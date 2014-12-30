@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+<string name="c_up">alzo:Mi alzo</string>
+<string name="c_sleep">dormo:Dormo</string>
+<string name="c_sing">canto:Canto</string>
+<string name="c_run">corro:Corro velocissimo</string>
+</resources>
