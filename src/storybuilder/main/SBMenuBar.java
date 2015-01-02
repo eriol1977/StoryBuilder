@@ -32,9 +32,8 @@ public class SBMenuBar extends MenuBar
         Menu menuStory = new Menu("Story");
         MenuItem newStory = buildMenuItem("New", KeyCode.N, "storybuilder.story.view.NewStoryView");
         MenuItem open = buildMenuItem("Open", KeyCode.O, "storybuilder.story.view.OpenStoryView");
-        MenuItem save = buildMenuItem("Save", KeyCode.S, "storybuilder.story.view.SaveStoryView");
-        MenuItem prefs = buildMenuItem("Preferences", KeyCode.P, "storybuilder.story.view.PreferencesView");
-        menuStory.getItems().addAll(newStory, open, save, new SeparatorMenuItem(), prefs);
+        MenuItem prefs = buildMenuItem("Preferences", KeyCode.P, "storybuilder.preferences.view.PreferencesView");
+        menuStory.getItems().addAll(newStory, open, new SeparatorMenuItem(), prefs);
         return menuStory;
     }
 

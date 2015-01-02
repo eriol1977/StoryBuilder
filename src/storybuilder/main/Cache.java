@@ -1,5 +1,6 @@
 package storybuilder.main;
 
+import storybuilder.preferences.model.Preferences;
 import storybuilder.story.model.NullStory;
 import storybuilder.story.model.Story;
 
@@ -16,8 +17,11 @@ public class Cache
 
     private final Story nullStory = new NullStory();
 
+    private final Preferences preferences = new Preferences();
+    
     private Cache()
     {
+        loadPreferences();
     }
 
     public final static Cache getInstance()
@@ -35,4 +39,14 @@ public class Cache
         this.story = story;
     }
 
+    public Preferences getPreferences()
+    {
+        return preferences;
+    }
+
+    private void loadPreferences()
+    {
+        // TODO caricare da xml di configurazione
+    }
+    
 }

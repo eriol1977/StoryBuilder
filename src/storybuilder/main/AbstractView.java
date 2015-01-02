@@ -43,16 +43,26 @@ public abstract class AbstractView extends VBox
         add(new Separator());
     }
 
-    protected TextField addLabeledTextInput(final String label)
+    protected Label getLabel(final String label)
     {
         final Label labelField = new Label(label + ":");
         labelField.setFont(new Font("Arial", 18));
+        return labelField;
+    }
+
+    protected TextField addLabeledTextInput(final String label)
+    {
         final TextField textField = new TextField();
         textField.setPromptText(label);
-        final HBox hBox = new HBox(labelField, textField);
+        final HBox hBox = new HBox(getLabel(label), textField);
         hBox.setSpacing(15);
         add(hBox);
         return textField;
+    }
+
+    protected void addLabel(final String label)
+    {
+        add(getLabel(label));
     }
 
     protected Button addButton(final String label)

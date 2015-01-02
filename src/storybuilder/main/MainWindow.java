@@ -56,4 +56,11 @@ public class MainWindow extends Application
     {
         return mainPane;
     }
+
+    Stage getStage()
+    {
+        return stage;
+    }
+    
+    
 }
