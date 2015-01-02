@@ -1,2 +1,7 @@
--- creare form Items
--- verificare se è possibile aggruppare vari forms in tabs, nella stessa finestra
+-- distinzione tra Command default (non modificabile né cancellabile) e altri
+-- caricamento di Command (default e della storia)
+-- validazione Command
+-- save e update di Command (cache e file)
+-- astrazione della View con tabella e form
+-- attivare menu Commands solo quando c'è una storia aperta
+-- eliminare forms vecchi

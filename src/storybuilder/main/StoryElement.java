@@ -1,5 +1,6 @@
-package storybuilder;
+package storybuilder.main;
 
+import storybuilder.main.IStoryElement;
 import javafx.beans.property.SimpleStringProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -1,5 +1,7 @@
 package storybuilder;
 
+import storybuilder.command.model.Command;
+import storybuilder.main.IStoryElement;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;

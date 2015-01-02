@@ -9,10 +9,10 @@ import storybuilder.story.model.Story;
  *
  * @author Francesco Bertolino
  */
-public class OpenStoryView extends AbstractView
+public class DeleteStoryView extends AbstractView
 {
 
-    public OpenStoryView()
+    public DeleteStoryView()
     {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a story");
@@ -20,9 +20,9 @@ public class OpenStoryView extends AbstractView
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
         final File file = fileChooser.showOpenDialog(mwc.getStage());
         if (file != null) {
-            final Story story = Story.load(file);
+            Story.delete(file);
             mwc.updateTitle();
-            mwc.updateStatusBarMessage("Story \"" + story.getTitle() + "\" loaded");
+            mwc.updateStatusBarMessage("Story deleted");
         }
     }
 

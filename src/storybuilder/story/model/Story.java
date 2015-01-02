@@ -24,29 +24,29 @@ import storybuilder.validation.ValidationFailed;
  */
 public class Story
 {
-
+    
     private final static String FILE_PATH = "resources/stories";
-
+    
     private final String title;
-
+    
     private final String fileName;
-
+    
     public Story(String title, String fileName)
     {
         this.title = title;
         this.fileName = fileName;
     }
-
+    
     public String getTitle()
     {
         return title;
     }
-
+    
     public String getFileName()
     {
         return fileName;
     }
-
+    
     public void save() throws ValidationFailed
     {
         validate();
@@ -57,7 +57,7 @@ public class Story
             ErrorManager.showErrorMessage(Story.class, "Error while saving story", ex);
         }
     }
-
+    
     private void updateStoriesFile() throws ParserConfigurationException, TransformerException, DOMException, SAXException, IOException
     {
         final Document storiesDoc = FileManager.openDocument(FILE_PATH);
@@ -67,7 +67,7 @@ public class Story
         storiesDoc.getDocumentElement().appendChild(storyElement);
         FileManager.saveDocument(storiesDoc, FILE_PATH);
     }
-
+    
     private void createStoryFile() throws ParserConfigurationException, TransformerException
     {
         final DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
@@ -75,15 +75,15 @@ public class Story
         final Document doc = icBuilder.newDocument();
         final Element mainRootElement = doc.createElement("resources");
         doc.appendChild(mainRootElement);
-
+        
         FileManager.addElement(doc, "l_title", title);
         FileManager.addElement(doc, "sections", String.valueOf(0));
         FileManager.addElement(doc, "starting", "");
         FileManager.addElement(doc, "ending", "");
-
+        
         FileManager.saveDocument(doc, FileManager.getStoryFilenameWithAbsolutePath(this));
     }
-
+    
     public static Story load(final File file)
     {
         Story story = null;
@@ -105,7 +105,13 @@ public class Story
         }
         return story;
     }
-
+    
+    public static void delete(final File file)
+    {
+        file.delete();
+        Cache.getInstance().setStory(new NullStory());
+    }
+    
     private void validate() throws ValidationFailed
     {
         if (title == null || title.isEmpty()) {
