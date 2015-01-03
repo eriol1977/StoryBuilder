@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import storybuilder.command.model.Command;
-import storybuilder.main.AbstractView;
+import storybuilder.main.view.AbstractView;
 
 /**
  *
@@ -43,9 +43,9 @@ public class CommandDetailView extends AbstractView
             command.setDescription(descriptionField.getText());
             if (isNewCommand) {
                 command.setNameWithoutPrefix(nameField.getText());
-                commandsView.addCommand(command);
+                commandsView.addElement(command);
             } else {
-                commandsView.updateCommand(command);
+                commandsView.updateElement(command);
             }
         });
 

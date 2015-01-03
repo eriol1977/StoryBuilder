@@ -1,5 +1,6 @@
-package storybuilder.main;
+package storybuilder.main.view;
 
+import storybuilder.main.view.AbstractView;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;

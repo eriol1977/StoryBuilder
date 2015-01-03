@@ -2,9 +2,9 @@ package storybuilder.story.view;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
-import storybuilder.main.AbstractView;
+import storybuilder.main.view.AbstractView;
 import javafx.scene.control.TextField;
-import storybuilder.main.EmptyView;
+import storybuilder.main.view.EmptyView;
 import storybuilder.story.model.Story;
 import storybuilder.validation.ValidationFailed;
 

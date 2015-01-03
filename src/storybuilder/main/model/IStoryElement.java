@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package storybuilder.main;
+package storybuilder.main.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,6 +22,11 @@ public interface IStoryElement
      */
     String getName();
 
+    /**
+     * @return name without prefix
+     */
+    String getNameWithoutPrefix();
+    
     /**
      * @return prefix used to form the element name
      */
@@ -44,4 +49,16 @@ public interface IStoryElement
      * @throws ValidationFailed 
      */
     void validate() throws ValidationFailed;
+    
+    /**
+     * Copies all internal data from another element to this one.
+     * 
+     * @param another 
+     */
+    void copyData(final IStoryElement another);
+    
+    /**
+     * @return True if this is a default element, which shouldn't be updated or deleted
+     */
+    boolean isDefault();
 }

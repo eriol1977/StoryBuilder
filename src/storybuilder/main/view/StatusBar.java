@@ -1,4 +1,4 @@
-package storybuilder.main;
+package storybuilder.main.view;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

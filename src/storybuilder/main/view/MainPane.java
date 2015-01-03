@@ -1,5 +1,7 @@
-package storybuilder.main;
+package storybuilder.main.view;
 
+import storybuilder.main.view.EmptyView;
+import storybuilder.main.view.AbstractView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 

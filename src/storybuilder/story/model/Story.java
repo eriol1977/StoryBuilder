@@ -16,8 +16,8 @@ import org.xml.sax.SAXException;
 import storybuilder.command.model.Command;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
-import storybuilder.main.IStoryElement;
-import storybuilder.main.MainWindowController;
+import storybuilder.main.model.IStoryElement;
+import storybuilder.main.view.MainWindowController;
 import storybuilder.validation.ErrorManager;
 import storybuilder.validation.ValidationFailed;
 

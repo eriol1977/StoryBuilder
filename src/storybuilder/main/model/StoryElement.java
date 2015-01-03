@@ -1,4 +1,4 @@
-package storybuilder.main;
+package storybuilder.main.model;
 
 import java.util.Objects;
 import javafx.beans.property.SimpleStringProperty;

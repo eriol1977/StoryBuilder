@@ -1,5 +1,6 @@
-package storybuilder.main;
+package storybuilder.main.view;
 
+import storybuilder.main.view.AbstractView;
 import javafx.stage.Stage;
 
 /**

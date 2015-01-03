@@ -1,4 +1,4 @@
-package storybuilder.main;
+package storybuilder.main.view;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import storybuilder.main.Cache;
 
 /**
  *
@@ -39,8 +40,8 @@ public abstract class AbstractView extends VBox
     {
         final Label label = new Label(title);
         label.setFont(new Font("Arial", 20));
-        add(label);
-        add(new Separator());
+        getChildren().add(0, label);
+        getChildren().add(1, new Separator());
     }
 
     protected Label getLabel(final String label)

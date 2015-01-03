@@ -1,6 +1,6 @@
 package storybuilder;
 
-import storybuilder.main.IStoryElement;
+import storybuilder.main.model.IStoryElement;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

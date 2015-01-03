@@ -1,7 +1,7 @@
 package storybuilder.story.view;
 
 import java.io.File;
-import storybuilder.main.AbstractView;
+import storybuilder.main.view.AbstractView;
 import javafx.stage.FileChooser;
 import storybuilder.story.model.Story;
 

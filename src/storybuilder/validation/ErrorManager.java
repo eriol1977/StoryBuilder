@@ -2,7 +2,7 @@ package storybuilder.validation;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import storybuilder.main.MainWindowController;
+import storybuilder.main.view.MainWindowController;
 
 /**
  *
