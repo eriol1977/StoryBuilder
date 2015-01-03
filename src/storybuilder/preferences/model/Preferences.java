@@ -1,15 +1,12 @@
 package storybuilder.preferences.model;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import storybuilder.main.FileManager;
-import storybuilder.story.model.Story;
 import storybuilder.validation.ErrorManager;
 
 /**
@@ -19,7 +16,7 @@ import storybuilder.validation.ErrorManager;
 public class Preferences
 {
 
-    private final static String FILE_PATH = "resources/prefs";
+    private final static String FILE_PATH = "resources/prefs.xml";
 
     private String directoryPath;
 

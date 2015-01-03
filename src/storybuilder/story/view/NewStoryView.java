@@ -24,13 +24,14 @@ public class NewStoryView extends AbstractView
         button.setOnAction((ActionEvent e) -> {
             final String title = titleField.getText();
             final String filename = fileField.getText();
-            final Story story = new Story(title, filename);
+            final Story story = new Story(title, filename + ".xml");
             try {
                 story.save();
                 cache.setStory(story);
                 mwc.updateTitle();
                 mwc.updateStatusBarMessage("Story \"" + title + "\" created");
                 mwc.switchView(new EmptyView());
+                mwc.enableMenus(true);
             } catch (ValidationFailed ex) {
                 mwc.updateStatusBarMessage(ex.getFailCause());
             }

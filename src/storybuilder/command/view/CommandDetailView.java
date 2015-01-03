@@ -28,25 +28,32 @@ public class CommandDetailView extends AbstractView
             addTitle("New command");
             nameField = addLabeledTextInput("Name");
         } else {
-            addTitle(command.getName());
+            addTitle(command.getNameWithoutPrefix());
             nameField = null;
         }
 
         final TextField keywordField = addLabeledTextInput("Keyword");
         keywordField.setText(command.getKeyword());
-        final TextField descriptionField = addLabeledTextInput("Description");
+        final TextField descriptionField = addLabeledTextInput("Description", 200);
         descriptionField.setText(command.getDescription());
+
         final Button saveButton = addButton("Save");
         saveButton.setOnAction((ActionEvent e) -> {
             command.setKeyword(keywordField.getText());
             command.setDescription(descriptionField.getText());
             if (isNewCommand) {
-                command.setName(nameField.getText());
+                command.setNameWithoutPrefix(nameField.getText());
                 commandsView.addCommand(command);
             } else {
                 commandsView.updateCommand(command);
             }
         });
+
+        if (command.isDefault()) {
+            keywordField.setDisable(true);
+            descriptionField.setDisable(true);
+            saveButton.setDisable(true);
+        }
     }
 
 }

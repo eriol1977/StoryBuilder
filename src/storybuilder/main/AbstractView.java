@@ -60,6 +60,13 @@ public abstract class AbstractView extends VBox
         return textField;
     }
 
+    protected TextField addLabeledTextInput(final String label, final double minWidth)
+    {
+        final TextField textField = addLabeledTextInput(label);
+        textField.setMinWidth(minWidth);
+        return textField;
+    }
+
     protected void addLabel(final String label)
     {
         add(getLabel(label));

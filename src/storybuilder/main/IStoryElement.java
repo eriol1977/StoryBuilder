@@ -9,10 +9,32 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- *
+ * Any story element writable to the XML file must implement this interface.
+ * 
  * @author Francesco
  */
 public interface IStoryElement
 {
+
+    /**
+     * @return name, written as an attribute in the XML element
+     */
+    String getName();
+
+    /**
+     * @return prefix used to form the element name
+     */
+    String getPrefix();
+
+    /**
+     * @param doc XML file
+     * @return XML element corresponding to the object
+     */
     Element build(final Document doc);
+
+    /**
+     * @return Text content of the XML element corresponding to the object
+     */
+    String getContent();
+
 }

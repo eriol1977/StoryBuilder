@@ -23,6 +23,7 @@ public class DeleteStoryView extends AbstractView
             Story.delete(file);
             mwc.updateTitle();
             mwc.updateStatusBarMessage("Story deleted");
+            mwc.enableMenus(false);
         }
     }
 

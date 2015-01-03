@@ -47,6 +47,11 @@ public class MainWindowController
         mainWindow.getMainPane().setContent(view);
     }
 
+    public void enableMenus(final boolean enable)
+    {
+        mainWindow.getMainPane().getMenuBar().enableMenus(enable);
+    }
+
     public Stage getStage()
     {
         return mainWindow.getStage();

@@ -113,7 +113,7 @@ public class CommandsForm extends AbstractForm
             data.add(new Command(
                     prefix + addName.getText(),
                     addKeyword.getText(),
-                    addDescription.getText()));
+                    addDescription.getText(), false));
             message.setText("Element " + prefix + addName.getText() + " added");
             addName.clear();
             addKeyword.clear();
@@ -130,6 +130,6 @@ public class CommandsForm extends AbstractForm
     @Override
     protected IStoryElement parseElement(final Node node)
     {
-        return new Command(node);
+        return new Command(node, false);
     }
 }

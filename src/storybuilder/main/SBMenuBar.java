@@ -21,24 +21,29 @@ public class SBMenuBar extends MenuBar
 {
 
     private final MainPane mainPane;
+    
+    private final Menu menuStory;
+    
+    private final Menu menuCommands;
 
     SBMenuBar(final MainPane mainPane)
     {
         this.mainPane = mainPane;
-        final Menu menuStory = buildMenuStory();
-        final Menu menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView");
+        menuStory = buildMenuStory();
+        menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView");
         getMenus().addAll(menuStory, menuCommands);
+        enableMenus(false);
     }
 
     private Menu buildMenuStory()
     {
-        final Menu menuStory = new Menu("Story");
+        final Menu menu = new Menu("Story");
         final MenuItem newStory = buildMenuItem("New", KeyCode.N, "storybuilder.story.view.NewStoryView");
         final MenuItem open = buildMenuItem("Open", KeyCode.O, "storybuilder.story.view.OpenStoryView");
         final MenuItem delete = buildMenuItem("Delete", KeyCode.D, "storybuilder.story.view.DeleteStoryView");
         final MenuItem prefs = buildMenuItem("Preferences", KeyCode.P, "storybuilder.preferences.view.PreferencesView");
-        menuStory.getItems().addAll(newStory, open, delete, new SeparatorMenuItem(), prefs);
-        return menuStory;
+        menu.getItems().addAll(newStory, open, delete, new SeparatorMenuItem(), prefs);
+        return menu;
     }
 
     private Menu buildMenuButton(final String label, final KeyCode accelerator, final String clazz)
@@ -69,6 +74,11 @@ public class SBMenuBar extends MenuBar
             }
         });
         return menuItem;
+    }
+
+    final void enableMenus(boolean enable)
+    {
+        menuCommands.setDisable(!enable);
     }
 
 }

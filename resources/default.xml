@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- labels -->
+    <string name="l_prompt">Comando?</string>
+
+    <!-- minigames -->
+    <string name="l_dw_greater_then">Devi ottenere un numero maggiore di </string>
+    <string name="l_dw_start">Quando sei pronto, tocca lo schermo per girare la Ruota del Destino</string>
+    <string name="l_lp_attempts">I tentativi a tua disposizione sono </string>
+    <string name="l_lp_help">L\'obiettivo del gioco è trovare il punto di scasso della serratura. Se tocchi un punto prossimo a quello giusto, ti avviserò di quanto sei vicino all\'obiettivo. Toccare un punto già scoperto non comporta penalità.</string>
+    <string name="l_lp_start">Quando sei pronto, tocca lo schermo per iniziare a scassinare la serratura.</string>
+    <string name="l_lp_far">Acqua</string>
+    <string name="l_lp_near">Fuochino</string>
+    <string name="l_lp_nearest">Fuoco</string>
+    <string name="l_lp_empty"> </string>
+    <string name="l_fi_hits_required"> colpi per vincere.</string>
+    <string name="l_fi_penalties"> ferite per perdere.</string>
+    <string name="l_fi_help_1">Le mosse consentite sono cinque, tanto in attacco come in difesa. Devi eseguirle nel più breve tempo possibile, non appena la mia voce le richiede.</string>
+    <string name="l_fi_help_2">Scorri in su: montante, oppure salta.</string>
+    <string name="l_fi_help_3">Scorri in giù: fendente, oppure giù.</string>
+    <string name="l_fi_help_4">Scorri a destra: rovescio, oppure rotola.</string>
+    <string name="l_fi_help_5">Scorri a sinistra: dritto, oppure schiva.</string>
+    <string name="l_fi_help_6">Doppio tap: affondo, oppure para.</string>
+    <string name="l_fi_help_7">A volte ti chiederò di ripetere non una sola mossa, bensì una sequenza di mosse. In questo caso, la sequenza sarà preceduta dalla parola: combo.</string>
+    <string name="l_fi_help_8">Tanto in difesa come in attacco, hai due modi di sbagliare una mossa: non eseguendola abbastanza rapidamente, oppure eseguendo il movimento errato.</string>
+    <string name="l_fi_help_9">Un turno, di attacco o di difesa, ha successo se commetti un massimo di tre errori.</string>
+    <string name="l_fi_help_10">Un turno di attacco è sempre seguìto da un turno di difesa, e viceversa, a meno che si verifichino condizioni speciali.</string>
+    <string name="l_fi_help_11">Un turno di attacco condotto alla perfezione, senza commettere alcun errore, consente di continuare ad attaccare anche nel turno successivo.</string>
+    <string name="l_fi_help_12">Un turno di difesa condotto alla perfezione, senza commettere alcun errore, consente di cancellare dal totale un colpo già subito.</string>
+    <string name="l_fi_help_13">Un turno di difesa rovinoso, nel quale commetti almeno cinque errori, ti costringe a difènderti anche nel turno successivo.</string>
+    <string name="l_fi_help_14">Oggetti o abilità speciali che tu possieda possono farti godere di bonus tanto al numero di attacchi necessari alla vittoria, come al numero di colpi che puoi subire.</string>
+    <string name="l_fi_start">Quando sei pronto, tocca lo schermo per iniziare a combattere.</string>
+    <string name="l_fi_attack_middle">Affondo</string>
+    <string name="l_fi_attack_left">Dritto</string>
+    <string name="l_fi_attack_right">Rovescio</string>
+    <string name="l_fi_attack_up">Montante</string>
+    <string name="l_fi_attack_down">Fendente</string>
+    <string name="l_fi_defense_middle">Para</string>
+    <string name="l_fi_defense_left">Schiva</string>
+    <string name="l_fi_defense_right">Rotola</string>
+    <string name="l_fi_defense_up">Salta</string>
+    <string name="l_fi_defense_down">Giù</string>
+    <string name="l_fi_round_attack_won">Attacco riuscito!</string>
+    <string name="l_fi_round_attack_perfect">Attacco formidabile!</string>
+    <string name="l_fi_round_attack_lost">Attacco fallito!</string>
+    <string name="l_fi_round_defense_won">Difesa riuscita!</string>
+    <string name="l_fi_round_defense_lost">Difesa fallita!</string>
+    <string name="l_fi_round_defense_perfect">Difesa perfetta!</string>
+    <string name="l_fi_round_defense_awful">Difesa disastrosa!</string>
+    <string name="l_fi_now_attack">Ora attacca.</string>
+    <string name="l_fi_now_defend">Ora difènditi.</string>
+    <string name="l_fi_missing_hits"> colpi per vincere.</string>
+    <string name="l_fi_missing_penalties"> ferite per perdere.</string>
+    <string name="l_fi_start_attack">Cominci all\'attacco.</string>
+    <string name="l_fi_start_defense">Cominci in difesa.</string>
+    <string name="l_fi_won">Hai sconfitto il tuo avversario!</string>
+    <string name="l_fi_lost">Sei stato sconfitto!</string>
+    <string name="l_fi_combo">Combo</string>
+
+    <!-- messages -->
+    <string name="m_unavailable">azione invalida</string>
+    <string name="m_inventory">possiedi i seguenti oggetti:</string>
+    <string name="m_empty_inventory">non possiedi oggetti</string>
+    <string name="m_no_object">quest\'oggetto non c\'è!</string>
+    <string name="m_cant_get">non si può prendere</string>
+    <string name="m_cant_use">non si può usare qui</string>
+    <string name="m_cant_examine">non puoi esaminare questo oggetto</string>
+    <string name="m_game_loaded">tocca lo schermo per caricare la partita</string>
+    <string name="m_game_saved">tocca lo schermo per salvare la partita</string>
+    <string name="m_cant_join">non puoi unire questi oggetti, o non li possiedi ancora</string>
+    <string name="m_are_you_sure">Sei sicuro?</string>
+
+    <!-- commands -->
+    <string name="c_get">prendo:Prendo</string>
+    <string name="c_use">uso:Uso</string>
+    <string name="c_repeat">ripeti:Ripeti</string>
+    <string name="c_instructions">istruzioni:Istruzioni</string>
+    <string name="c_help">aiuto:Aiuto</string>
+    <string name="c_start">inizio:Inizio</string>
+    <string name="c_new_game">nuova partita:Nuova partita</string>
+    <string name="c_save_game">salva:Salva partita</string>
+    <string name="c_load_game">carica:Carica partita</string>
+    <string name="c_quit">esci dal gioco:Esci dal gioco</string>
+    <string name="c_inventory">inventario:Inventario</string>
+    <string name="c_examine">esamino:Esamino</string>
+    <string name="c_observe">osservo:Osservo</string>
+    <string name="c_go_back">indietro:Torno indietro</string>
+    <string name="c_actions">azioni:Azioni disponibili</string>
+    <string name="c_commands">comandi:Comandi disponibili</string>
+    <string name="c_join">unisco:Unisco</string>
+    <string name="c_yes">sì:Sì</string>
+    <string name="c_no">no:No</string>
+    <string name="c_back_to_narrative">narrazione:Torno alla narrazione</string>
+
+    <!-- sections -->
+    <string name="home_1">Benvenuto!</string>
+    <string name="home_2">Tocca lo schermo in qualsiasi momento per interrompermi e per scegliere i comandi.</string>
+    <string name="home_3">Scorrendo rapidamente in su o in giù con il dito, potrai scoprire i comandi sempre disponibili, come Nuova Partita, Istruzioni, o Carica Partita.</string>
+    <string name="home_4">Una volta iniziata una partita, scorri a destra o a sinistra per udire le azioni disponibili nella sezione del gioco.</string>
+    <string name="home_5">Se è la prima volta che giochi, ti consiglio di ascoltare le istruzioni: tocca lo schermo, poi scorri in su o in giù con il dito sino a udire il comando Istruzioni. Tocca di nuovo lo schermo per ascoltarle.</string>
+    <string name="home_6">In bocca al lupo, e buon divertimento!</string>
+
+    <string name="help_1">Il gioco è un racconto interattivo ricco di esplorazioni, enigmi e avventura, diviso in piccole parti che ti narrerò una alla volta, descrivendo l\'ambiente che ti circonda, nonché le opportunità e i pericoli del momento.</string>
+    <string name="help_2">Al termine di ogni parte della narrazione (o anche durante le stesse, se non avrai voglia di ascoltare tutto quanto) potrai toccare lo schermo per proseguire.</string>
+    <string name="help_3">A questo punto, ti narrerò la prossima sezione del gioco, oppure ti permetterò di scegliere un\'azione tra quelle disponibili.</string>
+    <string name="help_4">Scòprile scorrendo lo schermo a destra o a sinistra, poi scegli quale eseguire con un tocco sullo schermo.</string>
+    <string name="help_5">Avrai sempre a disposizione una serie di azioni comuni, come Nuova Partita, o Istruzioni, a cui accedere scorrendo lo schermo in alto o in basso.</string>
+    <string name="help_6">Durante la storia potrai raccogliere numerosi oggetti utili a risolvere enigmi e quindi avanzare nel gioco.</string>
+    <string name="help_7">Per questo, tra le azioni comuni, troverai anche l\'accesso al tuo Inventario: ùsalo per sapere quali oggetti ti porti appresso, per esaminarli o anche per unirli a formare nuovi oggetti.</string>
+    <string name="help_8">Tocca lo schermo per tornare al gioco.</string>
+
+    <string name="end_1">La partita è giunta al termine.</string>
+    <string name="end_2">Vuoi iniziare una nuova partita, caricare una partita salvata, o uscire dal gioco?</string>
+
+    <string name="quit_1">Grazie per aver giocato!</string>
+    <string name="quit_2">Tocca lo schermo per abbandonare il gioco.</string>
+</resources>

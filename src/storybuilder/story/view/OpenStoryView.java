@@ -23,6 +23,7 @@ public class OpenStoryView extends AbstractView
             final Story story = Story.load(file);
             mwc.updateTitle();
             mwc.updateStatusBarMessage("Story \"" + story.getTitle() + "\" loaded");
+            mwc.enableMenus(true);
         }
     }
 

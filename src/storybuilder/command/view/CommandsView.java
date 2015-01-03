@@ -33,16 +33,12 @@ public class CommandsView extends AbstractView
         final HBox layout = new HBox(15);
 
         final TableView table = new TableView();
-        table.setMaxWidth(132);
+        table.setMaxWidth(202);
         layout.getChildren().add(table);
 
-        data.add(new Command("c_up", "alzo", "Mi alzo"));
-        data.add(new Command("c_lay_still", "resto", "Resto sdraiato"));
-        data.add(new Command("c_run", "corro", "Corro"));
-        data.add(new Command("c_walk", "cammino", "Cammino"));
-        data.add(new Command("c_get", "prendo", "Prendo"));
+        loadData();
         table.setItems(data);
-        table.getColumns().addAll(getColumn("name", 100), getDeleteColumn());
+        table.getColumns().addAll(getColumn("Name", "nameWithoutPrefix", 150), getDeleteColumn());
         table.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             if (table.getSelectionModel().getSelectedItem() != null) {
                 if (layout.getChildren().size() > 1) {
@@ -57,15 +53,15 @@ public class CommandsView extends AbstractView
             if (layout.getChildren().size() > 1) {
                 layout.getChildren().remove(1);
             }
-            layout.getChildren().add(new CommandDetailView(new Command("", "", ""), this));
+            layout.getChildren().add(new CommandDetailView(new Command("", "", "", false), this));
         });
 
         add(layout);
     }
 
-    protected TableColumn getColumn(final String fieldName, final double minWidth)
+    protected TableColumn getColumn(final String label, final String fieldName, final double minWidth)
     {
-        final TableColumn column = new TableColumn(fieldName.toUpperCase());
+        final TableColumn column = new TableColumn(label);
         column.setMinWidth(minWidth);
         column.setCellValueFactory(new PropertyValueFactory<>(fieldName));
         column.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -98,15 +94,22 @@ public class CommandsView extends AbstractView
         return deleteCol;
     }
 
-    void addCommand(Command command)
+    void addCommand(final Command command)
     {
         data.add(command);
-        // TODO save
+        cache.addCommand(command);
+        mwc.updateStatusBarMessage("Element \"" + command.getNameWithoutPrefix() + "\" added");
     }
 
-    void updateCommand(Command command)
+    void updateCommand(final Command command)
     {
-        // TODO update
+        cache.updateCommand(command);
+        mwc.updateStatusBarMessage("Element \"" + command.getNameWithoutPrefix() + "\" updated");
+    }
+
+    protected void loadData()
+    {
+        data.addAll(cache.getStory().getCommands());
     }
 
     protected class ButtonCell extends TableCell<Object, Boolean>
@@ -117,8 +120,9 @@ public class CommandsView extends AbstractView
         ButtonCell()
         {
             cellButton.setOnAction((ActionEvent t) -> {
-                data.remove(getTableRow().getIndex());
-                mwc.updateStatusBarMessage("Element deleted");
+                final Command removed = (Command) data.remove(getTableRow().getIndex());
+                cache.removeCommand(removed);
+                mwc.updateStatusBarMessage("Element \"" + removed.getNameWithoutPrefix() + "\" deleted");
             });
         }
 
@@ -127,7 +131,7 @@ public class CommandsView extends AbstractView
         protected void updateItem(Boolean t, boolean empty)
         {
             super.updateItem(t, empty);
-            if (!empty) {
+            if (!empty && !((Command) data.get(getTableRow().getIndex())).isDefault()) {
                 setGraphic(cellButton);
             } else {
                 setGraphic(null);
