@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import storybuilder.validation.ValidationFailed;
 
 /**
  *
@@ -35,6 +36,17 @@ public abstract class StoryElement implements IStoryElement
         Element element = doc.createElement("string");
         element.setAttribute("name", getName());
         return element;
+    }
+
+    @Override
+    public void validate() throws ValidationFailed
+    {
+        if (getNameWithoutPrefix().isEmpty()) {
+            throw new ValidationFailed("Name must be at least one character long");
+        }
+        if (name.get().contains(" ")) {
+            throw new ValidationFailed("Name cannot contain empty spaces");
+        }
     }
 
     @Override

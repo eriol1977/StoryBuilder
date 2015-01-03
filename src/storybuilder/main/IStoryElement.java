@@ -7,6 +7,7 @@ package storybuilder.main;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import storybuilder.validation.ValidationFailed;
 
 /**
  * Any story element writable to the XML file must implement this interface.
@@ -37,4 +38,10 @@ public interface IStoryElement
      */
     String getContent();
 
+    /**
+     * Validates the element data
+     * 
+     * @throws ValidationFailed 
+     */
+    void validate() throws ValidationFailed;
 }

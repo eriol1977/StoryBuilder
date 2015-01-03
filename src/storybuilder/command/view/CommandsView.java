@@ -23,31 +23,33 @@ import storybuilder.main.AbstractView;
  */
 public class CommandsView extends AbstractView
 {
-
+    
+    final HBox layout;
+    
     private final ObservableList<IStoryElement> data = FXCollections.observableArrayList();
-
+    
+    private Command stashed;
+    
     public CommandsView()
     {
         addTitle("Commands");
-
-        final HBox layout = new HBox(15);
-
+        
+        layout = new HBox(15);
+        
         final TableView table = new TableView();
         table.setMaxWidth(202);
         layout.getChildren().add(table);
-
+        
         loadData();
         table.setItems(data);
         table.getColumns().addAll(getColumn("Name", "nameWithoutPrefix", 150), getDeleteColumn());
         table.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (table.getSelectionModel().getSelectedItem() != null) {
-                if (layout.getChildren().size() > 1) {
-                    layout.getChildren().remove(1);
-                }
-                layout.getChildren().add(new CommandDetailView((Command) table.getSelectionModel().getSelectedItem(), this));
+            final Command selectedCommand = (Command) table.getSelectionModel().getSelectedItem();
+            if (selectedCommand != null) {
+                showCommandDetail(selectedCommand);
             }
         });
-
+        
         final Button newButton = addButton("New");
         newButton.setOnAction((ActionEvent event) -> {
             if (layout.getChildren().size() > 1) {
@@ -55,10 +57,19 @@ public class CommandsView extends AbstractView
             }
             layout.getChildren().add(new CommandDetailView(new Command("", "", "", false), this));
         });
-
+        
         add(layout);
     }
-
+    
+    private void showCommandDetail(final Command command)
+    {
+        if (layout.getChildren().size() > 1) {
+            layout.getChildren().remove(1);
+        }
+        stashed = new Command(command);
+        layout.getChildren().add(new CommandDetailView(command, this));
+    }
+    
     protected TableColumn getColumn(final String label, final String fieldName, final double minWidth)
     {
         final TableColumn column = new TableColumn(label);
@@ -67,7 +78,7 @@ public class CommandsView extends AbstractView
         column.setCellFactory(TextFieldTableCell.forTableColumn());
         return column;
     }
-
+    
     private TableColumn getDeleteColumn()
     {
         TableColumn deleteCol = new TableColumn<>("Del");
@@ -93,36 +104,46 @@ public class CommandsView extends AbstractView
                 });
         return deleteCol;
     }
-
+    
     void addCommand(final Command command)
     {
-        data.add(command);
-        cache.addCommand(command);
-        mwc.updateStatusBarMessage("Element \"" + command.getNameWithoutPrefix() + "\" added");
+        final boolean result = cache.getStory().addCommand(command);
+        if (result) {
+            data.add(command);
+            mwc.updateStatusBarMessage("Element \"" + command.getNameWithoutPrefix() + "\" added");
+        }
     }
-
+    
     void updateCommand(final Command command)
     {
-        cache.updateCommand(command);
-        mwc.updateStatusBarMessage("Element \"" + command.getNameWithoutPrefix() + "\" updated");
+        final boolean result = cache.getStory().updateCommand(command);
+        if (result) {
+            mwc.updateStatusBarMessage("Element \"" + command.getNameWithoutPrefix() + "\" updated");
+        } else {
+            command.copyData(stashed);
+            showCommandDetail(command);
+        }
     }
-
+    
     protected void loadData()
     {
         data.addAll(cache.getStory().getCommands());
     }
-
+    
     protected class ButtonCell extends TableCell<Object, Boolean>
     {
-
+        
         final Button cellButton = new Button("X");
-
+        
         ButtonCell()
         {
             cellButton.setOnAction((ActionEvent t) -> {
-                final Command removed = (Command) data.remove(getTableRow().getIndex());
-                cache.removeCommand(removed);
-                mwc.updateStatusBarMessage("Element \"" + removed.getNameWithoutPrefix() + "\" deleted");
+                final Command command = (Command) getTableRow().getItem();
+                final boolean result = cache.getStory().removeCommand(command);
+                if (result) {
+                    data.remove(command);
+                    mwc.updateStatusBarMessage("Element \"" + command.getNameWithoutPrefix() + "\" deleted");
+                }
             });
         }
 

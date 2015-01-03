@@ -17,6 +17,7 @@ import storybuilder.command.model.Command;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.IStoryElement;
+import storybuilder.main.MainWindowController;
 import storybuilder.validation.ErrorManager;
 import storybuilder.validation.ValidationFailed;
 
@@ -26,31 +27,31 @@ import storybuilder.validation.ValidationFailed;
  */
 public class Story
 {
-    
+
     private final static String FILE_PATH = "resources/stories.xml";
-    
+
     private final String title;
-    
+
     private final String fileName;
-    
+
     private final List<Command> commands = new ArrayList<>();
-    
+
     public Story(String title, String fileName)
     {
         this.title = title;
         this.fileName = fileName;
     }
-    
+
     public String getTitle()
     {
         return title;
     }
-    
+
     public String getFileName()
     {
         return fileName;
     }
-    
+
     public void save() throws ValidationFailed
     {
         validate();
@@ -62,7 +63,7 @@ public class Story
             ErrorManager.showErrorMessage(Story.class, "Error while saving story", ex);
         }
     }
-    
+
     private void updateStoriesFile() throws ParserConfigurationException, TransformerException, DOMException, SAXException, IOException
     {
         final Document storiesDoc = FileManager.openDocument(FILE_PATH);
@@ -72,7 +73,7 @@ public class Story
         storiesDoc.getDocumentElement().appendChild(storyElement);
         FileManager.saveDocument(storiesDoc, FILE_PATH);
     }
-    
+
     private void createStoryFile() throws ParserConfigurationException, TransformerException
     {
         final DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
@@ -80,15 +81,15 @@ public class Story
         final Document doc = icBuilder.newDocument();
         final Element mainRootElement = doc.createElement("resources");
         doc.appendChild(mainRootElement);
-        
+
         FileManager.addElement(doc, "l_title", title);
         FileManager.addElement(doc, "sections", String.valueOf(0));
         FileManager.addElement(doc, "starting", "");
         FileManager.addElement(doc, "ending", "");
-        
+
         saveXmlDoc(doc);
     }
-    
+
     public static Story load(final File file)
     {
         Story story = null;
@@ -107,19 +108,19 @@ public class Story
         }
         return story;
     }
-    
+
     private void loadCommands()
     {
         commands.addAll(Command.load("resources/default.xml", true));
         commands.addAll(Command.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
     }
-    
+
     public static void delete(final File file)
     {
         file.delete();
         Cache.getInstance().setStory(new NullStory());
     }
-    
+
     private void validate() throws ValidationFailed
     {
         if (title == null || title.isEmpty()) {
@@ -136,73 +137,100 @@ public class Story
             throw new ValidationFailed("Filename cannot contain illegal characters");
         }
     }
-    
+
     public List<Command> getCommands()
     {
         return commands;
     }
-    
-    public void addCommand(final Command command)
+
+    public boolean addCommand(final Command command)
     {
-        commands.add(command);
-        saveStoryElement(command);
+        final boolean result = saveStoryElement(command);
+        if (result) {
+            commands.add(command);
+        }
+        return result;
     }
-    
-    public void removeCommand(final Command command)
+
+    public boolean removeCommand(final Command command)
     {
-        commands.remove(command);
-        removeStoryElement(command);
+        final boolean result = removeStoryElement(command);
+        if (result) {
+            commands.remove(command);
+        }
+        return result;
     }
-    
-    public void updateCommand(final Command command)
+
+    public boolean updateCommand(final Command command)
     {
-        updateStoryElement(command);
+        return updateStoryElement(command);
     }
-    
-    public void saveStoryElement(final IStoryElement element)
+
+    public boolean saveStoryElement(final IStoryElement element)
     {
         try {
-            final Document doc = getXmlDoc();
-            final Element newElement = element.build(doc);
-            doc.getDocumentElement().appendChild(newElement);
-            saveXmlDoc(doc);
+            if (validateStoryElement(element)) {
+                final Document doc = getXmlDoc();
+                final Element newElement = element.build(doc);
+                doc.getDocumentElement().appendChild(newElement);
+                saveXmlDoc(doc);
+                return true;
+            }
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while saving new story element", ex);
         }
+        return false;
     }
-    
-    private void removeStoryElement(final IStoryElement element)
+
+    private boolean removeStoryElement(final IStoryElement element)
     {
         try {
             final Document doc = getXmlDoc();
             final Node node = FileManager.findElementNamed(element.getName(), doc);
             doc.getDocumentElement().removeChild(node);
             saveXmlDoc(doc);
+            return true;
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while deleting story element", ex);
         }
+        return false;
     }
-    
-    private void updateStoryElement(final IStoryElement element)
+
+    private boolean updateStoryElement(final IStoryElement element)
     {
         try {
-            final Document doc = getXmlDoc();
-            final Node node = FileManager.findElementNamed(element.getName(), doc);
-            node.setTextContent(element.getContent());
-            saveXmlDoc(doc);
+            if (validateStoryElement(element)) {
+                final Document doc = getXmlDoc();
+                final Node node = FileManager.findElementNamed(element.getName(), doc);
+                node.setTextContent(element.getContent());
+                saveXmlDoc(doc);
+                return true;
+            }
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while updating story element", ex);
         }
+        return false;
     }
-    
+
+    private boolean validateStoryElement(final IStoryElement element)
+    {
+        try {
+            element.validate();
+            return true;
+        } catch (ValidationFailed ex) {
+            MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
+        }
+        return false;
+    }
+
     private void saveXmlDoc(final Document doc) throws TransformerException
     {
         FileManager.saveDocument(doc, FileManager.getStoryFilenameWithAbsolutePath(this));
     }
-    
+
     private Document getXmlDoc() throws IOException, SAXException, ParserConfigurationException
     {
         return FileManager.openDocument(FileManager.getStoryFilenameWithAbsolutePath(this));
     }
-    
+
 }
