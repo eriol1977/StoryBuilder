@@ -61,6 +61,7 @@ public class Story
         try {
             updateStoriesFile();
             createStoryFile();
+            // even if the story is new, it must load elements from the default.xml file
             loadCommands();
             loadEvents();
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
@@ -207,6 +208,34 @@ public class Story
         return updateStoryElement(event);
     }
 
+    /////////// SECTIONS
+    public int getLastSectionId()
+    {
+        int lastSectionId = -1;
+        try {
+            final Document doc = getXmlDoc();
+            final Node sectionsElement = FileManager.findElementNamed("sections", doc);
+            lastSectionId = Integer.valueOf(sectionsElement.getTextContent());
+        } catch (IOException | SAXException | ParserConfigurationException ex) {
+            ErrorManager.showErrorMessage(Story.class, "Error while getting next section id", ex);
+        }
+        return lastSectionId;
+    }
+
+    public void incrementLastSectionId()
+    {
+        try {
+            final Document doc = getXmlDoc();
+            final Node sectionsElement = FileManager.findElementNamed("sections", doc);
+            int lastSectionId = Integer.valueOf(sectionsElement.getTextContent());
+            sectionsElement.setTextContent(String.valueOf(++lastSectionId));
+            saveXmlDoc(doc);
+        } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
+            ErrorManager.showErrorMessage(Story.class, "Error while incrementing section id", ex);
+        }
+    }
+
+    ////////// XML
     public boolean saveStoryElement(final IStoryElement element)
     {
         try {

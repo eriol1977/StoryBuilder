@@ -1,0 +1,4 @@
+-- caricare le Section con i paragrafi nella Story, dal default.xml o da un file qualsiasi
+-- creare menu, tabella e dettaglio per le Section, appena per mostrare sezioni e paragrafi caricati
+-- creazione ed edizione di sezioni con paragrafi
+-- implementare la parte degli Item
