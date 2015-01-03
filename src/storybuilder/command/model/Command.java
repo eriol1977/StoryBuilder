@@ -3,12 +3,10 @@ package storybuilder.command.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.beans.property.SimpleBooleanProperty;
 import storybuilder.main.model.StoryElement;
 import javafx.beans.property.SimpleStringProperty;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import storybuilder.main.FileManager;
@@ -29,23 +27,19 @@ public class Command extends StoryElement
 
     private final SimpleStringProperty description;
 
-    private final SimpleBooleanProperty defaultCommand;
-
-    public Command(final String name, final String keyword, final String description, final boolean defaultCommand)
+    public Command(final String name, final String keyword, final String description, final boolean defaultElement)
     {
-        super(name);
+        super(name, defaultElement);
         this.keyword = new SimpleStringProperty(keyword);
         this.description = new SimpleStringProperty(description);
-        this.defaultCommand = new SimpleBooleanProperty(defaultCommand);
     }
 
-    public Command(final Node node, final boolean defaultCommand)
+    public Command(final Node node, final boolean defaultElement)
     {
-        super(node);
+        super(node, defaultElement);
         int separatorIndex = textContent.indexOf(":");
         keyword = new SimpleStringProperty(textContent.substring(0, separatorIndex));
         description = new SimpleStringProperty(textContent.substring(separatorIndex + 1, textContent.length()));
-        this.defaultCommand = new SimpleBooleanProperty(defaultCommand);
     }
 
     public Command(final Command another)
@@ -54,27 +48,19 @@ public class Command extends StoryElement
     }
 
     @Override
-    public Element build(final Document doc)
-    {
-        final Element command = super.build(doc);
-        command.setTextContent(getContent());
-        return command;
-    }
-
-    @Override
     public String getContent()
     {
         return getKeyword() + ":" + getDescription();
     }
 
-    public static List<Command> load(final String fileName, final boolean defaultCommands)
+    public static List<Command> load(final String fileName, final boolean defaultElements)
     {
         final List<Command> commands = new ArrayList<>();
         try {
             final Document doc = FileManager.openDocument(fileName);
             final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
             elements.stream().forEach((element) -> {
-                commands.add(new Command(element, defaultCommands));
+                commands.add(new Command(element, defaultElements));
             });
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             ErrorManager.showErrorMessage(Command.class, "Error while loading commands", ex);
@@ -101,7 +87,7 @@ public class Command extends StoryElement
         setName(anotherCommand.getName());
         setKeyword(anotherCommand.getKeyword());
         setDescription(anotherCommand.getDescription());
-        setDefaultCommand(anotherCommand.isDefault());
+        setDefault(anotherCommand.isDefault());
     }
 
     @Override
@@ -120,12 +106,6 @@ public class Command extends StoryElement
         return description.get();
     }
 
-    @Override
-    public boolean isDefault()
-    {
-        return defaultCommand.get();
-    }
-
     public void setKeyword(final String keyword)
     {
         this.keyword.set(keyword);
@@ -134,11 +114,6 @@ public class Command extends StoryElement
     public void setDescription(final String description)
     {
         this.description.set(description);
-    }
-
-    public void setDefaultCommand(final boolean defaultCommand)
-    {
-        this.defaultCommand.set(defaultCommand);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package storybuilder.main.view;
 
-import storybuilder.main.view.AbstractView;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -22,17 +21,20 @@ public class SBMenuBar extends MenuBar
 {
 
     private final MainPane mainPane;
-    
+
     private final Menu menuStory;
-    
+
     private final Menu menuCommands;
+
+    private final Menu menuEvents;
 
     SBMenuBar(final MainPane mainPane)
     {
         this.mainPane = mainPane;
         menuStory = buildMenuStory();
         menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView");
-        getMenus().addAll(menuStory, menuCommands);
+        menuEvents = buildMenuButton("Events", KeyCode.E, "storybuilder.event.view.EventsView");
+        getMenus().addAll(menuStory, menuCommands, menuEvents);
         enableMenus(false);
     }
 
@@ -80,6 +82,7 @@ public class SBMenuBar extends MenuBar
     final void enableMenus(boolean enable)
     {
         menuCommands.setDisable(!enable);
+        menuEvents.setDisable(!enable);
     }
 
 }

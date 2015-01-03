@@ -1,6 +1,7 @@
 package storybuilder.main.model;
 
 import java.util.Objects;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,18 +17,22 @@ public abstract class StoryElement implements IStoryElement
 
     protected final SimpleStringProperty name;
 
+    private final SimpleBooleanProperty defaultElement;
+
     protected String textContent;
 
-    public StoryElement(final String name)
+    public StoryElement(final String name, final boolean defaultElement)
     {
         this.name = new SimpleStringProperty(name);
+        this.defaultElement = new SimpleBooleanProperty(defaultElement);
     }
 
-    public StoryElement(final Node node)
+    public StoryElement(final Node node, final boolean defaultElement)
     {
         Element eElement = (Element) node;
         name = new SimpleStringProperty(eElement.getAttribute("name"));
         textContent = eElement.getTextContent();
+        this.defaultElement = new SimpleBooleanProperty(defaultElement);
     }
 
     @Override
@@ -35,6 +40,7 @@ public abstract class StoryElement implements IStoryElement
     {
         Element element = doc.createElement("string");
         element.setAttribute("name", getName());
+        element.setTextContent(getContent());
         return element;
     }
 
@@ -69,6 +75,17 @@ public abstract class StoryElement implements IStoryElement
     public void setNameWithoutPrefix(final String name)
     {
         this.name.set(getPrefix() + name);
+    }
+
+    @Override
+    public boolean isDefault()
+    {
+        return defaultElement.get();
+    }
+
+    public void setDefault(final boolean defaultElement)
+    {
+        this.defaultElement.set(defaultElement);
     }
 
     @Override

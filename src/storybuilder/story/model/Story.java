@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import storybuilder.command.model.Command;
+import storybuilder.event.model.Event;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
@@ -35,6 +36,8 @@ public class Story
     private final String fileName;
 
     private final List<Command> commands = new ArrayList<>();
+
+    private final List<Event> events = new ArrayList<>();
 
     public Story(String title, String fileName)
     {
@@ -59,6 +62,7 @@ public class Story
             updateStoriesFile();
             createStoryFile();
             loadCommands();
+            loadEvents();
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while saving story", ex);
         }
@@ -99,6 +103,7 @@ public class Story
             if (titleElement != null) {
                 story = new Story(titleElement.getTextContent(), file.getName());
                 story.loadCommands();
+                story.loadEvents();
                 Cache.getInstance().setStory(story);
             } else {
                 ErrorManager.showErrorMessage(Story.class, "Error while loading story");
@@ -107,12 +112,6 @@ public class Story
             ErrorManager.showErrorMessage(Story.class, "Error while loading story", ex);
         }
         return story;
-    }
-
-    private void loadCommands()
-    {
-        commands.addAll(Command.load("resources/default.xml", true));
-        commands.addAll(Command.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
     }
 
     public static void delete(final File file)
@@ -136,6 +135,13 @@ public class Story
         if (!indexes.isEmpty()) {
             throw new ValidationFailed("Filename cannot contain illegal characters");
         }
+    }
+
+    /////////// COMMANDS
+    private void loadCommands()
+    {
+        commands.addAll(Command.load("resources/default.xml", true));
+        commands.addAll(Command.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
     }
 
     public List<Command> getCommands()
@@ -164,6 +170,41 @@ public class Story
     public boolean updateCommand(final Command command)
     {
         return updateStoryElement(command);
+    }
+
+    /////////// EVENTS
+    private void loadEvents()
+    {
+        events.addAll(Event.load("resources/default.xml", true));
+        events.addAll(Event.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
+    }
+
+    public List<Event> getEvents()
+    {
+        return events;
+    }
+
+    public boolean addEvent(final Event event)
+    {
+        final boolean result = saveStoryElement(event);
+        if (result) {
+            events.add(event);
+        }
+        return result;
+    }
+
+    public boolean removeEvent(final Event event)
+    {
+        final boolean result = removeStoryElement(event);
+        if (result) {
+            events.remove(event);
+        }
+        return result;
+    }
+
+    public boolean updateEvent(final Event event)
+    {
+        return updateStoryElement(event);
     }
 
     public boolean saveStoryElement(final IStoryElement element)
