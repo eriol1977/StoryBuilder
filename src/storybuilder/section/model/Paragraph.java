@@ -3,6 +3,7 @@ package storybuilder.section.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -21,39 +22,35 @@ import storybuilder.validation.ValidationFailed;
 public class Paragraph extends StoryElement
 {
 
-    private final Section section;
+    private SimpleStringProperty text;
 
-    private String text;
-
-    public Paragraph(final Section section, final String name, final String text, final boolean defaultElement)
+    public Paragraph(final String name, final String text, final boolean defaultElement)
     {
         super(name, defaultElement);
-        this.text = text;
-        this.section = section;
+        this.text = new SimpleStringProperty(text);
     }
 
-    public Paragraph(final Section section, Node node, boolean defaultElement)
+    public Paragraph(Node node, boolean defaultElement)
     {
         super(node, defaultElement);
-        this.text = textContent;
-        this.section = section;
+        this.text = new SimpleStringProperty(textContent);
     }
 
-    public Paragraph(final Section anotherSection, final Paragraph another)
+    public Paragraph(final Paragraph another)
     {
-        this(anotherSection, another.getName(), another.getText(), another.isDefault());
+        this(another.getName(), another.getText(), another.isDefault());
     }
 
     @Override
     public String getPrefix()
     {
-        return section.getName() + "_";
+        return "";
     }
 
     @Override
     public String getContent()
     {
-        return text;
+        return text.get();
     }
 
     @Override
@@ -65,17 +62,17 @@ public class Paragraph extends StoryElement
         setDefault(anotherParagraph.isDefault());
     }
 
-    public static List<Paragraph> load(final String fileName, final boolean defaultElements, final Section sectionOfParagraphs)
+    public static List<Paragraph> load(final String fileName, final boolean defaultElements, final String sectionName)
     {
         final List<Paragraph> paragraphs = new ArrayList<>();
         try {
             final Document doc = FileManager.openDocument(fileName);
-            final List<Node> elements = FileManager.findElementsStartingWith(sectionOfParagraphs.getName() + "_", doc);
+            final List<Node> elements = FileManager.findElementsMatching(sectionName + "_\\d+", doc);
             elements.stream().forEach((element) -> {
-                paragraphs.add(new Paragraph(sectionOfParagraphs, element, defaultElements));
+                paragraphs.add(new Paragraph(element, defaultElements));
             });
         } catch (ParserConfigurationException | SAXException | IOException ex) {
-            ErrorManager.showErrorMessage(Event.class, "Error while loading paragraphs of section " + sectionOfParagraphs.getName(), ex);
+            ErrorManager.showErrorMessage(Event.class, "Error while loading paragraphs of section " + sectionName, ex);
         }
         return paragraphs;
     }
@@ -84,7 +81,7 @@ public class Paragraph extends StoryElement
     public void validate() throws ValidationFailed
     {
         super.validate();
-        if (text == null || text.isEmpty()) {
+        if (text == null || text.get().isEmpty()) {
             throw new ValidationFailed("Paragraph text must be at least one character long");
         }
     }
@@ -95,19 +92,14 @@ public class Paragraph extends StoryElement
         return "<string name=\"" + getName() + "\">" + getText() + "</string>";
     }
 
-    public Section getSection()
-    {
-        return section;
-    }
-
     public String getText()
     {
-        return text;
+        return text.get();
     }
 
     public void setText(String text)
     {
-        this.text = text;
+        this.text.set(text);
     }
 
 }

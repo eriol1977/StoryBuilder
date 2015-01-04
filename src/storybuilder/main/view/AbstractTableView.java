@@ -13,6 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.util.Callback;
 import storybuilder.main.model.IStoryElement;
 
@@ -23,6 +24,8 @@ import storybuilder.main.model.IStoryElement;
 public abstract class AbstractTableView extends AbstractView
 {
 
+    public final static double ROW_HEIGHT = 25;
+    
     protected final HBox layout;
 
     protected final ObservableList<IStoryElement> data = FXCollections.observableArrayList();
@@ -31,10 +34,11 @@ public abstract class AbstractTableView extends AbstractView
 
     public AbstractTableView()
     {
-        layout = new HBox(15);
+        layout = new HBox(10);
 
         final TableView table = new TableView();
         table.setMaxWidth(202);
+        table.setFixedCellSize(ROW_HEIGHT);
         layout.getChildren().add(table);
 
         loadData();
@@ -144,6 +148,8 @@ public abstract class AbstractTableView extends AbstractView
 
         ButtonCell()
         {
+            cellButton.setFont(new Font("Arial",10));
+            cellButton.setMaxHeight(AbstractTableView.ROW_HEIGHT - 5);
             cellButton.setOnAction((ActionEvent t) -> {
                 final IStoryElement element = (IStoryElement) getTableRow().getItem();
                 deleteElement(element);

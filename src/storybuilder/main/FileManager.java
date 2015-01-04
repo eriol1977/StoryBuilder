@@ -76,9 +76,28 @@ public class FileManager
         return elements;
     }
 
+    public static List<Node> findElementsMatching(final String regex, final Document doc)
+    {
+        final List<Node> elements = new ArrayList<>();
+        final NodeList storyElements = doc.getElementsByTagName("string");
+        Node element;
+        for (int i = 0; i < storyElements.getLength(); i++) {
+            element = storyElements.item(i);
+            if (elementNameMatches(element, regex)) {
+                elements.add(element);
+            }
+        }
+        return elements;
+    }
+
     public static boolean elementNameStartsWith(final Node element, final String prefix)
     {
         return element.getAttributes().getNamedItem("name").getTextContent().startsWith(prefix);
+    }
+
+    public static boolean elementNameMatches(final Node element, final String regex)
+    {
+        return element.getAttributes().getNamedItem("name").getTextContent().matches(regex);
     }
 
     public static void saveDocument(final Document doc, final String fileName) throws TransformerConfigurationException, TransformerException

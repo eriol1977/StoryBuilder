@@ -19,6 +19,7 @@ import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.MainWindowController;
+import storybuilder.section.model.Section;
 import storybuilder.validation.ErrorManager;
 import storybuilder.validation.ValidationFailed;
 
@@ -38,6 +39,8 @@ public class Story
     private final List<Command> commands = new ArrayList<>();
 
     private final List<Event> events = new ArrayList<>();
+
+    private final List<Section> sections = new ArrayList<>();
 
     public Story(String title, String fileName)
     {
@@ -61,12 +64,18 @@ public class Story
         try {
             updateStoriesFile();
             createStoryFile();
-            // even if the story is new, it must load elements from the default.xml file
-            loadCommands();
-            loadEvents();
+            loadStoryElements();
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while saving story", ex);
         }
+    }
+
+    private void loadStoryElements()
+    {
+        // even if the story is new, it must load elements from the default.xml file
+        loadCommands();
+        loadEvents();
+        loadSections();
     }
 
     private void updateStoriesFile() throws ParserConfigurationException, TransformerException, DOMException, SAXException, IOException
@@ -103,9 +112,8 @@ public class Story
             final Node titleElement = FileManager.findElementNamed("l_title", doc);
             if (titleElement != null) {
                 story = new Story(titleElement.getTextContent(), file.getName());
-                story.loadCommands();
-                story.loadEvents();
                 Cache.getInstance().setStory(story);
+                story.loadStoryElements();
             } else {
                 ErrorManager.showErrorMessage(Story.class, "Error while loading story");
             }
@@ -209,6 +217,43 @@ public class Story
     }
 
     /////////// SECTIONS
+    public List<Section> getSections()
+    {
+        return sections;
+    }
+
+    private void loadSections()
+    {
+        sections.addAll(Section.loadDefault());
+        sections.addAll(Section.load(this));
+    }
+
+    public boolean addSection(final Section section)
+    {
+        // TODO save section elements
+        final boolean result = true;
+        if (result) {
+            sections.add(section);
+        }
+        return result;
+    }
+
+    public boolean updateSection(final Section section)
+    {
+        // TODO update section elements
+        return true;
+    }
+
+    public boolean deleteSection(final Section section)
+    {
+        // TODO delete section elements
+        final boolean result = true;
+        if (result) {
+            sections.remove(section);
+        }
+        return result;
+    }
+
     public int getLastSectionId()
     {
         int lastSectionId = -1;
@@ -293,12 +338,12 @@ public class Story
         return false;
     }
 
-    private void saveXmlDoc(final Document doc) throws TransformerException
+    public void saveXmlDoc(final Document doc) throws TransformerException
     {
         FileManager.saveDocument(doc, FileManager.getStoryFilenameWithAbsolutePath(this));
     }
 
-    private Document getXmlDoc() throws IOException, SAXException, ParserConfigurationException
+    public Document getXmlDoc() throws IOException, SAXException, ParserConfigurationException
     {
         return FileManager.openDocument(FileManager.getStoryFilenameWithAbsolutePath(this));
     }

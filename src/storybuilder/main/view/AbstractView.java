@@ -1,6 +1,7 @@
 package storybuilder.main.view;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,7 +25,7 @@ public abstract class AbstractView extends VBox
 
     public AbstractView()
     {
-        setSpacing(15);
+        setSpacing(10);
         setPadding(new Insets(20, 20, 20, 20));
 
         cache = Cache.getInstance();
@@ -41,7 +42,8 @@ public abstract class AbstractView extends VBox
         final Label label = new Label(title);
         label.setFont(new Font("Arial", 20));
         getChildren().add(0, label);
-        getChildren().add(1, new Separator());
+        final Separator separator = new Separator();
+        getChildren().add(1, separator);
     }
 
     protected Label getLabel(final String label)

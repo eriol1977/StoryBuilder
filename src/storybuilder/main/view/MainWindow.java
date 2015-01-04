@@ -16,10 +16,6 @@ public class MainWindow extends Application
 
     private MainPane mainPane;
 
-    private final static double screenWidth = 800;
-
-    private final static double screenHeight = 600;
-
     public static void main(String[] args)
     {
         launch(args);
@@ -38,8 +34,8 @@ public class MainWindow extends Application
         updateTitle();
         this.mainPane = new MainPane();
         stage.setScene(new Scene(mainPane));
-        stage.setWidth(screenWidth);
-        stage.setHeight(screenHeight);
+        stage.setMaximized(true);
+        stage.setResizable(false);
         stage.show();
     }
 
@@ -62,6 +58,5 @@ public class MainWindow extends Application
     {
         return stage;
     }
-    
-    
+
 }

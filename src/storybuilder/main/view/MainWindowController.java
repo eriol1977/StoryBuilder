@@ -1,6 +1,7 @@
 package storybuilder.main.view;
 
-import storybuilder.main.view.AbstractView;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -56,5 +57,19 @@ public class MainWindowController
     public Stage getStage()
     {
         return mainWindow.getStage();
+    }
+
+    public double getScreenWidth()
+    {
+        final Screen screen = Screen.getPrimary();
+        final Rectangle2D bounds = screen.getVisualBounds();
+        return bounds.getWidth();
+    }
+    
+    public double getScreenHeight()
+    {
+        final Screen screen = Screen.getPrimary();
+        final Rectangle2D bounds = screen.getVisualBounds();
+        return bounds.getHeight();
     }
 }
