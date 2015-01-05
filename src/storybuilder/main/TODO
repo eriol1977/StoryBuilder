@@ -1,1 +1,10 @@
--- implementare la parte degli Item
+-- rivedere validazione: dovrebbe venire attivata al volo quando si preme "Salva", prima di fare il giro delle eccezioni...
+-- starting/ending section
+-- get
+-- drop
+-- link
+-- switch
+-- minigame
+-- export well formed XML
+-- ergonomia: pulsanti per creare comando, oggetto, ecc, quando serve, per esempio direttamente dalla schermata di sezione
+-- ergonomia: tasto back per tornare alla schermata e selezione precedente

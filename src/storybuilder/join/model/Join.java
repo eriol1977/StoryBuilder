@@ -102,6 +102,9 @@ public class Join extends StoryElement
         if (itemIds.size() < 2) {
             throw new ValidationFailed("A minimum of two items must be chosen.");
         }
+        if (temporarySectionText == null || temporarySectionText.isEmpty()) {
+            throw new ValidationFailed("Text must be at least one character long");
+        }
     }
 
     @Override

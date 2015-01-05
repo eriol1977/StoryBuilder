@@ -66,7 +66,13 @@ public class Item extends StoryElement
     @Override
     public String getContent()
     {
-        return getItemName() + ":" + getItemFullName() + ":" + getSectionId();
+        final StringBuilder sb = new StringBuilder();
+        sb.append(getItemName()).append(":");
+        sb.append(getItemFullName());
+        if (!getSectionId().isEmpty()) {
+            sb.append(":").append(getSectionId());
+        }
+        return sb.toString();
     }
 
     public static List<Item> load(final String fileName, final boolean defaultElements)

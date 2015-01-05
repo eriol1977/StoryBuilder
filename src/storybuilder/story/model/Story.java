@@ -343,14 +343,15 @@ public class Story
     public boolean addItem(final Item item)
     {
         final String description = item.getTemporarySectionText();
-        final int newSectionId = getLastSectionId() + 1;
-        final Section section = new Section(Section.PREFIX + newSectionId, false);
-        final List<Paragraph> paragraphs = new ArrayList<>(1);
-        paragraphs.add(new Paragraph(section.getName() + "_1", description, false));
-        section.setParagraphs(paragraphs);
-        addSection(section);
-
-        item.setSectionId(String.valueOf(newSectionId));
+        if (!description.isEmpty()) {
+            final int newSectionId = getLastSectionId() + 1;
+            final Section section = new Section(Section.PREFIX + newSectionId, false);
+            final List<Paragraph> paragraphs = new ArrayList<>(1);
+            paragraphs.add(new Paragraph(section.getName() + "_1", description, false));
+            section.setParagraphs(paragraphs);
+            addSection(section);
+            item.setSectionId(String.valueOf(newSectionId));
+        }
         final boolean result = saveStoryElement(item);
         if (result) {
             items.add(item);
