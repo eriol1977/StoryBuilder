@@ -102,4 +102,9 @@ public class Paragraph extends StoryElement
         this.text.set(text);
     }
 
+    public String getNumber()
+    {
+        int index = getName().lastIndexOf("_");
+        return getName().substring(index + 1, getName().length());
+    }
 }

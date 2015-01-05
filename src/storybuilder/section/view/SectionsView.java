@@ -27,13 +27,13 @@ public class SectionsView extends AbstractTableView
     }
 
     @Override
-    protected void showDetailView(final IStoryElement element)
+    protected void showDetailView(final boolean isNewElement, final IStoryElement element)
     {
         if (layout.getChildren().size() > 1) {
             layout.getChildren().remove(1);
         }
         stashed = new Section((Section) element);
-        layout.getChildren().add(new SectionDetailView(element, this));
+        layout.getChildren().add(new SectionDetailView(isNewElement, element, this));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class SectionsView extends AbstractTableView
     @Override
     protected boolean updateElementInStory(final IStoryElement element)
     {
-        return cache.getStory().updateSection((Section) element);
+        return cache.getStory().updateSection((Section) stashed, (Section) element);
     }
 
     @Override

@@ -13,6 +13,7 @@ import storybuilder.main.view.AbstractTableView;
  */
 public class CommandsView extends AbstractTableView
 {
+
     public CommandsView()
     {
         addTitle("Commands");
@@ -31,13 +32,13 @@ public class CommandsView extends AbstractTableView
     }
 
     @Override
-    protected void showDetailView(final IStoryElement element)
+    protected void showDetailView(final boolean isNewElement, final IStoryElement element)
     {
         if (layout.getChildren().size() > 1) {
             layout.getChildren().remove(1);
         }
         stashed = new Command((Command) element);
-        layout.getChildren().add(new CommandDetailView((Command) element, this));
+        layout.getChildren().add(new CommandDetailView(isNewElement, (Command) element, this));
     }
 
     @Override

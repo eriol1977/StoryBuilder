@@ -25,9 +25,11 @@ public abstract class AbstractTableView extends AbstractView
 {
 
     public final static double ROW_HEIGHT = 25;
-    
+
     protected final HBox layout;
 
+    protected final TableView table;
+    
     protected final ObservableList<IStoryElement> data = FXCollections.observableArrayList();
 
     protected IStoryElement stashed;
@@ -36,7 +38,7 @@ public abstract class AbstractTableView extends AbstractView
     {
         layout = new HBox(10);
 
-        final TableView table = new TableView();
+        table = new TableView();
         table.setMaxWidth(202);
         table.setFixedCellSize(ROW_HEIGHT);
         layout.getChildren().add(table);
@@ -51,13 +53,13 @@ public abstract class AbstractTableView extends AbstractView
         table.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             final IStoryElement selected = (IStoryElement) table.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                showDetailView(selected);
+                showDetailView(false, selected);
             }
         });
 
         final Button newButton = addButton("New");
         newButton.setOnAction((ActionEvent event) -> {
-            showDetailView(getNewElement());
+            showDetailView(true, getNewElement());
         });
 
         add(layout);
@@ -65,7 +67,7 @@ public abstract class AbstractTableView extends AbstractView
 
     protected abstract IStoryElement getNewElement();
 
-    protected abstract void showDetailView(final IStoryElement element);
+    protected abstract void showDetailView(boolean isNewElement, final IStoryElement element);
 
     protected abstract List<TableColumn> getColumns();
 
@@ -104,12 +106,22 @@ public abstract class AbstractTableView extends AbstractView
         return deleteCol;
     }
 
+    protected void showEmptyView()
+    {
+        table.getSelectionModel().clearSelection();
+        if (layout.getChildren().size() > 1) {
+            layout.getChildren().remove(1);
+        }
+        layout.getChildren().add(new EmptyDetailView());
+    }
+
     public void addElement(final IStoryElement element)
     {
         final boolean result = addElementToStory(element);
         if (result) {
             data.add(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" added");
+            showEmptyView();
         }
     }
 
@@ -120,9 +132,10 @@ public abstract class AbstractTableView extends AbstractView
         final boolean result = updateElementInStory(element);
         if (result) {
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" updated");
+            showEmptyView();
         } else {
             element.copyData(stashed);
-            showDetailView(element);
+            showDetailView(false, element);
         }
     }
 
@@ -136,6 +149,7 @@ public abstract class AbstractTableView extends AbstractView
         if (result) {
             data.remove(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" deleted");
+            showEmptyView();
         }
     }
 
@@ -148,7 +162,7 @@ public abstract class AbstractTableView extends AbstractView
 
         ButtonCell()
         {
-            cellButton.setFont(new Font("Arial",10));
+            cellButton.setFont(new Font("Arial", 10));
             cellButton.setMaxHeight(AbstractTableView.ROW_HEIGHT - 5);
             cellButton.setOnAction((ActionEvent t) -> {
                 final IStoryElement element = (IStoryElement) getTableRow().getItem();
@@ -167,5 +181,12 @@ public abstract class AbstractTableView extends AbstractView
                 setGraphic(null);
             }
         }
+    }
+
+    public static <T> void refreshTable(final TableView<T> table, final ObservableList<T> data)
+    {
+        table.setItems(null);
+        table.layout();
+        table.setItems(data);
     }
 }

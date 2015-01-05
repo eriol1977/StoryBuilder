@@ -15,9 +15,9 @@ public class EventDetailView extends AbstractDetailView
 
     private TextField descriptionField;
 
-    public EventDetailView(final IStoryElement element, final AbstractTableView tableView)
+    public EventDetailView(final boolean isNewElement, final IStoryElement element, final AbstractTableView tableView)
     {
-        super(element, tableView);
+        super(isNewElement, element, tableView);
     }
 
     @Override

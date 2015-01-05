@@ -15,9 +15,9 @@ public class CommandDetailView extends AbstractDetailView
 
     private TextField descriptionField;
 
-    public CommandDetailView(final Command command, final CommandsView commandsView)
+    public CommandDetailView(final boolean isNewElement, final Command command, final CommandsView commandsView)
     {
-        super(command, commandsView);
+        super(isNewElement, command, commandsView);
     }
 
     @Override

@@ -2,13 +2,11 @@ package storybuilder.section.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.w3c.dom.Node;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
 import storybuilder.story.model.Story;
-import storybuilder.validation.ValidationFailed;
 
 /**
  *
@@ -28,14 +26,10 @@ public class Section extends StoryElement
         super(name, defaultElement);
     }
 
-    public Section(final Node node, final boolean defaultElement)
-    {
-        super(node, defaultElement);
-    }
-
     public Section(final Section another)
     {
         this(another.getName(), another.isDefault());
+        setParagraphs(another.getParagraphs());
     }
 
     @Override
@@ -56,14 +50,16 @@ public class Section extends StoryElement
     @Override
     public String getContent()
     {
-        // TODO
         return "";
     }
 
     @Override
     public void copyData(IStoryElement another)
     {
-        // TODO
+        final Section anotherSection = (Section) another;
+        setName(anotherSection.getName());
+        setParagraphs(anotherSection.getParagraphs());
+        setDefault(anotherSection.isDefault());
     }
 
     public static List<Section> loadDefault()
@@ -73,7 +69,6 @@ public class Section extends StoryElement
         for (String defaultSectionName : DEFAULT_SECTION_NAMES) {
             section = new Section(defaultSectionName, true);
             section.loadParagraphs();
-            // TODO load other section elements
             defaultSections.add(section);
         }
         return defaultSections;
@@ -87,10 +82,19 @@ public class Section extends StoryElement
         for (int id = 1; id <= lastSectionId; id++) {
             section = new Section(PREFIX + id, false);
             section.loadParagraphs();
-            // TODO load other section elements
-            sections.add(section);
+            // if some sections have been deleted, the sections counter still
+            // has the last id number used, but some of the sections don't
+            // exist anymore (they don't have any paragraphs)
+            if (!section.getParagraphs().isEmpty()) {
+                sections.add(section);
+            }
         }
         return sections;
+    }
+
+    public void refreshElements()
+    {
+        loadParagraphs();
     }
 
     private void loadParagraphs()
@@ -100,13 +104,6 @@ public class Section extends StoryElement
         } else {
             setParagraphs(Paragraph.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), false, getName()));
         }
-    }
-
-    @Override
-    public void validate() throws ValidationFailed
-    {
-        super.validate();
-        // TODO
     }
 
     @Override
@@ -124,5 +121,4 @@ public class Section extends StoryElement
     {
         this.paragraphs = paragraphs;
     }
-
 }

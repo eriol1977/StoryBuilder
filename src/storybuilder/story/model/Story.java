@@ -19,6 +19,7 @@ import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.MainWindowController;
+import storybuilder.section.model.Paragraph;
 import storybuilder.section.model.Section;
 import storybuilder.validation.ErrorManager;
 import storybuilder.validation.ValidationFailed;
@@ -230,26 +231,48 @@ public class Story
 
     public boolean addSection(final Section section)
     {
-        // TODO save section elements
-        final boolean result = true;
+        final boolean result = saveSectionElements(section);
         if (result) {
             sections.add(section);
+            incrementLastSectionId();
         }
         return result;
     }
 
-    public boolean updateSection(final Section section)
+    private boolean saveSectionElements(final Section section)
     {
-        // TODO update section elements
-        return true;
+        boolean result = true;
+        for (final Paragraph paragraph : section.getParagraphs()) {
+            result = saveStoryElement(paragraph);
+            if (!result) {
+                break;
+            }
+        }
+        return result;
+    }
+
+    public boolean updateSection(final Section oldSection, final Section newSection)
+    {
+        return deleteSectionElements(oldSection) && saveSectionElements(newSection);
     }
 
     public boolean deleteSection(final Section section)
     {
-        // TODO delete section elements
-        final boolean result = true;
+        final boolean result = deleteSectionElements(section);
         if (result) {
             sections.remove(section);
+        }
+        return result;
+    }
+
+    private boolean deleteSectionElements(final Section section)
+    {
+        boolean result = true;
+        for (final Paragraph paragraph : section.getParagraphs()) {
+            result = removeStoryElement(paragraph);
+            if (!result) {
+                break;
+            }
         }
         return result;
     }

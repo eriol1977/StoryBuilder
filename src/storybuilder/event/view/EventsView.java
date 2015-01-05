@@ -26,13 +26,13 @@ public class EventsView extends AbstractTableView
     }
 
     @Override
-    protected void showDetailView(final IStoryElement element)
+    protected void showDetailView(final boolean isNewElement, final IStoryElement element)
     {
         if (layout.getChildren().size() > 1) {
             layout.getChildren().remove(1);
         }
         stashed = new Event((Event) element);
-        layout.getChildren().add(new EventDetailView(element, this));
+        layout.getChildren().add(new EventDetailView(isNewElement, element, this));
     }
 
     @Override
