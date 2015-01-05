@@ -1,5 +1,7 @@
 package storybuilder.item.view;
 
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import storybuilder.item.model.Item;
 import storybuilder.main.model.IStoryElement;
@@ -12,18 +14,18 @@ import storybuilder.main.view.AbstractTableView;
  */
 public class ItemDetailView extends AbstractDetailView
 {
-
+    
     private TextField itemNameField;
-
+    
     private TextField itemFullNameField;
-
+    
     private TextField textField;
-
+    
     public ItemDetailView(final boolean isNewElement, final IStoryElement element, final AbstractTableView tableView)
     {
         super(isNewElement, element, tableView);
     }
-
+    
     @Override
     protected void setFields()
     {
@@ -34,8 +36,14 @@ public class ItemDetailView extends AbstractDetailView
         itemFullNameField.setText(item.getItemFullName());
         textField = addLabeledTextInput("Description", 600);
         textField.setText(item.getDescription());
+        if (!isNewElement && !item.getSectionId().isEmpty()) {
+            final Button button = addButton("Go to description section (" + item.getSectionId() + ")");
+            button.setOnAction((ActionEvent event) -> {
+                mwc.switchToSection(item.getSectionId());
+            });
+        }
     }
-
+    
     @Override
     protected void setElementValues()
     {
@@ -44,7 +52,7 @@ public class ItemDetailView extends AbstractDetailView
         item.setItemFullName(itemFullNameField.getText());
         item.setTemporaryDescription(textField.getText());
     }
-
+    
     @Override
     protected void disableFields()
     {
@@ -52,5 +60,5 @@ public class ItemDetailView extends AbstractDetailView
         itemFullNameField.setDisable(true);
         textField.setDisable(true);
     }
-
+    
 }

@@ -3,6 +3,9 @@ package storybuilder.main.view;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import storybuilder.main.Cache;
+import storybuilder.section.model.Section;
+import storybuilder.section.view.SectionsView;
 
 /**
  *
@@ -10,55 +13,55 @@ import javafx.stage.Stage;
  */
 public class MainWindowController
 {
-
+    
     private final static MainWindowController instance = new MainWindowController();
-
+    
     private MainWindow mainWindow;
-
+    
     private MainWindowController()
     {
     }
-
+    
     public final static MainWindowController getInstance()
     {
         return instance;
     }
-
+    
     public MainWindow getMainWindow()
     {
         return mainWindow;
     }
-
+    
     public void setMainWindow(MainWindow mainWindow)
     {
         this.mainWindow = mainWindow;
     }
-
+    
     public void updateTitle()
     {
         mainWindow.updateTitle();
     }
-
+    
     public void updateStatusBarMessage(final String message)
     {
         mainWindow.getMainPane().getStatusBar().setMessage(message);
     }
-
+    
     public void switchView(final AbstractView view)
     {
         mainWindow.getMainPane().setContent(view);
     }
-
+    
     public void enableMenus(final boolean enable)
     {
         mainWindow.getMainPane().getMenuBar().enableMenus(enable);
     }
-
+    
     public Stage getStage()
     {
         return mainWindow.getStage();
     }
-
+    
     public double getScreenWidth()
     {
         final Screen screen = Screen.getPrimary();
@@ -71,5 +74,15 @@ public class MainWindowController
         final Screen screen = Screen.getPrimary();
         final Rectangle2D bounds = screen.getVisualBounds();
         return bounds.getHeight();
+    }
+    
+    public void switchToSection(final String sectionId)
+    {
+        final Section section = Cache.getInstance().getStory().getSection(sectionId);
+        if (section != null) {
+            final SectionsView sectionsView = new SectionsView();
+            mainWindow.getMainPane().setContent(sectionsView);
+            sectionsView.selectElement(section);
+        }
     }
 }

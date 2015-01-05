@@ -18,16 +18,20 @@ public abstract class AbstractDetailView extends AbstractView
     protected final IStoryElement element;
 
     protected final TextField nameField;
+    
+    protected final boolean isNewElement;
 
     public AbstractDetailView()
     {
         this.tableView = null;
+        this.isNewElement = false;
         this.element = null;
         this.nameField = null;
     }
     
     public AbstractDetailView(final boolean isNewElement, final IStoryElement element, final AbstractTableView tableView)
     {
+        this.isNewElement = isNewElement;
         this.element = element;
         this.tableView = tableView;
 
