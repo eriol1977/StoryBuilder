@@ -61,6 +61,7 @@ public abstract class StoryElement implements IStoryElement
         return name.get();
     }
 
+    @Override
     public String getNameWithoutPrefix()
     {
         final String fullName = name.get();
@@ -86,6 +87,12 @@ public abstract class StoryElement implements IStoryElement
     public void setDefault(final boolean defaultElement)
     {
         this.defaultElement.set(defaultElement);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "<string name=\"" + getName() + "\">" + getContent() + "</string>";
     }
 
     @Override

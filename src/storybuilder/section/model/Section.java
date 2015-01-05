@@ -1,12 +1,21 @@
 package storybuilder.section.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+import storybuilder.event.model.Event;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
 import storybuilder.story.model.Story;
+import storybuilder.validation.ErrorManager;
 
 /**
  *
@@ -121,4 +130,5 @@ public class Section extends StoryElement
     {
         this.paragraphs = paragraphs;
     }
+    
 }

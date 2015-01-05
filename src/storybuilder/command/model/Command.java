@@ -90,12 +90,6 @@ public class Command extends StoryElement
         setDefault(anotherCommand.isDefault());
     }
 
-    @Override
-    public String toString()
-    {
-        return "<string name=\"" + getName() + "\">" + getKeyword() + ":" + getDescription() + "</string>";
-    }
-
     public String getKeyword()
     {
         return keyword.get();

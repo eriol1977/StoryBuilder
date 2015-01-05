@@ -97,9 +97,4 @@ public class Event extends StoryElement
         }
     }
 
-    @Override
-    public String toString()
-    {
-        return "<string name=\"" + getName() + "\">" + getDescription() + "</string>";
-    }
 }

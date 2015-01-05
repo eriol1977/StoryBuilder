@@ -1,9 +1,9 @@
-package storybuilder.event.view;
+package storybuilder.item.view;
 
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.TableColumn;
-import storybuilder.event.model.Event;
+import storybuilder.item.model.Item;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractTableView;
 
@@ -11,18 +11,18 @@ import storybuilder.main.view.AbstractTableView;
  *
  * @author Francesco Bertolino
  */
-public class EventsView extends AbstractTableView
+public class ItemsView extends AbstractTableView
 {
 
-    public EventsView()
+    public ItemsView()
     {
-        addTitle("Events");
+        addTitle("Items");
     }
 
     @Override
     protected IStoryElement getNewElement()
     {
-        return new Event("", "", false);
+        return new Item("", "", "", "", false);
     }
 
     @Override
@@ -31,8 +31,8 @@ public class EventsView extends AbstractTableView
         if (layout.getChildren().size() > 1) {
             layout.getChildren().remove(1);
         }
-        stashed = new Event((Event) element);
-        layout.getChildren().add(new EventDetailView(isNewElement, element, this));
+        stashed = new Item((Item) element);
+        layout.getChildren().add(new ItemDetailView(isNewElement, element, this));
     }
 
     @Override
@@ -46,25 +46,25 @@ public class EventsView extends AbstractTableView
     @Override
     protected boolean addElementToStory(final IStoryElement element)
     {
-        return cache.getStory().addEvent((Event) element);
+        return cache.getStory().addItem((Item) element);
     }
 
     @Override
     protected boolean updateElementInStory(final IStoryElement element)
     {
-        return cache.getStory().updateEvent((Event) element);
+        return cache.getStory().updateItem((Item) element);
     }
 
     @Override
     protected boolean deleteElementFromStory(final IStoryElement element)
     {
-        return cache.getStory().removeEvent((Event) element);
+        return cache.getStory().removeItem((Item) element);
     }
 
     @Override
     protected void loadData()
     {
-        data.addAll(cache.getStory().getEvents());
+        data.addAll(cache.getStory().getItems());
     }
 
 }

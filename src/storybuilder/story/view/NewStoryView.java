@@ -26,7 +26,7 @@ public class NewStoryView extends AbstractView
             final String filename = fileField.getText();
             final Story story = new Story(title, filename + ".xml");
             try {
-                story.save();
+                story.create();
                 cache.setStory(story);
                 mwc.updateTitle();
                 mwc.updateStatusBarMessage("Story \"" + title + "\" created");

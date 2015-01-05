@@ -15,6 +15,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import storybuilder.command.model.Command;
 import storybuilder.event.model.Event;
+import storybuilder.item.model.Item;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
@@ -41,6 +42,8 @@ public class Story
 
     private final List<Event> events = new ArrayList<>();
 
+    private final List<Item> items = new ArrayList<>();
+
     private final List<Section> sections = new ArrayList<>();
 
     public Story(String title, String fileName)
@@ -59,7 +62,7 @@ public class Story
         return fileName;
     }
 
-    public void save() throws ValidationFailed
+    public void create() throws ValidationFailed
     {
         validate();
         try {
@@ -76,6 +79,7 @@ public class Story
         // even if the story is new, it must load elements from the default.xml file
         loadCommands();
         loadEvents();
+        loadItems();
         loadSections();
     }
 
@@ -223,6 +227,16 @@ public class Story
         return sections;
     }
 
+    public Section getSection(final String id)
+    {
+        for (final Section section : sections) {
+            if (section.getNameWithoutPrefix().equals(id)) {
+                return section;
+            }
+        }
+        return null;
+    }
+
     private void loadSections()
     {
         sections.addAll(Section.loadDefault());
@@ -301,6 +315,68 @@ public class Story
         } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while incrementing section id", ex);
         }
+    }
+
+    ////////// ITEMS
+    private void loadItems()
+    {
+        items.addAll(Item.load("resources/default.xml", true));
+        items.addAll(Item.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
+    }
+
+    public List<Item> getItems()
+    {
+        return items;
+    }
+
+    public boolean addItem(final Item item)
+    {
+        final String description = item.getTemporaryDescription();
+        final int newSectionId = getLastSectionId() + 1;
+        final Section section = new Section(Section.PREFIX + newSectionId, false);
+        final List<Paragraph> paragraphs = new ArrayList<>(1);
+        paragraphs.add(new Paragraph(section.getName() + "_1", description, false));
+        section.setParagraphs(paragraphs);
+        addSection(section);
+
+        item.setSectionId(String.valueOf(newSectionId));
+        final boolean result = saveStoryElement(item);
+        if (result) {
+            items.add(item);
+        }
+        return result;
+    }
+
+    public boolean removeItem(final Item item)
+    {
+        if (!item.getSectionId().isEmpty()) {
+            final Section section = getSection(item.getSectionId());
+            if (section != null) {
+                deleteSection(section);
+            }
+        }
+
+        final boolean result = removeStoryElement(item);
+        if (result) {
+            items.remove(item);
+        }
+        return result;
+    }
+
+    public boolean updateItem(final Item item)
+    {
+        if (!item.getSectionId().isEmpty()) {
+            final Section section = getSection(item.getSectionId());
+            if (section != null) {
+                final String description = item.getTemporaryDescription();
+                final Paragraph paragraph = section.getParagraphs().get(0);
+                if (!paragraph.getText().equals(description)) {
+                    paragraph.setText(description);
+                    updateStoryElement(paragraph);
+                }
+            }
+        }
+        return updateStoryElement(item);
     }
 
     ////////// XML

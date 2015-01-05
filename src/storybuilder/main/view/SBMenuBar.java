@@ -28,6 +28,8 @@ public class SBMenuBar extends MenuBar
 
     private final Menu menuEvents;
 
+    private final Menu menuItems;
+
     private final Menu menuSections;
 
     SBMenuBar(final MainPane mainPane)
@@ -36,8 +38,9 @@ public class SBMenuBar extends MenuBar
         menuStory = buildMenuStory();
         menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView");
         menuEvents = buildMenuButton("Events", KeyCode.E, "storybuilder.event.view.EventsView");
+        menuItems = buildMenuButton("Items", KeyCode.I, "storybuilder.item.view.ItemsView");
         menuSections = buildMenuButton("Sections", KeyCode.S, "storybuilder.section.view.SectionsView");
-        getMenus().addAll(menuStory, menuCommands, menuEvents, menuSections);
+        getMenus().addAll(menuStory, menuCommands, menuEvents, menuItems, menuSections);
         enableMenus(false);
     }
 
@@ -86,6 +89,7 @@ public class SBMenuBar extends MenuBar
     {
         menuCommands.setDisable(!enable);
         menuEvents.setDisable(!enable);
+        menuItems.setDisable(!enable);
         menuSections.setDisable(!enable);
     }
 

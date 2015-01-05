@@ -33,7 +33,7 @@ public abstract class AbstractDetailView extends AbstractView
 
         if (isNewElement) {
             addTitle("New");
-            nameField = addLabeledTextInput("Name");
+            nameField = addLabeledTextInput("Code");
         } else {
             addTitle(element.getNameWithoutPrefix());
             nameField = null;

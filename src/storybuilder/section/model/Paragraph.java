@@ -86,12 +86,6 @@ public class Paragraph extends StoryElement
         }
     }
 
-    @Override
-    public String toString()
-    {
-        return "<string name=\"" + getName() + "\">" + getText() + "</string>";
-    }
-
     public String getText()
     {
         return text.get();

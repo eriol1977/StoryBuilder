@@ -45,7 +45,7 @@ public class CommandsView extends AbstractTableView
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Name", "nameWithoutPrefix", 150));
+        columns.add(getColumn("Code", "nameWithoutPrefix", 150));
         return columns;
     }
 
