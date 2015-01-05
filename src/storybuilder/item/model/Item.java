@@ -30,12 +30,12 @@ public class Item extends StoryElement
     private final SimpleStringProperty itemFullName;
 
     private final SimpleStringProperty sectionId;
-    
+
     /**
      * Used to hold the item description while it's being manipulated, for
      * showing and updating.
      */
-    private String temporaryDescription;
+    private String temporarySectionText;
 
     public Item(final String name, final String itemName, final String itemFullName, final String sectionId, final boolean defaultElement)
     {
@@ -137,7 +137,7 @@ public class Item extends StoryElement
         this.sectionId.set(sectionId);
     }
 
-    public String getDescription()
+    public String getSectionText()
     {
         String description = "";
         if (!getSectionId().isEmpty()) {
@@ -154,16 +154,16 @@ public class Item extends StoryElement
         return description;
     }
 
-    public String getTemporaryDescription()
+    public String getTemporarySectionText()
     {
-        return temporaryDescription;
+        return temporarySectionText;
     }
 
-    public void setTemporaryDescription(String temporaryDescription)
+    public void setTemporarySectionText(String temporarySectionText)
     {
-        this.temporaryDescription = temporaryDescription;
+        this.temporarySectionText = temporarySectionText;
     }
-    
+
     @Override
     public String getPrefix()
     {

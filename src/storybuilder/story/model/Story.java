@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 import storybuilder.command.model.Command;
 import storybuilder.event.model.Event;
 import storybuilder.item.model.Item;
+import storybuilder.join.model.Join;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
@@ -43,6 +44,8 @@ public class Story
     private final List<Event> events = new ArrayList<>();
 
     private final List<Item> items = new ArrayList<>();
+
+    private final List<Join> joins = new ArrayList<>();
 
     private final List<Section> sections = new ArrayList<>();
 
@@ -80,6 +83,7 @@ public class Story
         loadCommands();
         loadEvents();
         loadItems();
+        loadJoins();
         loadSections();
     }
 
@@ -329,9 +333,16 @@ public class Story
         return items;
     }
 
+    public List<String> getItemIds()
+    {
+        final List<String> itemIds = new ArrayList<>(items.size());
+        items.stream().forEach(i -> itemIds.add(i.getName()));
+        return itemIds;
+    }
+
     public boolean addItem(final Item item)
     {
-        final String description = item.getTemporaryDescription();
+        final String description = item.getTemporarySectionText();
         final int newSectionId = getLastSectionId() + 1;
         final Section section = new Section(Section.PREFIX + newSectionId, false);
         final List<Paragraph> paragraphs = new ArrayList<>(1);
@@ -368,7 +379,7 @@ public class Story
         if (!item.getSectionId().isEmpty()) {
             final Section section = getSection(item.getSectionId());
             if (section != null) {
-                final String description = item.getTemporaryDescription();
+                final String description = item.getTemporarySectionText();
                 final Paragraph paragraph = section.getParagraphs().get(0);
                 if (!paragraph.getText().equals(description)) {
                     paragraph.setText(description);
@@ -377,6 +388,68 @@ public class Story
             }
         }
         return updateStoryElement(item);
+    }
+
+    ////////// JOINS
+    private void loadJoins()
+    {
+        joins.addAll(Join.load("resources/default.xml", true));
+        joins.addAll(Join.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
+    }
+
+    public List<Join> getJoins()
+    {
+        return joins;
+    }
+
+    public boolean addJoin(final Join join)
+    {
+        final String description = join.getTemporarySectionText();
+        final int newSectionId = getLastSectionId() + 1;
+        final Section section = new Section(Section.PREFIX + newSectionId, false);
+        final List<Paragraph> paragraphs = new ArrayList<>(1);
+        paragraphs.add(new Paragraph(section.getName() + "_1", description, false));
+        section.setParagraphs(paragraphs);
+        addSection(section);
+
+        join.setSectionId(String.valueOf(newSectionId));
+        final boolean result = saveStoryElement(join);
+        if (result) {
+            joins.add(join);
+        }
+        return result;
+    }
+
+    public boolean removeJoin(final Join join)
+    {
+        if (!join.getSectionId().isEmpty()) {
+            final Section section = getSection(join.getSectionId());
+            if (section != null) {
+                deleteSection(section);
+            }
+        }
+
+        final boolean result = removeStoryElement(join);
+        if (result) {
+            joins.remove(join);
+        }
+        return result;
+    }
+
+    public boolean updateJoin(final Join join)
+    {
+        if (!join.getSectionId().isEmpty()) {
+            final Section section = getSection(join.getSectionId());
+            if (section != null) {
+                final String description = join.getTemporarySectionText();
+                final Paragraph paragraph = section.getParagraphs().get(0);
+                if (!paragraph.getText().equals(description)) {
+                    paragraph.setText(description);
+                    updateStoryElement(paragraph);
+                }
+            }
+        }
+        return updateStoryElement(join);
     }
 
     ////////// XML

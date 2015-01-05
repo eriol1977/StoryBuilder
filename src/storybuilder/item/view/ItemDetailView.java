@@ -34,8 +34,8 @@ public class ItemDetailView extends AbstractDetailView
         itemNameField.setText(item.getItemName());
         itemFullNameField = addLabeledTextInput("Full Name");
         itemFullNameField.setText(item.getItemFullName());
-        textField = addLabeledTextInput("Description", 600);
-        textField.setText(item.getDescription());
+        textField = addLabeledTextInput("Section text", 600);
+        textField.setText(item.getSectionText());
         if (!isNewElement && !item.getSectionId().isEmpty()) {
             final Button button = addButton("Go to description section (" + item.getSectionId() + ")");
             button.setOnAction((ActionEvent event) -> {
@@ -50,7 +50,7 @@ public class ItemDetailView extends AbstractDetailView
         final Item item = (Item) element;
         item.setItemName(itemNameField.getText());
         item.setItemFullName(itemFullNameField.getText());
-        item.setTemporaryDescription(textField.getText());
+        item.setTemporarySectionText(textField.getText());
     }
     
     @Override
