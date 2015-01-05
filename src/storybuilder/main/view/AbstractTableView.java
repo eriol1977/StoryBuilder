@@ -16,6 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.validation.ValidationFailed;
 
 /**
  *
@@ -23,26 +24,26 @@ import storybuilder.main.model.IStoryElement;
  */
 public abstract class AbstractTableView extends AbstractView
 {
-    
+
     public final static double ROW_HEIGHT = 25;
-    
+
     protected final HBox layout;
-    
+
     protected final TableView table;
-    
+
     protected final ObservableList<IStoryElement> data = FXCollections.observableArrayList();
-    
+
     protected IStoryElement stashed;
-    
+
     public AbstractTableView()
     {
         layout = new HBox(10);
-        
+
         table = new TableView();
         table.setMaxWidth(202);
         table.setFixedCellSize(ROW_HEIGHT);
         layout.getChildren().add(table);
-        
+
         loadData();
         table.setItems(data);
         final List<TableColumn> columns = getColumns();
@@ -56,21 +57,21 @@ public abstract class AbstractTableView extends AbstractView
                 showDetailView(false, selected);
             }
         });
-        
+
         final Button newButton = addButton("New");
         newButton.setOnAction((ActionEvent event) -> {
             showDetailView(true, getNewElement());
         });
-        
+
         add(layout);
     }
-    
+
     protected abstract IStoryElement getNewElement();
-    
+
     protected abstract void showDetailView(boolean isNewElement, final IStoryElement element);
-    
+
     protected abstract List<TableColumn> getColumns();
-    
+
     protected TableColumn getColumn(final String label, final String fieldName, final double minWidth)
     {
         final TableColumn column = new TableColumn(label);
@@ -79,7 +80,7 @@ public abstract class AbstractTableView extends AbstractView
         column.setCellFactory(TextFieldTableCell.forTableColumn());
         return column;
     }
-    
+
     private TableColumn getDeleteColumn()
     {
         TableColumn deleteCol = new TableColumn<>("Del");
@@ -105,7 +106,7 @@ public abstract class AbstractTableView extends AbstractView
                 });
         return deleteCol;
     }
-    
+
     protected void showEmptyView()
     {
         table.getSelectionModel().clearSelection();
@@ -114,22 +115,35 @@ public abstract class AbstractTableView extends AbstractView
         }
         layout.getChildren().add(new EmptyDetailView());
     }
-    
+
+    private boolean validateStoryElement(final IStoryElement element)
+    {
+        try {
+            element.validate();
+            return true;
+        } catch (ValidationFailed ex) {
+            mwc.updateStatusBarMessage(ex.getFailCause());
+        }
+        return false;
+    }
+
     public void addElement(final IStoryElement element)
     {
-        final boolean result = addElementToStory(element);
+        // action depends on validation and then on possible exceptions
+        final boolean result = validateStoryElement(element) && addElementToStory(element);
         if (result) {
             data.add(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" added");
             showEmptyView();
         }
     }
-    
+
     protected abstract boolean addElementToStory(final IStoryElement element);
-    
+
     public void updateElement(final IStoryElement element)
     {
-        final boolean result = updateElementInStory(element);
+        // action depends on validation and then on possible exceptions
+        final boolean result = validateStoryElement(element) && updateElementInStory(element);
         if (result) {
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" updated");
             showEmptyView();
@@ -138,11 +152,11 @@ public abstract class AbstractTableView extends AbstractView
             showDetailView(false, element);
         }
     }
-    
+
     protected abstract boolean updateElementInStory(final IStoryElement element);
-    
+
     protected abstract void loadData();
-    
+
     public void deleteElement(final IStoryElement element)
     {
         final boolean result = deleteElementFromStory(element);
@@ -152,14 +166,14 @@ public abstract class AbstractTableView extends AbstractView
             showEmptyView();
         }
     }
-    
+
     protected abstract boolean deleteElementFromStory(final IStoryElement element);
-    
+
     protected class ButtonCell extends TableCell<Object, Boolean>
     {
-        
+
         final Button cellButton = new Button("X");
-        
+
         ButtonCell()
         {
             cellButton.setFont(new Font("Arial", 10));
@@ -182,14 +196,14 @@ public abstract class AbstractTableView extends AbstractView
             }
         }
     }
-    
+
     public static <T> void refreshTable(final TableView<T> table, final ObservableList<T> data)
     {
         table.setItems(null);
         table.layout();
         table.setItems(data);
     }
-    
+
     public void selectElement(final IStoryElement element)
     {
         table.scrollTo(element);

@@ -23,6 +23,7 @@ import storybuilder.main.view.MainWindowController;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Paragraph;
 import storybuilder.section.model.Section;
+import storybuilder.validation.ValidationFailed;
 
 /**
  *
@@ -150,8 +151,14 @@ public class ParagraphsTable extends TableView<Paragraph>
         dialog.add(text);
         Button button = new Button("Add");
         button.setOnAction((ActionEvent event) -> {
-            paragraphsData.add(new Paragraph(getNewParagraphId(), text.getText(), false));
-            resizeParagraphsTableHeight();
+            final Paragraph paragraph = new Paragraph(getNewParagraphId(), text.getText(), false);
+            try {
+                paragraph.validate();
+                paragraphsData.add(paragraph);
+                resizeParagraphsTableHeight();
+            } catch (ValidationFailed ex) {
+                MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
+            }
             dialog.close();
         });
         dialog.add(button);
@@ -167,7 +174,12 @@ public class ParagraphsTable extends TableView<Paragraph>
         Button button = new Button("Update");
         button.setOnAction((ActionEvent event) -> {
             paragraph.setText(text.getText());
-            AbstractTableView.refreshTable(this, paragraphsData);
+            try {
+                paragraph.validate();
+                AbstractTableView.refreshTable(this, paragraphsData);
+            } catch (ValidationFailed ex) {
+                MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
+            }
             dialog.close();
         });
         dialog.add(button);

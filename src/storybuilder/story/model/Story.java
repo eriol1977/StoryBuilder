@@ -20,7 +20,6 @@ import storybuilder.join.model.Join;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
-import storybuilder.main.view.MainWindowController;
 import storybuilder.section.model.Paragraph;
 import storybuilder.section.model.Section;
 import storybuilder.validation.ErrorManager;
@@ -457,13 +456,11 @@ public class Story
     public boolean saveStoryElement(final IStoryElement element)
     {
         try {
-            if (validateStoryElement(element)) {
-                final Document doc = getXmlDoc();
-                final Element newElement = element.build(doc);
-                doc.getDocumentElement().appendChild(newElement);
-                saveXmlDoc(doc);
-                return true;
-            }
+            final Document doc = getXmlDoc();
+            final Element newElement = element.build(doc);
+            doc.getDocumentElement().appendChild(newElement);
+            saveXmlDoc(doc);
+            return true;
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while saving new story element", ex);
         }
@@ -487,26 +484,13 @@ public class Story
     private boolean updateStoryElement(final IStoryElement element)
     {
         try {
-            if (validateStoryElement(element)) {
-                final Document doc = getXmlDoc();
-                final Node node = FileManager.findElementNamed(element.getName(), doc);
-                node.setTextContent(element.getContent());
-                saveXmlDoc(doc);
-                return true;
-            }
+            final Document doc = getXmlDoc();
+            final Node node = FileManager.findElementNamed(element.getName(), doc);
+            node.setTextContent(element.getContent());
+            saveXmlDoc(doc);
+            return true;
         } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while updating story element", ex);
-        }
-        return false;
-    }
-
-    private boolean validateStoryElement(final IStoryElement element)
-    {
-        try {
-            element.validate();
-            return true;
-        } catch (ValidationFailed ex) {
-            MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
         }
         return false;
     }
