@@ -3,8 +3,11 @@ package storybuilder.section.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import storybuilder.event.model.Event;
+import storybuilder.item.model.Item;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
@@ -87,6 +90,16 @@ public class Get extends StoryElement
     public List<String> getIds()
     {
         return ids;
+    }
+
+    public List<String> getItemIds()
+    {
+        return ids.stream().filter(id -> id.startsWith(Item.PREFIX)).collect(Collectors.toList());
+    }
+
+    public List<String> getEventIds()
+    {
+        return ids.stream().filter(id -> id.startsWith(Event.PREFIX)).collect(Collectors.toList());
     }
 
     public String[] getIdsArray()

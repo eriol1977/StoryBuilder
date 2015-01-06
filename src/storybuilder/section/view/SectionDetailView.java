@@ -1,9 +1,12 @@
 package storybuilder.section.view;
 
+import javafx.scene.control.Accordion;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TitledPane;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.section.model.Get;
 import storybuilder.section.model.Section;
 import storybuilder.validation.SBException;
 
@@ -17,6 +20,8 @@ public class SectionDetailView extends AbstractDetailView
     private CheckBox endingField;
 
     private ParagraphsTable paragraphsTable;
+
+    private GetView getView;
 
     public SectionDetailView(final boolean isNewElement, final IStoryElement element, final AbstractTableView tableView)
     {
@@ -37,8 +42,19 @@ public class SectionDetailView extends AbstractDetailView
         endingField.setSelected(section.isEnding());
         add(endingField);
 
+        final Accordion accordion = new Accordion();
+
         paragraphsTable = new ParagraphsTable(section);
-        add(paragraphsTable);
+        TitledPane paragraphsPane = new TitledPane("Paragraphs", paragraphsTable);
+        accordion.getPanes().add(paragraphsPane);
+
+        getView = new GetView(section.getGet());
+        TitledPane getPane = new TitledPane("Item Gets", getView);
+        accordion.getPanes().add(getPane);
+
+        accordion.setExpandedPane(paragraphsPane);
+        add(accordion);
+
     }
 
     @Override
@@ -47,6 +63,18 @@ public class SectionDetailView extends AbstractDetailView
         final Section section = (Section) element;
         section.setEnding(endingField.isSelected());
         section.setParagraphs(paragraphsTable.getParagraphsData());
+        updateGet(section);
+    }
+
+    private void updateGet(final Section section)
+    {
+        Get get = section.getGet();
+        if (get == null) {
+            get = new Get(section.getName() + "_get", false, getView.getIdsArray());
+            section.setGet(get);
+        } else {
+            get.setIds(getView.getIds());
+        }
     }
 
     @Override
@@ -54,6 +82,7 @@ public class SectionDetailView extends AbstractDetailView
     {
         endingField.setDisable(true);
         paragraphsTable.setDisable(true);
+        getView.setDisable(true);
     }
 
 }

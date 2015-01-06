@@ -3,6 +3,7 @@ package storybuilder.story.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -187,6 +188,11 @@ public class Story
         return events;
     }
 
+    public List<String> getEventIds()
+    {
+        return events.stream().map(e -> e.getName()).collect(Collectors.toList());
+    }
+
     public void addEvent(final Event event) throws SBException
     {
         saveStoryElement(event);
@@ -241,6 +247,9 @@ public class Story
         for (final Paragraph paragraph : section.getParagraphs()) {
             saveStoryElement(paragraph);
         }
+        if (section.getGet() != null) {
+            saveStoryElement(section.getGet());
+        }
     }
 
     public void updateSection(final Section oldSection, final Section newSection) throws SBException
@@ -282,6 +291,9 @@ public class Story
         }
         for (final Paragraph paragraph : section.getParagraphs()) {
             removeStoryElement(paragraph);
+        }
+        if (section.getGet() != null) {
+            removeStoryElement(section.getGet());
         }
     }
 
@@ -360,9 +372,7 @@ public class Story
 
     public List<String> getItemIds()
     {
-        final List<String> itemIds = new ArrayList<>(items.size());
-        items.stream().forEach(i -> itemIds.add(i.getName()));
-        return itemIds;
+        return items.stream().map(i -> i.getName()).collect(Collectors.toList());
     }
 
     public void addItem(final Item item) throws SBException
