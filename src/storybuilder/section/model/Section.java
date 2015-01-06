@@ -27,6 +27,8 @@ public class Section extends StoryElement
 
     private boolean ending = false;
 
+    private Get get;
+
     public Section(final String name, final boolean defaultElement)
     {
         super(name, defaultElement);
@@ -36,6 +38,7 @@ public class Section extends StoryElement
     {
         this(another.getName(), another.isDefault());
         setParagraphs(another.getParagraphs());
+        setGet(another.getGet());
     }
 
     @Override
@@ -65,6 +68,7 @@ public class Section extends StoryElement
         final Section anotherSection = (Section) another;
         setName(anotherSection.getName());
         setParagraphs(anotherSection.getParagraphs());
+        setGet(anotherSection.getGet());
         setDefault(anotherSection.isDefault());
     }
 
@@ -89,6 +93,7 @@ public class Section extends StoryElement
             section = new Section(PREFIX + id, false);
             section.loadIsEnding(story);
             section.loadParagraphs();
+            section.loadGet();
             // if some sections have been deleted, the sections counter still
             // has the last id number used, but some of the sections don't
             // exist anymore (they don't have any paragraphs)
@@ -103,6 +108,7 @@ public class Section extends StoryElement
     {
         loadIsEnding(story);
         loadParagraphs();
+        loadGet();
     }
 
     private void loadIsEnding(final Story story) throws SBException
@@ -124,6 +130,16 @@ public class Section extends StoryElement
             setParagraphs(Paragraph.load("resources/default.xml", true, getName()));
         } else {
             setParagraphs(Paragraph.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), false, getName()));
+        }
+    }
+
+    private void loadGet() throws SBException
+    {
+        if (!isDefault()) {
+            final Get loadedGet = Get.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), getName());
+            if (loadedGet != null) {
+                setGet(loadedGet);
+            }
         }
     }
 
@@ -160,6 +176,16 @@ public class Section extends StoryElement
     public void setEnding(boolean ending)
     {
         this.ending = ending;
+    }
+
+    public Get getGet()
+    {
+        return get;
+    }
+
+    public void setGet(final Get get)
+    {
+        this.get = get;
     }
 
 }

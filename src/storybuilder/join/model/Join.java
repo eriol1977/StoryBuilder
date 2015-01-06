@@ -93,7 +93,7 @@ public class Join extends StoryElement
             throw new ValidationFailed("Description must be at least one character long");
         }
         if (itemIds.size() < 2) {
-            throw new ValidationFailed("A minimum of two items must be chosen.");
+            throw new ValidationFailed("A minimum of two items is required.");
         }
         if (temporarySectionText == null || temporarySectionText.isEmpty()) {
             throw new ValidationFailed("Text must be at least one character long");
