@@ -106,7 +106,7 @@ public class Story
 
         FileManager.addElement(doc, "l_title", title);
         FileManager.addElement(doc, "sections", String.valueOf(0));
-        FileManager.addElement(doc, "starting", "");
+        FileManager.addElement(doc, "starting", String.valueOf(1));
         FileManager.addElement(doc, "ending", "");
 
         saveXmlDoc(doc);
@@ -248,10 +248,16 @@ public class Story
 
     public boolean addSection(final Section section)
     {
-        final boolean result = saveSectionElements(section);
+        boolean result = true;
+        if (section.isEnding()) {
+            result = addEnding(section.getNameWithoutPrefix());
+        }
         if (result) {
-            sections.add(section);
-            incrementLastSectionId();
+            result = saveSectionElements(section);
+            if (result) {
+                sections.add(section);
+                incrementLastSectionId();
+            }
         }
         return result;
     }
@@ -270,14 +276,24 @@ public class Story
 
     public boolean updateSection(final Section oldSection, final Section newSection)
     {
-        return deleteSectionElements(oldSection) && saveSectionElements(newSection);
+        boolean result = updateEndings(newSection.getNameWithoutPrefix(), newSection.isEnding());
+        if (result) {
+            return deleteSectionElements(oldSection) && saveSectionElements(newSection);
+        }
+        return result;
     }
 
     public boolean deleteSection(final Section section)
     {
-        final boolean result = deleteSectionElements(section);
+        boolean result = true;
+        if (section.isEnding()) {
+            result = removeEnding(section.getNameWithoutPrefix());
+        }
         if (result) {
-            sections.remove(section);
+            result = deleteSectionElements(section);
+            if (result) {
+                sections.remove(section);
+            }
         }
         return result;
     }
@@ -285,6 +301,9 @@ public class Story
     private boolean deleteSectionElements(final Section section)
     {
         boolean result = true;
+        if (section.isEnding()) {
+            result = removeEnding(section.getNameWithoutPrefix());
+        }
         for (final Paragraph paragraph : section.getParagraphs()) {
             result = removeStoryElement(paragraph);
             if (!result) {
@@ -318,6 +337,69 @@ public class Story
         } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
             ErrorManager.showErrorMessage(Story.class, "Error while incrementing section id", ex);
         }
+    }
+
+    public boolean addEnding(final String sectionId)
+    {
+        try {
+            final Document doc = getXmlDoc();
+            final Node endingElement = FileManager.findElementNamed("ending", doc);
+            final String oldValue = endingElement.getTextContent();
+            final String newValue = oldValue.isEmpty() ? sectionId : oldValue + "," + sectionId;
+            endingElement.setTextContent(newValue);
+            saveXmlDoc(doc);
+            return true;
+        } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
+            ErrorManager.showErrorMessage(Story.class, "Error while adding ending", ex);
+        }
+        return false;
+    }
+
+    public boolean removeEnding(final String sectionId)
+    {
+        try {
+            final Document doc = getXmlDoc();
+            final Node endingElement = FileManager.findElementNamed("ending", doc);
+            final StringBuilder sb = new StringBuilder();
+            final String[] endingSectionsIds = endingElement.getTextContent().split(",");
+            for (final String id : endingSectionsIds) {
+                if (!id.equals(sectionId)) {
+                    sb.append(id).append(",");
+                }
+            }
+            sb.delete(sb.length() - 1, sb.length());
+            endingElement.setTextContent(sb.toString());
+            saveXmlDoc(doc);
+            return true;
+        } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
+            ErrorManager.showErrorMessage(Story.class, "Error while removing ending", ex);
+        }
+        return false;
+    }
+
+    public boolean updateEndings(final String sectionId, final boolean isEnding)
+    {
+        try {
+            final Document doc = getXmlDoc();
+            final Node endingElement = FileManager.findElementNamed("ending", doc);
+            final String[] endingSectionsIds = endingElement.getTextContent().split(",");
+            boolean found = false;
+            for (final String id : endingSectionsIds) {
+                if (id.equals(sectionId)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (isEnding && !found) {
+                addEnding(sectionId);
+            } else if (!isEnding && found) {
+                removeEnding(sectionId);
+            }
+            return true;
+        } catch (IOException | SAXException | ParserConfigurationException ex) {
+            ErrorManager.showErrorMessage(Story.class, "Error while updating endings", ex);
+        }
+        return false;
     }
 
     ////////// ITEMS

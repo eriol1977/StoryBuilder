@@ -1,5 +1,6 @@
 package storybuilder.section.view;
 
+import javafx.scene.control.CheckBox;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
@@ -11,6 +12,8 @@ import storybuilder.section.model.Section;
  */
 public class SectionDetailView extends AbstractDetailView
 {
+
+    private CheckBox endingField;
 
     private ParagraphsTable paragraphsTable;
 
@@ -27,7 +30,11 @@ public class SectionDetailView extends AbstractDetailView
     protected void setFields()
     {
         final Section section = (Section) element;
-        section.refreshElements();
+        section.refreshElements(cache.getStory());
+
+        endingField = new CheckBox("Ending?");
+        endingField.setSelected(section.isEnding());
+        add(endingField);
 
         paragraphsTable = new ParagraphsTable(section);
         add(paragraphsTable);
@@ -37,12 +44,14 @@ public class SectionDetailView extends AbstractDetailView
     protected void setElementValues()
     {
         final Section section = (Section) element;
+        section.setEnding(endingField.isSelected());
         section.setParagraphs(paragraphsTable.getParagraphsData());
     }
 
     @Override
     protected void disableFields()
     {
+        endingField.setDisable(true);
         paragraphsTable.setDisable(true);
     }
 

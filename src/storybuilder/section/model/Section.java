@@ -1,12 +1,18 @@
 package storybuilder.section.model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
 import storybuilder.story.model.Story;
+import storybuilder.validation.ErrorManager;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -21,6 +27,8 @@ public class Section extends StoryElement
     public final static String[] DEFAULT_SECTION_NAMES = {"home", "help", "end", "quit"};
 
     private List<Paragraph> paragraphs = new ArrayList<>();
+
+    private boolean ending = false;
 
     public Section(final String name, final boolean defaultElement)
     {
@@ -82,6 +90,7 @@ public class Section extends StoryElement
         Section section;
         for (int id = 1; id <= lastSectionId; id++) {
             section = new Section(PREFIX + id, false);
+            section.loadIsEnding(story);
             section.loadParagraphs();
             // if some sections have been deleted, the sections counter still
             // has the last id number used, but some of the sections don't
@@ -93,9 +102,27 @@ public class Section extends StoryElement
         return sections;
     }
 
-    public void refreshElements()
+    public void refreshElements(final Story story)
     {
+        loadIsEnding(story);
         loadParagraphs();
+    }
+
+    private void loadIsEnding(final Story story)
+    {
+        try {
+            final Document doc = story.getXmlDoc();
+            final Node endingElement = FileManager.findElementNamed("ending", doc);
+            final String[] endingSectionsIds = endingElement.getTextContent().split(",");
+            for (final String id : endingSectionsIds) {
+                if (id.equals(getNameWithoutPrefix())) {
+                    setEnding(true);
+                    break;
+                }
+            }
+        } catch (IOException | SAXException | ParserConfigurationException ex) {
+            ErrorManager.showErrorMessage(Section.class, "Error while loading ending section", ex);
+        }
     }
 
     private void loadParagraphs()
@@ -115,8 +142,7 @@ public class Section extends StoryElement
             throw new ValidationFailed("A minimum of one paragraph is required.");
         }
     }
-    
-    
+
     @Override
     public String toString()
     {
@@ -131,6 +157,16 @@ public class Section extends StoryElement
     public void setParagraphs(final List<Paragraph> paragraphs)
     {
         this.paragraphs = paragraphs;
+    }
+
+    public boolean isEnding()
+    {
+        return ending;
+    }
+
+    public void setEnding(boolean ending)
+    {
+        this.ending = ending;
     }
 
 }
