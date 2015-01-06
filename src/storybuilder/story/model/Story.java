@@ -250,6 +250,9 @@ public class Story
         if (section.getGet() != null) {
             saveStoryElement(section.getGet());
         }
+        if (section.getDrop() != null) {
+            saveStoryElement(section.getDrop());
+        }
     }
 
     public void updateSection(final Section oldSection, final Section newSection) throws SBException
@@ -286,15 +289,10 @@ public class Story
 
     private void deleteSectionElements(final Section section) throws SBException
     {
-        if (section.isEnding()) {
-            removeEnding(section.getNameWithoutPrefix());
-        }
-        for (final Paragraph paragraph : section.getParagraphs()) {
-            removeStoryElement(paragraph);
-        }
-        if (section.getGet() != null) {
-            removeStoryElement(section.getGet());
-        }
+        final Document doc = getXmlDoc();
+        final List<Node> sectionElements = FileManager.findElementsStartingWith(section.getName(), doc);
+        sectionElements.stream().forEach(node -> doc.getDocumentElement().removeChild(node));
+        saveXmlDoc(doc);
     }
 
     public int getLastSectionId() throws SBException

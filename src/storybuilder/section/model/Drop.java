@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import storybuilder.event.model.Event;
 import storybuilder.item.model.Item;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
@@ -18,7 +17,7 @@ import storybuilder.validation.ValidationFailed;
  *
  * @author Francesco Bertolino
  */
-public class Get extends StoryElement
+public class Drop extends StoryElement
 {
 
     /**
@@ -26,20 +25,20 @@ public class Get extends StoryElement
      */
     private List<String> ids = new ArrayList<>();
 
-    public Get(final String name, final boolean defaultElement, final String... ids)
+    public Drop(final String name, final boolean defaultElement, final String... ids)
     {
         super(name, defaultElement);
         this.ids.addAll(Arrays.asList(ids));
     }
 
-    public Get(Node node, boolean defaultElement)
+    public Drop(Node node, boolean defaultElement)
     {
         super(node, defaultElement);
         final String[] loadedIds = textContent.split(",");
         ids.addAll(Arrays.asList(loadedIds));
     }
 
-    public Get(final Get another)
+    public Drop(final Drop another)
     {
         this(another.getName(), another.isDefault(), another.getIdsArray());
     }
@@ -62,18 +61,18 @@ public class Get extends StoryElement
     @Override
     public void copyData(IStoryElement another)
     {
-        final Get anotherParagraph = (Get) another;
+        final Drop anotherParagraph = (Drop) another;
         setName(anotherParagraph.getName());
         setIds(anotherParagraph.getIds());
         setDefault(anotherParagraph.isDefault());
     }
 
-    public static Get load(final String fileName, final String sectionName) throws SBException
+    public static Drop load(final String fileName, final String sectionName) throws SBException
     {
         final Document doc = FileManager.openDocument(fileName);
-        final Node element = FileManager.findElementNamed(sectionName + "_get", doc);
+        final Node element = FileManager.findElementNamed(sectionName + "_drop", doc);
         if (element != null) {
-            return new Get(element, false);
+            return new Drop(element, false);
         }
         return null;
     }
@@ -83,7 +82,7 @@ public class Get extends StoryElement
     {
         super.validate();
         if (ids.isEmpty()) {
-            throw new ValidationFailed("A minimum of one item/event is required.");
+            throw new ValidationFailed("A minimum of one item is required.");
         }
     }
 
@@ -95,11 +94,6 @@ public class Get extends StoryElement
     public List<String> getItemIds()
     {
         return ids.stream().filter(id -> id.startsWith(Item.PREFIX)).collect(Collectors.toList());
-    }
-
-    public List<String> getEventIds()
-    {
-        return ids.stream().filter(id -> id.startsWith(Event.PREFIX)).collect(Collectors.toList());
     }
 
     public String[] getIdsArray()

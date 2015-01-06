@@ -1,5 +1,4 @@
--- get
--- drop
+-- salvataggio di sezione dovrebbe essere atomico...
 -- link
 -- switch
 -- minigame

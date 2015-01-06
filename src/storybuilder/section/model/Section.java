@@ -29,6 +29,8 @@ public class Section extends StoryElement
 
     private Get get;
 
+    private Drop drop;
+
     public Section(final String name, final boolean defaultElement)
     {
         super(name, defaultElement);
@@ -39,6 +41,7 @@ public class Section extends StoryElement
         this(another.getName(), another.isDefault());
         setParagraphs(another.getParagraphs());
         setGet(another.getGet());
+        setDrop(another.getDrop());
     }
 
     @Override
@@ -69,6 +72,7 @@ public class Section extends StoryElement
         setName(anotherSection.getName());
         setParagraphs(anotherSection.getParagraphs());
         setGet(anotherSection.getGet());
+        setDrop(anotherSection.getDrop());
         setDefault(anotherSection.isDefault());
     }
 
@@ -94,6 +98,7 @@ public class Section extends StoryElement
             section.loadIsEnding(story);
             section.loadParagraphs();
             section.loadGet();
+            section.loadDrop();
             // if some sections have been deleted, the sections counter still
             // has the last id number used, but some of the sections don't
             // exist anymore (they don't have any paragraphs)
@@ -109,6 +114,7 @@ public class Section extends StoryElement
         loadIsEnding(story);
         loadParagraphs();
         loadGet();
+        loadDrop();
     }
 
     private void loadIsEnding(final Story story) throws SBException
@@ -139,6 +145,16 @@ public class Section extends StoryElement
             final Get loadedGet = Get.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), getName());
             if (loadedGet != null) {
                 setGet(loadedGet);
+            }
+        }
+    }
+
+    private void loadDrop() throws SBException
+    {
+        if (!isDefault()) {
+            final Drop loadedDrop = Drop.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), getName());
+            if (loadedDrop != null) {
+                setDrop(loadedDrop);
             }
         }
     }
@@ -186,6 +202,16 @@ public class Section extends StoryElement
     public void setGet(final Get get)
     {
         this.get = get;
+    }
+
+    public Drop getDrop()
+    {
+        return drop;
+    }
+
+    public void setDrop(Drop drop)
+    {
+        this.drop = drop;
     }
 
 }

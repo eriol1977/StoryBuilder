@@ -6,6 +6,7 @@ import javafx.scene.control.TitledPane;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.section.model.Drop;
 import storybuilder.section.model.Get;
 import storybuilder.section.model.Section;
 import storybuilder.validation.SBException;
@@ -22,6 +23,8 @@ public class SectionDetailView extends AbstractDetailView
     private ParagraphsTable paragraphsTable;
 
     private GetView getView;
+
+    private DropView dropView;
 
     public SectionDetailView(final boolean isNewElement, final IStoryElement element, final AbstractTableView tableView)
     {
@@ -49,8 +52,12 @@ public class SectionDetailView extends AbstractDetailView
         accordion.getPanes().add(paragraphsPane);
 
         getView = new GetView(section.getGet());
-        TitledPane getPane = new TitledPane("Item Gets", getView);
+        TitledPane getPane = new TitledPane("Items/Events to get", getView);
         accordion.getPanes().add(getPane);
+
+        dropView = new DropView(section.getDrop());
+        TitledPane dropPane = new TitledPane("Items to drop", dropView);
+        accordion.getPanes().add(dropPane);
 
         accordion.setExpandedPane(paragraphsPane);
         add(accordion);
@@ -64,16 +71,36 @@ public class SectionDetailView extends AbstractDetailView
         section.setEnding(endingField.isSelected());
         section.setParagraphs(paragraphsTable.getParagraphsData());
         updateGet(section);
+        updateDrop(section);
     }
 
     private void updateGet(final Section section)
     {
         Get get = section.getGet();
-        if (get == null) {
+        if (get == null && !getView.getIds().isEmpty()) {
             get = new Get(section.getName() + "_get", false, getView.getIdsArray());
             section.setGet(get);
-        } else {
-            get.setIds(getView.getIds());
+        } else if (get != null) {
+            if (getView.getIds().isEmpty()) {
+                section.setGet(null);
+            } else {
+                get.setIds(getView.getIds());
+            }
+        }
+    }
+
+    private void updateDrop(final Section section)
+    {
+        Drop drop = section.getDrop();
+        if (drop == null && !dropView.getIds().isEmpty()) {
+            drop = new Drop(section.getName() + "_drop", false, dropView.getIdsArray());
+            section.setDrop(drop);
+        } else if (drop != null) {
+            if (dropView.getIds().isEmpty()) {
+                section.setDrop(null);
+            } else {
+                drop.setIds(dropView.getIds());
+            }
         }
     }
 
