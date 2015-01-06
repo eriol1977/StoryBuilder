@@ -24,6 +24,8 @@ public class Section extends StoryElement
     public final static String[] DEFAULT_SECTION_NAMES = {"home", "help", "end", "quit"};
 
     private List<Paragraph> paragraphs = new ArrayList<>();
+    
+    private List<Link> links = new ArrayList<>();
 
     private boolean ending = false;
 
@@ -40,6 +42,7 @@ public class Section extends StoryElement
     {
         this(another.getName(), another.isDefault());
         setParagraphs(another.getParagraphs());
+        setLinks(another.getLinks());
         setGet(another.getGet());
         setDrop(another.getDrop());
     }
@@ -71,6 +74,7 @@ public class Section extends StoryElement
         final Section anotherSection = (Section) another;
         setName(anotherSection.getName());
         setParagraphs(anotherSection.getParagraphs());
+        setLinks(anotherSection.getLinks());
         setGet(anotherSection.getGet());
         setDrop(anotherSection.getDrop());
         setDefault(anotherSection.isDefault());
@@ -83,6 +87,7 @@ public class Section extends StoryElement
         for (String defaultSectionName : DEFAULT_SECTION_NAMES) {
             section = new Section(defaultSectionName, true);
             section.loadParagraphs();
+            section.loadLinks();
             defaultSections.add(section);
         }
         return defaultSections;
@@ -97,6 +102,7 @@ public class Section extends StoryElement
             section = new Section(PREFIX + id, false);
             section.loadIsEnding(story);
             section.loadParagraphs();
+            section.loadLinks();
             section.loadGet();
             section.loadDrop();
             // if some sections have been deleted, the sections counter still
@@ -113,6 +119,7 @@ public class Section extends StoryElement
     {
         loadIsEnding(story);
         loadParagraphs();
+        loadLinks();
         loadGet();
         loadDrop();
     }
@@ -139,6 +146,15 @@ public class Section extends StoryElement
         }
     }
 
+    private void loadLinks() throws SBException
+    {
+        if (isDefault()) {
+            setLinks(Link.load("resources/default.xml", true, getName()));
+        } else {
+            setLinks(Link.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), false, getName()));
+        }
+    }
+    
     private void loadGet() throws SBException
     {
         if (!isDefault()) {
@@ -166,6 +182,9 @@ public class Section extends StoryElement
         if (paragraphs.isEmpty()) {
             throw new ValidationFailed("A minimum of one paragraph is required.");
         }
+        if (!isEnding() && links.isEmpty()) {
+            throw new ValidationFailed("A minimum of one link is required, if this is not an ending section.");
+        }
     }
 
     @Override
@@ -182,6 +201,16 @@ public class Section extends StoryElement
     public void setParagraphs(final List<Paragraph> paragraphs)
     {
         this.paragraphs = paragraphs;
+    }
+
+    public List<Link> getLinks()
+    {
+        return links;
+    }
+
+    public void setLinks(final List<Link> links)
+    {
+        this.links = links;
     }
 
     public boolean isEnding()

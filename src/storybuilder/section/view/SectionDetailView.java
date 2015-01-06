@@ -1,5 +1,6 @@
 package storybuilder.section.view;
 
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TitledPane;
@@ -18,9 +19,29 @@ import storybuilder.validation.SBException;
 public class SectionDetailView extends AbstractDetailView
 {
 
+    private final static int NONE_EXPANDED = -1;
+
+    private final static int EXPAND_PARAGRAPHS = 1;
+
+    private final static int EXPAND_LINKS = 2;
+
+    private final static int EXPAND_GETS = 3;
+
+    private final static int EXPAND_DROPS = 4;
+
+    private final static String PARAGRAPHS_PANE_TITLE = "Paragraphs";
+
+    private final static String LINKS_PANE_TITLE = "Links";
+
+    private final static String GETS_PANE_TITLE = "Items/Events to get";
+
+    private final static String DROPS_PANE_TITLE = "Items to drop";
+
     private CheckBox endingField;
 
     private ParagraphsTable paragraphsTable;
+
+    private LinksTable linksTable;
 
     private GetView getView;
 
@@ -46,22 +67,57 @@ public class SectionDetailView extends AbstractDetailView
         add(endingField);
 
         final Accordion accordion = new Accordion();
+        // remembers which pane was open in the previously viewed section detail
+        accordion.expandedPaneProperty().addListener((ObservableValue<? extends TitledPane> ov, TitledPane old_val, TitledPane new_val) -> {
+            if (new_val != null) {
+                final SectionsView sectionsView = (SectionsView) tableView;
+                final String title = accordion.getExpandedPane().getText();
+                switch (title) {
+                    case PARAGRAPHS_PANE_TITLE:
+                        sectionsView.setExpandedPane(EXPAND_PARAGRAPHS);
+                        break;
+                    case LINKS_PANE_TITLE:
+                        sectionsView.setExpandedPane(EXPAND_LINKS);
+                        break;
+                    case GETS_PANE_TITLE:
+                        sectionsView.setExpandedPane(EXPAND_GETS);
+                        break;
+                    case DROPS_PANE_TITLE:
+                        sectionsView.setExpandedPane(EXPAND_DROPS);
+                        break;
+                }
+            }
+        });
 
         paragraphsTable = new ParagraphsTable(section);
-        TitledPane paragraphsPane = new TitledPane("Paragraphs", paragraphsTable);
+        TitledPane paragraphsPane = new TitledPane(PARAGRAPHS_PANE_TITLE, paragraphsTable);
         accordion.getPanes().add(paragraphsPane);
 
+        linksTable = new LinksTable(section);
+        TitledPane linksPane = new TitledPane(LINKS_PANE_TITLE, linksTable);
+        accordion.getPanes().add(linksPane);
+
         getView = new GetView(section.getGet());
-        TitledPane getPane = new TitledPane("Items/Events to get", getView);
+        TitledPane getPane = new TitledPane(GETS_PANE_TITLE, getView);
         accordion.getPanes().add(getPane);
 
         dropView = new DropView(section.getDrop());
-        TitledPane dropPane = new TitledPane("Items to drop", dropView);
+        TitledPane dropPane = new TitledPane(DROPS_PANE_TITLE, dropView);
         accordion.getPanes().add(dropPane);
 
-        accordion.setExpandedPane(paragraphsPane);
-        add(accordion);
+        // remembers which pane was open in the previously viewed section detail
+        final int expandedPane = ((SectionsView) tableView).getExpandedPane();
+        if (expandedPane == EXPAND_LINKS) {
+            accordion.setExpandedPane(linksPane);
+        } else if (expandedPane == EXPAND_GETS) {
+            accordion.setExpandedPane(getPane);
+        } else if (expandedPane == EXPAND_DROPS) {
+            accordion.setExpandedPane(dropPane);
+        } else {
+            accordion.setExpandedPane(paragraphsPane);
+        }
 
+        add(accordion);
     }
 
     @Override
@@ -70,6 +126,7 @@ public class SectionDetailView extends AbstractDetailView
         final Section section = (Section) element;
         section.setEnding(endingField.isSelected());
         section.setParagraphs(paragraphsTable.getParagraphsData());
+        section.setLinks(linksTable.getLinksData());
         updateGet(section);
         updateDrop(section);
     }
@@ -109,6 +166,7 @@ public class SectionDetailView extends AbstractDetailView
     {
         endingField.setDisable(true);
         paragraphsTable.setDisable(true);
+        linksTable.setDisable(true);
         getView.setDisable(true);
     }
 

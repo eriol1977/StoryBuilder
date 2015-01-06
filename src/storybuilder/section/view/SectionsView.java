@@ -15,6 +15,11 @@ import storybuilder.validation.SBException;
 public class SectionsView extends AbstractTableView
 {
 
+    /**
+     * Remembers which pane was open in the previously viewed section detail
+     */
+    private int expandedPane = -1;
+
     public SectionsView()
     {
         addTitle("Sections");
@@ -67,6 +72,16 @@ public class SectionsView extends AbstractTableView
     protected void loadData()
     {
         data.addAll(cache.getStory().getSections());
+    }
+
+    int getExpandedPane()
+    {
+        return expandedPane;
+    }
+
+    void setExpandedPane(final int expandedPane)
+    {
+        this.expandedPane = expandedPane;
     }
 
 }

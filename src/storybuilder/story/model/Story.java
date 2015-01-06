@@ -17,6 +17,7 @@ import storybuilder.join.model.Join;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.section.model.Link;
 import storybuilder.section.model.Paragraph;
 import storybuilder.section.model.Section;
 import storybuilder.validation.SBException;
@@ -159,6 +160,11 @@ public class Story
         return commands;
     }
 
+    public Command getCommand(final String id)
+    {
+        return commands.stream().filter(item -> item.getName().equals(id)).collect(Collectors.toList()).get(0);
+    }
+
     public void addCommand(final Command command) throws SBException
     {
         saveStoryElement(command);
@@ -246,6 +252,9 @@ public class Story
     {
         for (final Paragraph paragraph : section.getParagraphs()) {
             saveStoryElement(paragraph);
+        }
+        for (final Link link : section.getLinks()) {
+            saveStoryElement(link);
         }
         if (section.getGet() != null) {
             saveStoryElement(section.getGet());
@@ -371,6 +380,11 @@ public class Story
     public List<String> getItemIds()
     {
         return items.stream().map(i -> i.getName()).collect(Collectors.toList());
+    }
+
+    public Item getItem(final String id)
+    {
+        return items.stream().filter(item -> item.getName().equals(id)).collect(Collectors.toList()).get(0);
     }
 
     public void addItem(final Item item) throws SBException
