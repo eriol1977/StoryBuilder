@@ -3,6 +3,8 @@ package storybuilder.main;
 import storybuilder.preferences.model.Preferences;
 import storybuilder.story.model.NullStory;
 import storybuilder.story.model.Story;
+import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -17,7 +19,7 @@ public class Cache
 
     private final Story nullStory = new NullStory();
 
-    private final Preferences preferences = new Preferences();
+    private Preferences preferences;
 
     private Cache()
     {
@@ -46,7 +48,11 @@ public class Cache
 
     private void loadPreferences()
     {
-        // TODO caricare da xml di configurazione
+        try {
+            preferences = new Preferences();
+        } catch (SBException ex) {
+            ErrorManager.showErrorMessage(ex.getFailCause());
+        }
     }
 
 }

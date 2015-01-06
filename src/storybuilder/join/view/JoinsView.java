@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import storybuilder.join.model.Join;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -44,21 +45,21 @@ public class JoinsView extends AbstractTableView
     }
 
     @Override
-    protected boolean addElementToStory(final IStoryElement element)
+    protected void addElementToStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().addJoin((Join) element);
+        cache.getStory().addJoin((Join) element);
     }
 
     @Override
-    protected boolean updateElementInStory(final IStoryElement element)
+    protected void updateElementInStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().updateJoin((Join) element);
+        cache.getStory().updateJoin((Join) element);
     }
 
     @Override
-    protected boolean deleteElementFromStory(final IStoryElement element)
+    protected void deleteElementFromStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().removeJoin((Join) element);
+        cache.getStory().removeJoin((Join) element);
     }
 
     @Override

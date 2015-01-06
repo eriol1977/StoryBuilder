@@ -1,19 +1,16 @@
 package storybuilder.item.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import storybuilder.main.model.StoryElement;
 import javafx.beans.property.SimpleStringProperty;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.section.model.Section;
-import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -75,18 +72,14 @@ public class Item extends StoryElement
         return sb.toString();
     }
 
-    public static List<Item> load(final String fileName, final boolean defaultElements)
+    public static List<Item> load(final String fileName, final boolean defaultElements) throws SBException
     {
         final List<Item> items = new ArrayList<>();
-        try {
-            final Document doc = FileManager.openDocument(fileName);
-            final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
-            elements.stream().forEach((element) -> {
-                items.add(new Item(element, defaultElements));
-            });
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            ErrorManager.showErrorMessage(Item.class, "Error while loading items", ex);
-        }
+        final Document doc = FileManager.openDocument(fileName);
+        final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
+        elements.stream().forEach((element) -> {
+            items.add(new Item(element, defaultElements));
+        });
         return items;
     }
 
@@ -143,18 +136,14 @@ public class Item extends StoryElement
         this.sectionId.set(sectionId);
     }
 
-    public String getSectionText()
+    public String getSectionText() throws SBException
     {
         String description = "";
         if (!getSectionId().isEmpty()) {
-            try {
-                final Document doc = FileManager.openDocument(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()));
-                final Node node = FileManager.findElementNamed(Section.PREFIX + getSectionId() + "_1", doc);
-                if (node != null) {
-                    description = node.getTextContent();
-                }
-            } catch (ParserConfigurationException | SAXException | IOException ex) {
-                ErrorManager.showErrorMessage(Item.class, "Error while loading section by id " + getSectionId(), ex);
+            final Document doc = FileManager.openDocument(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()));
+            final Node node = FileManager.findElementNamed(Section.PREFIX + getSectionId() + "_1", doc);
+            if (node != null) {
+                description = node.getTextContent();
             }
         }
         return description;

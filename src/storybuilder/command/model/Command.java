@@ -1,17 +1,14 @@
 package storybuilder.command.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import storybuilder.main.model.StoryElement;
 import javafx.beans.property.SimpleStringProperty;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
-import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -53,18 +50,14 @@ public class Command extends StoryElement
         return getKeyword() + ":" + getDescription();
     }
 
-    public static List<Command> load(final String fileName, final boolean defaultElements)
+    public static List<Command> load(final String fileName, final boolean defaultElements) throws SBException
     {
         final List<Command> commands = new ArrayList<>();
-        try {
-            final Document doc = FileManager.openDocument(fileName);
-            final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
-            elements.stream().forEach((element) -> {
-                commands.add(new Command(element, defaultElements));
-            });
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            ErrorManager.showErrorMessage(Command.class, "Error while loading commands", ex);
-        }
+        final Document doc = FileManager.openDocument(fileName);
+        final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
+        elements.stream().forEach((element) -> {
+            commands.add(new Command(element, defaultElements));
+        });
         return commands;
     }
 

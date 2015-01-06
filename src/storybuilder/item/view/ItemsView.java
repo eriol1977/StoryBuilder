@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import storybuilder.item.model.Item;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -44,21 +45,21 @@ public class ItemsView extends AbstractTableView
     }
 
     @Override
-    protected boolean addElementToStory(final IStoryElement element)
+    protected void addElementToStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().addItem((Item) element);
+        cache.getStory().addItem((Item) element);
     }
 
     @Override
-    protected boolean updateElementInStory(final IStoryElement element)
+    protected void updateElementInStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().updateItem((Item) element);
+        cache.getStory().updateItem((Item) element);
     }
 
     @Override
-    protected boolean deleteElementFromStory(final IStoryElement element)
+    protected void deleteElementFromStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().removeItem((Item) element);
+        cache.getStory().removeItem((Item) element);
     }
 
     @Override

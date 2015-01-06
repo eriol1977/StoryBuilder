@@ -16,6 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -60,13 +62,17 @@ public abstract class AbstractTableView extends AbstractView
 
         final Button newButton = addButton("New");
         newButton.setOnAction((ActionEvent event) -> {
-            showDetailView(true, getNewElement());
+            try {
+                showDetailView(true, getNewElement());
+            } catch (SBException ex) {
+                ErrorManager.showErrorMessage(ex.getFailCause());
+            }
         });
 
         add(layout);
     }
 
-    protected abstract IStoryElement getNewElement();
+    protected abstract IStoryElement getNewElement() throws SBException;
 
     protected abstract void showDetailView(boolean isNewElement, final IStoryElement element);
 
@@ -129,45 +135,56 @@ public abstract class AbstractTableView extends AbstractView
 
     public void addElement(final IStoryElement element)
     {
-        // action depends on validation and then on possible exceptions
-        final boolean result = validateStoryElement(element) && addElementToStory(element);
-        if (result) {
+        try {
+            element.validate();
+            addElementToStory(element);
             data.add(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" added");
             showEmptyView();
+        } catch (ValidationFailed ex) {
+            ErrorManager.showErrorMessage(ex.getFailCause());
+        } catch (SBException ex) {
+            ErrorManager.showErrorMessage(ex.getFailCause());
         }
     }
 
-    protected abstract boolean addElementToStory(final IStoryElement element);
+    protected abstract void addElementToStory(final IStoryElement element) throws SBException;
 
     public void updateElement(final IStoryElement element)
     {
-        // action depends on validation and then on possible exceptions
-        final boolean result = validateStoryElement(element) && updateElementInStory(element);
-        if (result) {
+        try {
+            element.validate();
+            updateElementInStory(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" updated");
             showEmptyView();
-        } else {
+        } catch (ValidationFailed ex) {
+            ErrorManager.showErrorMessage(ex.getFailCause());
+            element.copyData(stashed);
+            showDetailView(false, element);
+        } catch (SBException ex) {
+            ErrorManager.showErrorMessage(ex.getFailCause());
             element.copyData(stashed);
             showDetailView(false, element);
         }
     }
 
-    protected abstract boolean updateElementInStory(final IStoryElement element);
+    protected abstract void updateElementInStory(final IStoryElement element) throws SBException;
 
     protected abstract void loadData();
 
     public void deleteElement(final IStoryElement element)
     {
-        final boolean result = deleteElementFromStory(element);
-        if (result) {
+        try {
+            deleteElementFromStory(element);
             data.remove(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" deleted");
             showEmptyView();
+        } catch (SBException ex) {
+            ErrorManager.showErrorMessage(ex.getFailCause());
         }
     }
 
-    protected abstract boolean deleteElementFromStory(final IStoryElement element);
+    protected abstract void deleteElementFromStory(final IStoryElement element) throws SBException;
 
     protected class ButtonCell extends TableCell<Object, Boolean>
     {

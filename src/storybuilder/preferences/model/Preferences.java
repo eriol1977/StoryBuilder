@@ -1,13 +1,9 @@
 package storybuilder.preferences.model;
 
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 import storybuilder.main.FileManager;
-import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -20,7 +16,7 @@ public class Preferences
 
     private String directoryPath;
 
-    public Preferences()
+    public Preferences() throws SBException
     {
         load();
     }
@@ -30,21 +26,21 @@ public class Preferences
         return directoryPath;
     }
 
-    public void setDirectoryPath(String directoryPath)
+    public void setDirectoryPath(String directoryPath) throws SBException
     {
         this.directoryPath = directoryPath;
         save();
     }
 
-    private void load()
+    private void load() throws SBException
     {
         try {
             final Document doc = FileManager.openDocument(FILE_PATH);
             final Node directoryNode = doc.getElementsByTagName("directory").item(0);
             directoryPath = !directoryNode.getTextContent().isEmpty() ? directoryNode.getTextContent() : System.getProperty("user.home");
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            ErrorManager.showErrorMessage(Preferences.class, "Error while loading preferences", ex);
+        } catch (SBException ex) {
             loadDefault();
+            throw new SBException("Error while loading preferences");
         }
     }
 
@@ -53,15 +49,11 @@ public class Preferences
         directoryPath = System.getProperty("user.home");
     }
 
-    private void save()
+    private void save() throws SBException
     {
-        try {
-            final Document doc = FileManager.openDocument(FILE_PATH);
-            final Node directoryNode = doc.getElementsByTagName("directory").item(0);
-            directoryNode.setTextContent(directoryPath);
-            FileManager.saveDocument(doc, FILE_PATH);
-        } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
-            ErrorManager.showErrorMessage(Preferences.class, "Error while saving preferences", ex);
-        }
+        final Document doc = FileManager.openDocument(FILE_PATH);
+        final Node directoryNode = doc.getElementsByTagName("directory").item(0);
+        directoryNode.setTextContent(directoryPath);
+        FileManager.saveDocument(doc, FILE_PATH);
     }
 }

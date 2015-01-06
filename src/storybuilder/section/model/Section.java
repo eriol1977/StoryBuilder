@@ -1,18 +1,15 @@
 package storybuilder.section.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
 import storybuilder.story.model.Story;
-import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -71,7 +68,7 @@ public class Section extends StoryElement
         setDefault(anotherSection.isDefault());
     }
 
-    public static List<Section> loadDefault()
+    public static List<Section> loadDefault() throws SBException
     {
         final List<Section> defaultSections = new ArrayList<>();
         Section section;
@@ -83,7 +80,7 @@ public class Section extends StoryElement
         return defaultSections;
     }
 
-    public static List<Section> load(final Story story)
+    public static List<Section> load(final Story story) throws SBException
     {
         final List<Section> sections = new ArrayList<>();
         final int lastSectionId = story.getLastSectionId();
@@ -102,30 +99,26 @@ public class Section extends StoryElement
         return sections;
     }
 
-    public void refreshElements(final Story story)
+    public void refreshElements(final Story story) throws SBException
     {
         loadIsEnding(story);
         loadParagraphs();
     }
 
-    private void loadIsEnding(final Story story)
+    private void loadIsEnding(final Story story) throws SBException
     {
-        try {
-            final Document doc = story.getXmlDoc();
-            final Node endingElement = FileManager.findElementNamed("ending", doc);
-            final String[] endingSectionsIds = endingElement.getTextContent().split(",");
-            for (final String id : endingSectionsIds) {
-                if (id.equals(getNameWithoutPrefix())) {
-                    setEnding(true);
-                    break;
-                }
+        final Document doc = story.getXmlDoc();
+        final Node endingElement = FileManager.findElementNamed("ending", doc);
+        final String[] endingSectionsIds = endingElement.getTextContent().split(",");
+        for (final String id : endingSectionsIds) {
+            if (id.equals(getNameWithoutPrefix())) {
+                setEnding(true);
+                break;
             }
-        } catch (IOException | SAXException | ParserConfigurationException ex) {
-            ErrorManager.showErrorMessage(Section.class, "Error while loading ending section", ex);
         }
     }
 
-    private void loadParagraphs()
+    private void loadParagraphs() throws SBException
     {
         if (isDefault()) {
             setParagraphs(Paragraph.load("resources/default.xml", true, getName()));

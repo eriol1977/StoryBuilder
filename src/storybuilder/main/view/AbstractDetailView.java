@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
+import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -18,7 +20,7 @@ public abstract class AbstractDetailView extends AbstractView
     protected final IStoryElement element;
 
     protected final TextField nameField;
-    
+
     protected final boolean isNewElement;
 
     public AbstractDetailView()
@@ -28,7 +30,7 @@ public abstract class AbstractDetailView extends AbstractView
         this.element = null;
         this.nameField = null;
     }
-    
+
     public AbstractDetailView(final boolean isNewElement, final IStoryElement element, final AbstractTableView tableView)
     {
         this.isNewElement = isNewElement;
@@ -43,7 +45,11 @@ public abstract class AbstractDetailView extends AbstractView
             nameField = null;
         }
 
-        setFields();
+        try {
+            setFields();
+        } catch (SBException ex) {
+            ErrorManager.showErrorMessage(ex.getFailCause());
+        }
 
         final Button saveButton = addButton("Save");
         saveButton.setOnAction((ActionEvent e) -> {
@@ -62,7 +68,7 @@ public abstract class AbstractDetailView extends AbstractView
         }
     }
 
-    protected abstract void setFields();
+    protected abstract void setFields() throws SBException;
 
     protected abstract void setElementValues();
 

@@ -48,10 +48,10 @@ public abstract class StoryElement implements IStoryElement
     public void validate() throws ValidationFailed
     {
         if (getNameWithoutPrefix().isEmpty()) {
-            throw new ValidationFailed("Name must be at least one character long");
+            throw new ValidationFailed("Code must be at least one character long");
         }
         if (name.get().contains(" ")) {
-            throw new ValidationFailed("Name cannot contain empty spaces");
+            throw new ValidationFailed("Code cannot contain empty spaces");
         }
     }
 

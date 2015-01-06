@@ -4,6 +4,8 @@ import java.io.File;
 import storybuilder.main.view.AbstractView;
 import javafx.stage.FileChooser;
 import storybuilder.story.model.Story;
+import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -20,10 +22,14 @@ public class OpenStoryView extends AbstractView
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
         final File file = fileChooser.showOpenDialog(mwc.getStage());
         if (file != null) {
-            final Story story = Story.load(file);
-            mwc.updateTitle();
-            mwc.updateStatusBarMessage("Story \"" + story.getTitle() + "\" loaded");
-            mwc.enableMenus(true);
+            try {
+                final Story story = Story.load(file);
+                mwc.updateTitle();
+                mwc.updateStatusBarMessage("Story \"" + story.getTitle() + "\" loaded");
+                mwc.enableMenus(true);
+            } catch (SBException ex) {
+                ErrorManager.showErrorMessage(ex.getFailCause());
+            }
         }
     }
 

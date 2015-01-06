@@ -10,7 +10,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -21,6 +20,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import storybuilder.story.model.Story;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -29,19 +29,23 @@ import storybuilder.story.model.Story;
 public class FileManager
 {
 
-    public static Document openDocument(final String fileName) throws ParserConfigurationException, SAXException, IOException
+    public static Document openDocument(final String fileName) throws SBException
     {
         final File file = new File(fileName);
         return openDocument(file);
     }
 
-    public static Document openDocument(final File file) throws ParserConfigurationException, SAXException, IOException
+    public static Document openDocument(final File file) throws SBException
     {
-        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        final Document doc = dBuilder.parse(file);
-        doc.getDocumentElement().normalize();
-        return doc;
+        try {
+            final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            final Document doc = dBuilder.parse(file);
+            doc.getDocumentElement().normalize();
+            return doc;
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            throw new SBException("Error while opening document " + file.getName());
+        }
     }
 
     public static Node findElementNamed(final String name, final Document doc)
@@ -100,13 +104,17 @@ public class FileManager
         return element.getAttributes().getNamedItem("name").getTextContent().matches(regex);
     }
 
-    public static void saveDocument(final Document doc, final String fileName) throws TransformerConfigurationException, TransformerException
+    public static void saveDocument(final Document doc, final String fileName) throws SBException
     {
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        DOMSource source = new DOMSource(doc);
-        StreamResult file = new StreamResult(new File(fileName));
-        transformer.transform(source, file);
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(doc);
+            StreamResult file = new StreamResult(new File(fileName));
+            transformer.transform(source, file);
+        } catch (TransformerException ex) {
+            throw new SBException("Error while saving document " + fileName);
+        }
     }
 
     public static Element addElement(final Document doc, final String name, final String value)

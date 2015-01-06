@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import storybuilder.event.model.Event;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -44,21 +45,21 @@ public class EventsView extends AbstractTableView
     }
 
     @Override
-    protected boolean addElementToStory(final IStoryElement element)
+    protected void addElementToStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().addEvent((Event) element);
+        cache.getStory().addEvent((Event) element);
     }
 
     @Override
-    protected boolean updateElementInStory(final IStoryElement element)
+    protected void updateElementInStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().updateEvent((Event) element);
+        cache.getStory().updateEvent((Event) element);
     }
 
     @Override
-    protected boolean deleteElementFromStory(final IStoryElement element)
+    protected void deleteElementFromStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().removeEvent((Event) element);
+        cache.getStory().removeEvent((Event) element);
     }
 
     @Override

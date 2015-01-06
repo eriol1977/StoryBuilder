@@ -1,18 +1,14 @@
 package storybuilder.story.model;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 import storybuilder.command.model.Command;
 import storybuilder.event.model.Event;
 import storybuilder.item.model.Item;
@@ -22,7 +18,7 @@ import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.section.model.Paragraph;
 import storybuilder.section.model.Section;
-import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -64,29 +60,25 @@ public class Story
         return fileName;
     }
 
-    public void create() throws ValidationFailed
+    public void create() throws ValidationFailed, SBException
     {
         validate();
-        try {
-            updateStoriesFile();
-            createStoryFile();
-            loadStoryElements();
-        } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while saving story", ex);
-        }
+        updateStoriesFile();
+        createStoryFile();
+        loadStoryElements();
     }
 
-    private void loadStoryElements()
+    private void loadStoryElements() throws SBException
     {
         // even if the story is new, it must load elements from the default.xml file
         loadCommands();
         loadEvents();
+        loadSections();
         loadItems();
         loadJoins();
-        loadSections();
     }
 
-    private void updateStoriesFile() throws ParserConfigurationException, TransformerException, DOMException, SAXException, IOException
+    private void updateStoriesFile() throws SBException
     {
         final Document storiesDoc = FileManager.openDocument(FILE_PATH);
         final Element storyElement = storiesDoc.createElement("story");
@@ -96,37 +88,37 @@ public class Story
         FileManager.saveDocument(storiesDoc, FILE_PATH);
     }
 
-    private void createStoryFile() throws ParserConfigurationException, TransformerException
+    private void createStoryFile() throws SBException
     {
-        final DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
-        final DocumentBuilder icBuilder = icFactory.newDocumentBuilder();
-        final Document doc = icBuilder.newDocument();
-        final Element mainRootElement = doc.createElement("resources");
-        doc.appendChild(mainRootElement);
+        try {
+            final DocumentBuilderFactory icFactory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilder icBuilder = icFactory.newDocumentBuilder();
+            final Document doc = icBuilder.newDocument();
+            final Element mainRootElement = doc.createElement("resources");
+            doc.appendChild(mainRootElement);
 
-        FileManager.addElement(doc, "l_title", title);
-        FileManager.addElement(doc, "sections", String.valueOf(0));
-        FileManager.addElement(doc, "starting", String.valueOf(1));
-        FileManager.addElement(doc, "ending", "");
+            FileManager.addElement(doc, "l_title", title);
+            FileManager.addElement(doc, "sections", String.valueOf(0));
+            FileManager.addElement(doc, "starting", String.valueOf(1));
+            FileManager.addElement(doc, "ending", "");
 
-        saveXmlDoc(doc);
+            saveXmlDoc(doc);
+        } catch (ParserConfigurationException ex) {
+            throw new SBException("Error while building story document.");
+        }
     }
 
-    public static Story load(final File file)
+    public static Story load(final File file) throws SBException
     {
         Story story = null;
-        try {
-            final Document doc = FileManager.openDocument(file);
-            final Node titleElement = FileManager.findElementNamed("l_title", doc);
-            if (titleElement != null) {
-                story = new Story(titleElement.getTextContent(), file.getName());
-                Cache.getInstance().setStory(story);
-                story.loadStoryElements();
-            } else {
-                ErrorManager.showErrorMessage(Story.class, "Error while loading story");
-            }
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while loading story", ex);
+        final Document doc = FileManager.openDocument(file);
+        final Node titleElement = FileManager.findElementNamed("l_title", doc);
+        if (titleElement != null) {
+            story = new Story(titleElement.getTextContent(), file.getName());
+            Cache.getInstance().setStory(story);
+            story.loadStoryElements();
+        } else {
+            throw new SBException("Story title not found.");
         }
         return story;
     }
@@ -155,7 +147,7 @@ public class Story
     }
 
     /////////// COMMANDS
-    private void loadCommands()
+    private void loadCommands() throws SBException
     {
         commands.addAll(Command.load("resources/default.xml", true));
         commands.addAll(Command.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
@@ -166,31 +158,25 @@ public class Story
         return commands;
     }
 
-    public boolean addCommand(final Command command)
+    public void addCommand(final Command command) throws SBException
     {
-        final boolean result = saveStoryElement(command);
-        if (result) {
-            commands.add(command);
-        }
-        return result;
+        saveStoryElement(command);
+        commands.add(command);
     }
 
-    public boolean removeCommand(final Command command)
+    public void removeCommand(final Command command) throws SBException
     {
-        final boolean result = removeStoryElement(command);
-        if (result) {
-            commands.remove(command);
-        }
-        return result;
+        removeStoryElement(command);
+        commands.remove(command);
     }
 
-    public boolean updateCommand(final Command command)
+    public void updateCommand(final Command command) throws SBException
     {
-        return updateStoryElement(command);
+        updateStoryElement(command);
     }
 
     /////////// EVENTS
-    private void loadEvents()
+    private void loadEvents() throws SBException
     {
         events.addAll(Event.load("resources/default.xml", true));
         events.addAll(Event.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
@@ -201,27 +187,21 @@ public class Story
         return events;
     }
 
-    public boolean addEvent(final Event event)
+    public void addEvent(final Event event) throws SBException
     {
-        final boolean result = saveStoryElement(event);
-        if (result) {
-            events.add(event);
-        }
-        return result;
+        saveStoryElement(event);
+        events.add(event);
     }
 
-    public boolean removeEvent(final Event event)
+    public void removeEvent(final Event event) throws SBException
     {
-        final boolean result = removeStoryElement(event);
-        if (result) {
-            events.remove(event);
-        }
-        return result;
+        removeStoryElement(event);
+        events.remove(event);
     }
 
-    public boolean updateEvent(final Event event)
+    public void updateEvent(final Event event) throws SBException
     {
-        return updateStoryElement(event);
+        updateStoryElement(event);
     }
 
     /////////// SECTIONS
@@ -240,170 +220,134 @@ public class Story
         return null;
     }
 
-    private void loadSections()
+    private void loadSections() throws SBException
     {
         sections.addAll(Section.loadDefault());
         sections.addAll(Section.load(this));
     }
 
-    public boolean addSection(final Section section)
+    public void addSection(final Section section) throws SBException
     {
-        boolean result = true;
         if (section.isEnding()) {
-            result = addEnding(section.getNameWithoutPrefix());
+            addEnding(section.getNameWithoutPrefix());
         }
-        if (result) {
-            result = saveSectionElements(section);
-            if (result) {
-                sections.add(section);
-                incrementLastSectionId();
-            }
-        }
-        return result;
+        saveSectionElements(section);
+        sections.add(section);
+        incrementLastSectionId();
     }
 
-    private boolean saveSectionElements(final Section section)
+    private void saveSectionElements(final Section section) throws SBException
     {
-        boolean result = true;
         for (final Paragraph paragraph : section.getParagraphs()) {
-            result = saveStoryElement(paragraph);
-            if (!result) {
+            saveStoryElement(paragraph);
+        }
+    }
+
+    public void updateSection(final Section oldSection, final Section newSection) throws SBException
+    {
+        updateEndings(newSection.getNameWithoutPrefix(), newSection.isEnding());
+        deleteSectionElements(oldSection);
+        saveSectionElements(newSection);
+    }
+
+    public void deleteSection(final Section section) throws SBException
+    {
+        checkRelatedElement(section);
+
+        if (section.isEnding()) {
+            removeEnding(section.getNameWithoutPrefix());
+        }
+        deleteSectionElements(section);
+        sections.remove(section);
+    }
+
+    private void checkRelatedElement(final Section section) throws SBException
+    {
+        for (final Item item : items) {
+            if (item.getSectionId().equals(section.getNameWithoutPrefix())) {
+                throw new SBException("Cannot delete section, because it's related to item \"" + item.getNameWithoutPrefix() + "\"");
+            }
+        }
+        for (final Join join : joins) {
+            if (join.getSectionId().equals(section.getNameWithoutPrefix())) {
+                throw new SBException("Cannot delete section, because it's related to join \"" + join.getNameWithoutPrefix() + "\"");
+            }
+        }
+    }
+
+    private void deleteSectionElements(final Section section) throws SBException
+    {
+        if (section.isEnding()) {
+            removeEnding(section.getNameWithoutPrefix());
+        }
+        for (final Paragraph paragraph : section.getParagraphs()) {
+            removeStoryElement(paragraph);
+        }
+    }
+
+    public int getLastSectionId() throws SBException
+    {
+        final Document doc = getXmlDoc();
+        final Node sectionsElement = FileManager.findElementNamed("sections", doc);
+        return Integer.valueOf(sectionsElement.getTextContent());
+    }
+
+    public void incrementLastSectionId() throws SBException
+    {
+        final Document doc = getXmlDoc();
+        final Node sectionsElement = FileManager.findElementNamed("sections", doc);
+        int lastSectionId = Integer.valueOf(sectionsElement.getTextContent());
+        sectionsElement.setTextContent(String.valueOf(++lastSectionId));
+        saveXmlDoc(doc);
+    }
+
+    public void addEnding(final String sectionId) throws SBException
+    {
+        final Document doc = getXmlDoc();
+        final Node endingElement = FileManager.findElementNamed("ending", doc);
+        final String oldValue = endingElement.getTextContent();
+        final String newValue = oldValue.isEmpty() ? sectionId : oldValue + "," + sectionId;
+        endingElement.setTextContent(newValue);
+        saveXmlDoc(doc);
+    }
+
+    public void removeEnding(final String sectionId) throws SBException
+    {
+        final Document doc = getXmlDoc();
+        final Node endingElement = FileManager.findElementNamed("ending", doc);
+        final StringBuilder sb = new StringBuilder();
+        final String[] endingSectionsIds = endingElement.getTextContent().split(",");
+        for (final String id : endingSectionsIds) {
+            if (!id.equals(sectionId)) {
+                sb.append(id).append(",");
+            }
+        }
+        sb.delete(sb.length() - 1, sb.length());
+        endingElement.setTextContent(sb.toString());
+        saveXmlDoc(doc);
+    }
+
+    public void updateEndings(final String sectionId, final boolean isEnding) throws SBException
+    {
+        final Document doc = getXmlDoc();
+        final Node endingElement = FileManager.findElementNamed("ending", doc);
+        final String[] endingSectionsIds = endingElement.getTextContent().split(",");
+        boolean found = false;
+        for (final String id : endingSectionsIds) {
+            if (id.equals(sectionId)) {
+                found = true;
                 break;
             }
         }
-        return result;
-    }
-
-    public boolean updateSection(final Section oldSection, final Section newSection)
-    {
-        boolean result = updateEndings(newSection.getNameWithoutPrefix(), newSection.isEnding());
-        if (result) {
-            return deleteSectionElements(oldSection) && saveSectionElements(newSection);
+        if (isEnding && !found) {
+            addEnding(sectionId);
+        } else if (!isEnding && found) {
+            removeEnding(sectionId);
         }
-        return result;
-    }
-
-    public boolean deleteSection(final Section section)
-    {
-        boolean result = true;
-        if (section.isEnding()) {
-            result = removeEnding(section.getNameWithoutPrefix());
-        }
-        if (result) {
-            result = deleteSectionElements(section);
-            if (result) {
-                sections.remove(section);
-            }
-        }
-        return result;
-    }
-
-    private boolean deleteSectionElements(final Section section)
-    {
-        boolean result = true;
-        if (section.isEnding()) {
-            result = removeEnding(section.getNameWithoutPrefix());
-        }
-        for (final Paragraph paragraph : section.getParagraphs()) {
-            result = removeStoryElement(paragraph);
-            if (!result) {
-                break;
-            }
-        }
-        return result;
-    }
-
-    public int getLastSectionId()
-    {
-        int lastSectionId = -1;
-        try {
-            final Document doc = getXmlDoc();
-            final Node sectionsElement = FileManager.findElementNamed("sections", doc);
-            lastSectionId = Integer.valueOf(sectionsElement.getTextContent());
-        } catch (IOException | SAXException | ParserConfigurationException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while getting next section id", ex);
-        }
-        return lastSectionId;
-    }
-
-    public void incrementLastSectionId()
-    {
-        try {
-            final Document doc = getXmlDoc();
-            final Node sectionsElement = FileManager.findElementNamed("sections", doc);
-            int lastSectionId = Integer.valueOf(sectionsElement.getTextContent());
-            sectionsElement.setTextContent(String.valueOf(++lastSectionId));
-            saveXmlDoc(doc);
-        } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while incrementing section id", ex);
-        }
-    }
-
-    public boolean addEnding(final String sectionId)
-    {
-        try {
-            final Document doc = getXmlDoc();
-            final Node endingElement = FileManager.findElementNamed("ending", doc);
-            final String oldValue = endingElement.getTextContent();
-            final String newValue = oldValue.isEmpty() ? sectionId : oldValue + "," + sectionId;
-            endingElement.setTextContent(newValue);
-            saveXmlDoc(doc);
-            return true;
-        } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while adding ending", ex);
-        }
-        return false;
-    }
-
-    public boolean removeEnding(final String sectionId)
-    {
-        try {
-            final Document doc = getXmlDoc();
-            final Node endingElement = FileManager.findElementNamed("ending", doc);
-            final StringBuilder sb = new StringBuilder();
-            final String[] endingSectionsIds = endingElement.getTextContent().split(",");
-            for (final String id : endingSectionsIds) {
-                if (!id.equals(sectionId)) {
-                    sb.append(id).append(",");
-                }
-            }
-            sb.delete(sb.length() - 1, sb.length());
-            endingElement.setTextContent(sb.toString());
-            saveXmlDoc(doc);
-            return true;
-        } catch (IOException | SAXException | ParserConfigurationException | TransformerException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while removing ending", ex);
-        }
-        return false;
-    }
-
-    public boolean updateEndings(final String sectionId, final boolean isEnding)
-    {
-        try {
-            final Document doc = getXmlDoc();
-            final Node endingElement = FileManager.findElementNamed("ending", doc);
-            final String[] endingSectionsIds = endingElement.getTextContent().split(",");
-            boolean found = false;
-            for (final String id : endingSectionsIds) {
-                if (id.equals(sectionId)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (isEnding && !found) {
-                addEnding(sectionId);
-            } else if (!isEnding && found) {
-                removeEnding(sectionId);
-            }
-            return true;
-        } catch (IOException | SAXException | ParserConfigurationException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while updating endings", ex);
-        }
-        return false;
     }
 
     ////////// ITEMS
-    private void loadItems()
+    private void loadItems() throws SBException
     {
         items.addAll(Item.load("resources/default.xml", true));
         items.addAll(Item.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
@@ -421,7 +365,7 @@ public class Story
         return itemIds;
     }
 
-    public boolean addItem(final Item item)
+    public void addItem(final Item item) throws SBException
     {
         final String description = item.getTemporarySectionText();
         if (!description.isEmpty()) {
@@ -433,14 +377,11 @@ public class Story
             addSection(section);
             item.setSectionId(String.valueOf(newSectionId));
         }
-        final boolean result = saveStoryElement(item);
-        if (result) {
-            items.add(item);
-        }
-        return result;
+        saveStoryElement(item);
+        items.add(item);
     }
 
-    public boolean removeItem(final Item item)
+    public void removeItem(final Item item) throws SBException
     {
         if (!item.getSectionId().isEmpty()) {
             final Section section = getSection(item.getSectionId());
@@ -448,15 +389,11 @@ public class Story
                 deleteSection(section);
             }
         }
-
-        final boolean result = removeStoryElement(item);
-        if (result) {
-            items.remove(item);
-        }
-        return result;
+        removeStoryElement(item);
+        items.remove(item);
     }
 
-    public boolean updateItem(final Item item)
+    public void updateItem(final Item item) throws SBException
     {
         if (!item.getSectionId().isEmpty()) {
             final Section section = getSection(item.getSectionId());
@@ -469,11 +406,11 @@ public class Story
                 }
             }
         }
-        return updateStoryElement(item);
+        updateStoryElement(item);
     }
 
     ////////// JOINS
-    private void loadJoins()
+    private void loadJoins() throws SBException
     {
         joins.addAll(Join.load("resources/default.xml", true));
         joins.addAll(Join.load(FileManager.getStoryFilenameWithAbsolutePath(this), false));
@@ -484,7 +421,7 @@ public class Story
         return joins;
     }
 
-    public boolean addJoin(final Join join)
+    public void addJoin(final Join join) throws SBException
     {
         final String description = join.getTemporarySectionText();
         final int newSectionId = getLastSectionId() + 1;
@@ -495,14 +432,11 @@ public class Story
         addSection(section);
 
         join.setSectionId(String.valueOf(newSectionId));
-        final boolean result = saveStoryElement(join);
-        if (result) {
-            joins.add(join);
-        }
-        return result;
+        saveStoryElement(join);
+        joins.add(join);
     }
 
-    public boolean removeJoin(final Join join)
+    public void removeJoin(final Join join) throws SBException
     {
         if (!join.getSectionId().isEmpty()) {
             final Section section = getSection(join.getSectionId());
@@ -510,15 +444,11 @@ public class Story
                 deleteSection(section);
             }
         }
-
-        final boolean result = removeStoryElement(join);
-        if (result) {
-            joins.remove(join);
-        }
-        return result;
+        removeStoryElement(join);
+        joins.remove(join);
     }
 
-    public boolean updateJoin(final Join join)
+    public void updateJoin(final Join join) throws SBException
     {
         if (!join.getSectionId().isEmpty()) {
             final Section section = getSection(join.getSectionId());
@@ -531,58 +461,40 @@ public class Story
                 }
             }
         }
-        return updateStoryElement(join);
+        updateStoryElement(join);
     }
 
     ////////// XML
-    public boolean saveStoryElement(final IStoryElement element)
+    public void saveStoryElement(final IStoryElement element) throws SBException
     {
-        try {
-            final Document doc = getXmlDoc();
-            final Element newElement = element.build(doc);
-            doc.getDocumentElement().appendChild(newElement);
-            saveXmlDoc(doc);
-            return true;
-        } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while saving new story element", ex);
-        }
-        return false;
+        final Document doc = getXmlDoc();
+        final Element newElement = element.build(doc);
+        doc.getDocumentElement().appendChild(newElement);
+        saveXmlDoc(doc);
     }
 
-    private boolean removeStoryElement(final IStoryElement element)
+    private void removeStoryElement(final IStoryElement element) throws SBException
     {
-        try {
-            final Document doc = getXmlDoc();
-            final Node node = FileManager.findElementNamed(element.getName(), doc);
-            doc.getDocumentElement().removeChild(node);
-            saveXmlDoc(doc);
-            return true;
-        } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while deleting story element", ex);
-        }
-        return false;
+        final Document doc = getXmlDoc();
+        final Node node = FileManager.findElementNamed(element.getName(), doc);
+        doc.getDocumentElement().removeChild(node);
+        saveXmlDoc(doc);
     }
 
-    private boolean updateStoryElement(final IStoryElement element)
+    private void updateStoryElement(final IStoryElement element) throws SBException
     {
-        try {
-            final Document doc = getXmlDoc();
-            final Node node = FileManager.findElementNamed(element.getName(), doc);
-            node.setTextContent(element.getContent());
-            saveXmlDoc(doc);
-            return true;
-        } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
-            ErrorManager.showErrorMessage(Story.class, "Error while updating story element", ex);
-        }
-        return false;
+        final Document doc = getXmlDoc();
+        final Node node = FileManager.findElementNamed(element.getName(), doc);
+        node.setTextContent(element.getContent());
+        saveXmlDoc(doc);
     }
 
-    public void saveXmlDoc(final Document doc) throws TransformerException
+    public void saveXmlDoc(final Document doc) throws SBException
     {
         FileManager.saveDocument(doc, FileManager.getStoryFilenameWithAbsolutePath(this));
     }
 
-    public Document getXmlDoc() throws IOException, SAXException, ParserConfigurationException
+    public Document getXmlDoc() throws SBException
     {
         return FileManager.openDocument(FileManager.getStoryFilenameWithAbsolutePath(this));
     }

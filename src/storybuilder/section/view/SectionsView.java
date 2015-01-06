@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.section.model.Section;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -20,7 +21,7 @@ public class SectionsView extends AbstractTableView
     }
 
     @Override
-    protected IStoryElement getNewElement()
+    protected IStoryElement getNewElement() throws SBException
     {
         final int newSectionId = cache.getStory().getLastSectionId() + 1;
         return new Section(Section.PREFIX + newSectionId, false);
@@ -45,21 +46,21 @@ public class SectionsView extends AbstractTableView
     }
 
     @Override
-    protected boolean addElementToStory(final IStoryElement element)
+    protected void addElementToStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().addSection((Section) element);
+        cache.getStory().addSection((Section) element);
     }
 
     @Override
-    protected boolean updateElementInStory(final IStoryElement element)
+    protected void updateElementInStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().updateSection((Section) stashed, (Section) element);
+        cache.getStory().updateSection((Section) stashed, (Section) element);
     }
 
     @Override
-    protected boolean deleteElementFromStory(final IStoryElement element)
+    protected void deleteElementFromStory(final IStoryElement element) throws SBException
     {
-        return cache.getStory().deleteSection((Section) element);
+        cache.getStory().deleteSection((Section) element);
     }
 
     @Override

@@ -6,6 +6,8 @@ import storybuilder.main.view.AbstractView;
 import javafx.scene.control.TextField;
 import storybuilder.main.view.EmptyView;
 import storybuilder.story.model.Story;
+import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -33,7 +35,9 @@ public class NewStoryView extends AbstractView
                 mwc.switchView(new EmptyView());
                 mwc.enableMenus(true);
             } catch (ValidationFailed ex) {
-                mwc.updateStatusBarMessage(ex.getFailCause());
+                ErrorManager.showErrorMessage(ex.getFailCause());
+            } catch (SBException ex) {
+                ErrorManager.showErrorMessage(ex.getFailCause());
             }
         });
     }

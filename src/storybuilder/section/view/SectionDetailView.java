@@ -5,6 +5,7 @@ import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.section.model.Section;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -27,7 +28,7 @@ public class SectionDetailView extends AbstractDetailView
     }
 
     @Override
-    protected void setFields()
+    protected void setFields() throws SBException
     {
         final Section section = (Section) element;
         section.refreshElements(cache.getStory());

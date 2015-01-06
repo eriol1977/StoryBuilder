@@ -13,6 +13,7 @@ import storybuilder.join.model.Join;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -39,7 +40,7 @@ public class JoinDetailView extends AbstractDetailView
     }
     
     @Override
-    protected void setFields()
+    protected void setFields() throws SBException
     {
         final Join join = (Join) element;
         descriptionField = addLabeledTextInput("Description");

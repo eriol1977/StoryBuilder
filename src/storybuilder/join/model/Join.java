@@ -1,20 +1,17 @@
 package storybuilder.join.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import storybuilder.main.model.StoryElement;
 import javafx.beans.property.SimpleStringProperty;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.section.model.Section;
-import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -77,18 +74,14 @@ public class Join extends StoryElement
         return sb.toString();
     }
 
-    public static List<Join> load(final String fileName, final boolean defaultElements)
+    public static List<Join> load(final String fileName, final boolean defaultElements) throws SBException
     {
         final List<Join> joins = new ArrayList<>();
-        try {
-            final Document doc = FileManager.openDocument(fileName);
-            final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
-            elements.stream().forEach((element) -> {
-                joins.add(new Join(element, defaultElements));
-            });
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            ErrorManager.showErrorMessage(Join.class, "Error while loading joins", ex);
-        }
+        final Document doc = FileManager.openDocument(fileName);
+        final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
+        elements.stream().forEach((element) -> {
+            joins.add(new Join(element, defaultElements));
+        });
         return joins;
     }
 
@@ -165,18 +158,14 @@ public class Join extends StoryElement
         this.sectionId.set(sectionId);
     }
 
-    public String getSectionText()
+    public String getSectionText() throws SBException
     {
         String text = "";
         if (!getSectionId().isEmpty()) {
-            try {
-                final Document doc = FileManager.openDocument(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()));
-                final Node node = FileManager.findElementNamed(Section.PREFIX + getSectionId() + "_1", doc);
-                if (node != null) {
-                    text = node.getTextContent();
-                }
-            } catch (ParserConfigurationException | SAXException | IOException ex) {
-                ErrorManager.showErrorMessage(Join.class, "Error while loading section by id " + getSectionId(), ex);
+            final Document doc = FileManager.openDocument(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()));
+            final Node node = FileManager.findElementNamed(Section.PREFIX + getSectionId() + "_1", doc);
+            if (node != null) {
+                text = node.getTextContent();
             }
         }
         return text;

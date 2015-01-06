@@ -11,15 +11,10 @@ import storybuilder.main.view.MainWindowController;
 public class ErrorManager
 {
 
-    public static void showErrorMessage(final Class<?> clazz, final String message)
+    public static void showErrorMessage(final String message)
     {
         MainWindowController.getInstance().updateStatusBarMessage(message);
-        Logger.getLogger(clazz.getName()).log(Level.SEVERE, message);
+        Logger.getGlobal().log(Level.SEVERE, message);
     }
-    
-    public static void showErrorMessage(final Class<?> clazz, final String message, final Exception ex)
-    {
-        MainWindowController.getInstance().updateStatusBarMessage(message);
-        Logger.getLogger(clazz.getName()).log(Level.SEVERE, message, ex);
-    }
+
 }

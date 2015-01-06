@@ -1,17 +1,14 @@
 package storybuilder.event.model;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
-import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
-import storybuilder.validation.ErrorManager;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -73,18 +70,14 @@ public class Event extends StoryElement
         this.description.set(description);
     }
 
-    public static List<Event> load(final String fileName, final boolean defaultElements)
+    public static List<Event> load(final String fileName, final boolean defaultElements) throws SBException
     {
         final List<Event> events = new ArrayList<>();
-        try {
-            final Document doc = FileManager.openDocument(fileName);
-            final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
-            elements.stream().forEach((element) -> {
-                events.add(new Event(element, defaultElements));
-            });
-        } catch (ParserConfigurationException | SAXException | IOException ex) {
-            ErrorManager.showErrorMessage(Event.class, "Error while loading events", ex);
-        }
+        final Document doc = FileManager.openDocument(fileName);
+        final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
+        elements.stream().forEach((element) -> {
+            events.add(new Event(element, defaultElements));
+        });
         return events;
     }
 

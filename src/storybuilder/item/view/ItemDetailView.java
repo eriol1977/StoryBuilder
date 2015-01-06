@@ -7,6 +7,7 @@ import storybuilder.item.model.Item;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -14,20 +15,20 @@ import storybuilder.main.view.AbstractTableView;
  */
 public class ItemDetailView extends AbstractDetailView
 {
-    
+
     private TextField itemNameField;
-    
+
     private TextField itemFullNameField;
-    
+
     private TextField textField;
-    
+
     public ItemDetailView(final boolean isNewElement, final IStoryElement element, final AbstractTableView tableView)
     {
         super(isNewElement, element, tableView);
     }
-    
+
     @Override
-    protected void setFields()
+    protected void setFields() throws SBException
     {
         final Item item = (Item) element;
         itemNameField = addLabeledTextInput("Name");
@@ -43,7 +44,7 @@ public class ItemDetailView extends AbstractDetailView
             });
         }
     }
-    
+
     @Override
     protected void setElementValues()
     {
@@ -52,7 +53,7 @@ public class ItemDetailView extends AbstractDetailView
         item.setItemFullName(itemFullNameField.getText());
         item.setTemporarySectionText(textField.getText());
     }
-    
+
     @Override
     protected void disableFields()
     {
@@ -60,5 +61,5 @@ public class ItemDetailView extends AbstractDetailView
         itemFullNameField.setDisable(true);
         textField.setDisable(true);
     }
-    
+
 }

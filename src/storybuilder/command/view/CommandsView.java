@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import storybuilder.command.model.Command;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.validation.SBException;
 
 /**
  *
@@ -50,21 +51,21 @@ public class CommandsView extends AbstractTableView
     }
 
     @Override
-    protected boolean addElementToStory(IStoryElement element)
+    protected void addElementToStory(IStoryElement element) throws SBException
     {
-        return cache.getStory().addCommand((Command) element);
+        cache.getStory().addCommand((Command) element);
     }
 
     @Override
-    protected boolean updateElementInStory(IStoryElement element)
+    protected void updateElementInStory(IStoryElement element) throws SBException
     {
-        return cache.getStory().updateCommand((Command) element);
+        cache.getStory().updateCommand((Command) element);
     }
 
     @Override
-    protected boolean deleteElementFromStory(IStoryElement element)
+    protected void deleteElementFromStory(IStoryElement element) throws SBException
     {
-        return cache.getStory().removeCommand((Command) element);
+        cache.getStory().removeCommand((Command) element);
     }
 
 }
