@@ -14,12 +14,15 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.main.view.MainWindowController;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.Section;
+import storybuilder.validation.ValidationFailed;
 
 /**
  *
@@ -28,12 +31,15 @@ import storybuilder.section.model.Section;
 public class LinksTable extends TableView<Link>
 {
 
+    private final SectionDetailView sectionDetailView;
+    
     private final Section section;
 
     private ObservableList<Link> linksData;
 
-    public LinksTable(final Section section)
+    public LinksTable(final SectionDetailView sectionDetailView, final Section section)
     {
+        this.sectionDetailView = sectionDetailView;
         this.section = section;
         linksData = FXCollections.observableArrayList();
         linksData.addAll(section.getLinks());
@@ -43,7 +49,7 @@ public class LinksTable extends TableView<Link>
         setFixedCellSize(AbstractTableView.ROW_HEIGHT);
         final Button buttonAdd = new Button("Add");
         buttonAdd.setOnAction((ActionEvent event) -> {
-            showAddLinkDialog();
+            new AddLinkDialog(this).show();
         });
         setPlaceholder(buttonAdd);
         resizeTableHeight();
@@ -67,12 +73,12 @@ public class LinksTable extends TableView<Link>
             {
                 final MenuItem addMenuItem = new MenuItem("Add");
                 addMenuItem.setOnAction((ActionEvent event) -> {
-                    showAddLinkDialog();
+                    new AddLinkDialog(LinksTable.this).show();
                 });
                 final MenuItem updateMenuItem = new MenuItem("Update");
                 updateMenuItem.setOnAction((ActionEvent event) -> {
                     final Link link = row.getItem();
-                    showUpdateLinkDialog(link);
+                    new UpdateLinkDialog(LinksTable.this, link).show();
                 });
                 final MenuItem moveUpMenuItem = new MenuItem("Move Up");
                 moveUpMenuItem.setOnAction((ActionEvent event) -> {
@@ -139,79 +145,52 @@ public class LinksTable extends TableView<Link>
         getColumns().add(column);
     }
 
-    // TODO
-    private void showAddLinkDialog()
-    {
-        final SBDialog dialog = new SBDialog();
-        dialog.add(new Label("Add link"));
-//        TextField text = new TextField();
-//        dialog.add(text);
-//        Button button = new Button("Add");
-//        button.setOnAction((ActionEvent event) -> {
-//            final Paragraph paragraph = new Paragraph(getNewParagraphId(), text.getText(), false);
-//            try {
-//                paragraph.validate();
-//                linksData.add(paragraph);
-//                resizeTableHeight();
-//            } catch (ValidationFailed ex) {
-//                MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
-//            }
-//            dialog.close();
-//        });
-        //dialog.add(button);
-        dialog.show();
-    }
-
-    // TODO
-    private void showUpdateLinkDialog(final Link link)
-    {
-        final SBDialog dialog = new SBDialog();
-        dialog.add(new Label("Update link"));
-//        TextField text = new TextField(paragraph.getText());
-//        dialog.add(text);
-//        Button button = new Button("Update");
-//        button.setOnAction((ActionEvent event) -> {
-//            paragraph.setText(text.getText());
-//            try {
-//                paragraph.validate();
-//                AbstractTableView.refreshTable(this, linksData);
-//            } catch (ValidationFailed ex) {
-//                MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
-//            }
-//            dialog.close();
-//        });
-//        dialog.add(button);
-        dialog.show();
-    }
-
-    // TODO
     private void showRemoveLinkDialog(final Link link)
     {
         final SBDialog dialog = new SBDialog();
-        dialog.add(new Label("Remove link"));
-//        
-//        String parText = paragraph.getText().length() > 120 ? paragraph.getText().substring(0, 120) + "..." : paragraph.getText();
-//        dialog.add(new Text("\"" + parText + "\""));
-//        dialog.add(new Label("Do you really want to delete this paragraph?"));
-//        final HBox buttonBox = new HBox(10);
-//        Button buttonYes = new Button("Yes");
-//        buttonYes.setOnAction((ActionEvent event) -> {
-//            linksData.remove(paragraph);
-//            renameParagraphs();
-//            resizeTableHeight();
-//            dialog.close();
-//        });
-//        buttonBox.getChildren().add(buttonYes);
-//        Button buttonNo = new Button("No");
-//        buttonNo.setOnAction((ActionEvent event) -> {
-//            dialog.close();
-//        });
-//        buttonBox.getChildren().add(buttonNo);
-//        dialog.add(buttonBox);
+
+        dialog.add(new Text("\"" + link.getReadableContent() + "\""));
+        dialog.add(new Label("Do you really want to delete this link?"));
+        final HBox buttonBox = new HBox(10);
+        Button buttonYes = new Button("Yes");
+        buttonYes.setOnAction((ActionEvent event) -> {
+            linksData.remove(link);
+            renameLinks();
+            resizeTableHeight();
+            dialog.close();
+        });
+        buttonBox.getChildren().add(buttonYes);
+        Button buttonNo = new Button("No");
+        buttonNo.setOnAction((ActionEvent event) -> {
+            dialog.close();
+        });
+        buttonBox.getChildren().add(buttonNo);
+        dialog.add(buttonBox);
         dialog.show();
     }
 
-    private String getNewLinkId()
+    void addLink(final Link link)
+    {
+        try {
+            link.validate();
+            linksData.add(link);
+            resizeTableHeight();
+        } catch (final ValidationFailed ex) {
+            MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
+        }
+    }
+
+    void updateLink(final Link link)
+    {
+        try {
+            link.validate();
+            AbstractTableView.refreshTable(this, linksData);
+        } catch (final ValidationFailed ex) {
+            MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
+        }
+    }
+
+    String getNewLinkId()
     {
         int id = linksData.size() + 1;
         return section.getName() + "_link_" + id;
@@ -240,4 +219,9 @@ public class LinksTable extends TableView<Link>
         return linksData;
     }
 
+    public SectionDetailView getSectionDetailView()
+    {
+        return sectionDetailView;
+    }
+    
 }

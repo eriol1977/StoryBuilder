@@ -226,4 +226,9 @@ public abstract class AbstractTableView extends AbstractView
         table.scrollTo(element);
         table.getSelectionModel().select(element);
     }
+
+    public void addElementStraightAway(final IStoryElement element)
+    {
+        data.add(element);
+    }
 }

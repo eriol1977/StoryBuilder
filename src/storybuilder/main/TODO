@@ -1,6 +1,11 @@
--- edizione link
--- switch
+-- bug: cancellare sezione 1 del file di esempio
+-- bug: creare una nuova sezione con un link a una nuova sezione: viene utilizzato lo stesso id di sezione!
+-- bug: creare link con sezione e comando: restano i ":" in fondo
+
+-- paragraph switch
+-- link switch
 -- minigame
+
 -- export well formed XML
 -- ergonomia: pulsanti per creare comando, oggetto, ecc, quando serve, per esempio direttamente dalla schermata di sezione
 -- ergonomia: tasto back per tornare alla schermata e selezione precedente

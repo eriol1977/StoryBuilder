@@ -160,9 +160,14 @@ public class Story
         return commands;
     }
 
+    public List<String> getCommandIds()
+    {
+        return commands.stream().map(c -> c.getName()).collect(Collectors.toList());
+    }
+
     public Command getCommand(final String id)
     {
-        return commands.stream().filter(item -> item.getName().equals(id)).collect(Collectors.toList()).get(0);
+        return commands.stream().filter(command -> command.getName().equals(id)).collect(Collectors.toList()).get(0);
     }
 
     public void addCommand(final Command command) throws SBException
@@ -194,6 +199,11 @@ public class Story
         return events;
     }
 
+    public Event getEvent(final String id)
+    {
+        return events.stream().filter(event -> event.getName().equals(id)).collect(Collectors.toList()).get(0);
+    }
+
     public List<String> getEventIds()
     {
         return events.stream().map(e -> e.getName()).collect(Collectors.toList());
@@ -222,6 +232,14 @@ public class Story
         return sections;
     }
 
+    public List<String> getSectionIds(final boolean noDefaults)
+    {
+        if (noDefaults) {
+            return sections.stream().filter(s -> !s.isDefault()).map(s -> s.getNameWithoutPrefix()).collect(Collectors.toList());
+        }
+        return sections.stream().map(s -> s.getNameWithoutPrefix()).collect(Collectors.toList());
+    }
+
     public Section getSection(final String id)
     {
         for (final Section section : sections) {
@@ -246,6 +264,16 @@ public class Story
         saveSectionElements(section);
         sections.add(section);
         incrementLastSectionId();
+    }
+
+    public Section addNewEmptySection() throws SBException
+    {
+        final Section section = new Section(Section.PREFIX + (getLastSectionId() + 1), false);
+        final List<Paragraph> paragraphs = new ArrayList<>(1);
+        paragraphs.add(new Paragraph(section.getName() + "_1", "<<write me>>", false));
+        section.setParagraphs(paragraphs);
+        addSection(section);
+        return section;
     }
 
     private void saveSectionElements(final Section section) throws SBException

@@ -93,7 +93,7 @@ public class SectionDetailView extends AbstractDetailView
         TitledPane paragraphsPane = new TitledPane(PARAGRAPHS_PANE_TITLE, paragraphsTable);
         accordion.getPanes().add(paragraphsPane);
 
-        linksTable = new LinksTable(section);
+        linksTable = new LinksTable(this, section);
         TitledPane linksPane = new TitledPane(LINKS_PANE_TITLE, linksTable);
         accordion.getPanes().add(linksPane);
 
@@ -170,4 +170,8 @@ public class SectionDetailView extends AbstractDetailView
         getView.setDisable(true);
     }
 
+    void addNewSectionToTable(final Section section)
+    {
+        tableView.addElementStraightAway(section);
+    }
 }

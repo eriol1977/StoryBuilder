@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import storybuilder.event.model.Event;
+import storybuilder.item.model.Item;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
@@ -22,9 +24,9 @@ import storybuilder.validation.ValidationFailed;
 public class Link extends StoryElement
 {
 
-    public final static String ITEM_YES = "yes";
+    public final static String YES = "yes";
 
-    public final static String ITEM_NO = "no";
+    public final static String NO = "no";
 
     private String sectionId;
 
@@ -32,13 +34,20 @@ public class Link extends StoryElement
 
     private Map<String, List<String>> itemIds = new HashMap<>();
 
-    public Link(final String name, final String sectionId, final List<String> commandIds, final List<String> itemIds, final List<String> noItemIds, final boolean defaultElement)
+    private Map<String, List<String>> eventIds = new HashMap<>();
+
+    public Link(final String name, final String sectionId, final List<String> commandIds,
+            final List<String> itemIds, final List<String> noItemIds,
+            final List<String> eventIds, final List<String> noEventIds,
+            final boolean defaultElement)
     {
         super(name, defaultElement);
         this.sectionId = sectionId;
         this.commandIds.addAll(commandIds);
-        this.itemIds.put(ITEM_YES, itemIds);
-        this.itemIds.put(ITEM_NO, noItemIds);
+        this.itemIds.put(YES, itemIds);
+        this.itemIds.put(NO, noItemIds);
+        this.eventIds.put(YES, eventIds);
+        this.eventIds.put(NO, noEventIds);
     }
 
     public Link(Node node, boolean defaultElement)
@@ -49,18 +58,26 @@ public class Link extends StoryElement
         if (linkInfo.length > 1) {
             commandIds.addAll(Arrays.asList(linkInfo[1].split(",")));
             if (linkInfo.length > 2) {
-                final String[] itemsAndNoItems = linkInfo[2].split(",");
+                final String[] stuff = linkInfo[2].split(",");
                 final List<String> items = new ArrayList<>();
                 final List<String> noItems = new ArrayList<>();
-                for (final String id : itemsAndNoItems) {
-                    if (id.startsWith("no_")) {
-                        noItems.add(id);
-                    } else {
+                final List<String> events = new ArrayList<>();
+                final List<String> noEvents = new ArrayList<>();
+                for (final String id : stuff) {
+                    if (id.startsWith("no_" + Item.PREFIX)) {
+                        noItems.add(id.substring(3, id.length()));
+                    } else if (id.startsWith("no_" + Event.PREFIX)) {
+                        noEvents.add(id.substring(3, id.length()));
+                    } else if (id.startsWith(Item.PREFIX)) {
                         items.add(id);
+                    } else if (id.startsWith(Event.PREFIX)) {
+                        events.add(id);
                     }
                 }
-                this.itemIds.put(ITEM_YES, items);
-                this.itemIds.put(ITEM_NO, noItems);
+                this.itemIds.put(YES, items);
+                this.itemIds.put(NO, noItems);
+                this.eventIds.put(YES, events);
+                this.eventIds.put(NO, noEvents);
             }
         }
     }
@@ -68,7 +85,7 @@ public class Link extends StoryElement
     public Link(final Link another)
     {
         this(another.getName(), another.getSectionId(), another.getCommandIds(),
-                another.getItemIds(), another.getNoItemIds(), another.isDefault());
+                another.getItemIds(), another.getNoItemIds(), another.getEventIds(), another.getNoEventIds(), another.isDefault());
     }
 
     @Override
@@ -88,18 +105,30 @@ public class Link extends StoryElement
             getCommandIds().stream().forEach(id -> sb.append(id).append(","));
             sb.delete(sb.length() - 1, sb.length()); // deletes last ','
 
-            // items and no_items
-            if (!getItemIds().isEmpty() || !getNoItemIds().isEmpty()) {
+            // items, no_items, events and no_events
+            if (!getAllItemIds().isEmpty() || !getAllEventIds().isEmpty()) {
                 sb.append(":");
             }
             if (!getItemIds().isEmpty()) {
                 getItemIds().stream().forEach(id -> sb.append(id).append(","));
-                if (getNoItemIds().isEmpty()) {
+                if (getNoItemIds().isEmpty() && getAllEventIds().isEmpty()) {
                     sb.delete(sb.length() - 1, sb.length()); // deletes last ','
                 }
             }
             if (!getNoItemIds().isEmpty()) {
-                getNoItemIds().stream().forEach(id -> sb.append(id).append(","));
+                getNoItemIds().stream().forEach(id -> sb.append("no_").append(id).append(","));
+                if (getAllEventIds().isEmpty()) {
+                    sb.delete(sb.length() - 1, sb.length()); // deletes last ','
+                }
+            }
+            if (!getEventIds().isEmpty()) {
+                getEventIds().stream().forEach(id -> sb.append(id).append(","));
+                if (getNoEventIds().isEmpty()) {
+                    sb.delete(sb.length() - 1, sb.length()); // deletes last ','
+                }
+            }
+            if (!getNoEventIds().isEmpty()) {
+                getNoEventIds().stream().forEach(id -> sb.append("no_").append(id).append(","));
                 sb.delete(sb.length() - 1, sb.length()); // deletes last ','
             }
         }
@@ -110,29 +139,38 @@ public class Link extends StoryElement
     {
         final Story story = Cache.getInstance().getStory();
         final StringBuilder sb = new StringBuilder();
-        sb.append("Next section: ").append(getSectionId());
+        sb.append("[Next section: ").append(getSectionId()).append("] ");
         // commands
         if (!getCommandIds().isEmpty()) {
-            sb.append(" - Commands: ");
+            sb.append("[Commands: ");
             getCommandIds().stream().forEach(id -> sb.append(story.getCommand(id).getDescription()).append(", "));
             sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+            sb.append("] ");
 
-            // items and no_items
-            if (!getItemIds().isEmpty() || !getNoItemIds().isEmpty()) {
-                sb.append(" - ");
-            }
+            // items, no_items, events and no_events
             if (!getItemIds().isEmpty()) {
-                sb.append("Items to have: ");
+                sb.append("[Items to have: ");
                 getItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
                 sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-                if (!getNoItemIds().isEmpty()) {
-                    sb.append(" - ");
-                }
+                sb.append("] ");
             }
             if (!getNoItemIds().isEmpty()) {
-                sb.append("Items not to have: ");
+                sb.append("[Items not to have: ");
                 getNoItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
                 sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+                sb.append("] ");
+            }
+            if (!getEventIds().isEmpty()) {
+                sb.append("[Events to have: ");
+                getEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
+                sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+                sb.append("] ");
+            }
+            if (!getNoEventIds().isEmpty()) {
+                sb.append("[Events not to have: ");
+                getNoEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
+                sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+                sb.append("] ");
             }
         }
         return sb.toString();
@@ -145,7 +183,8 @@ public class Link extends StoryElement
         setName(anotherLink.getName());
         setSectionId(anotherLink.getSectionId());
         setCommandIds(anotherLink.getCommandIds());
-        setItemIds(anotherLink.getAllItemIds());
+        setAllItemIds(anotherLink.getAllItemIds());
+        setAllEventIds(anotherLink.getAllEventIds());
         setDefault(anotherLink.isDefault());
     }
 
@@ -192,7 +231,7 @@ public class Link extends StoryElement
 
     public List<String> getItemIds()
     {
-        final List<String> items = itemIds.get(ITEM_YES);
+        final List<String> items = itemIds.get(YES);
         if (items == null) {
             return new ArrayList<>();
         }
@@ -201,11 +240,34 @@ public class Link extends StoryElement
 
     public List<String> getNoItemIds()
     {
-        final List<String> noItems = itemIds.get(ITEM_NO);
+        final List<String> noItems = itemIds.get(NO);
         if (noItems == null) {
             return new ArrayList<>();
         }
         return noItems;
+    }
+
+    public Map<String, List<String>> getAllEventIds()
+    {
+        return eventIds;
+    }
+
+    public List<String> getEventIds()
+    {
+        final List<String> events = eventIds.get(YES);
+        if (events == null) {
+            return new ArrayList<>();
+        }
+        return events;
+    }
+
+    public List<String> getNoEventIds()
+    {
+        final List<String> noEvents = eventIds.get(NO);
+        if (noEvents == null) {
+            return new ArrayList<>();
+        }
+        return noEvents;
     }
 
     public void setSectionId(final String sectionId)
@@ -218,9 +280,34 @@ public class Link extends StoryElement
         this.commandIds = commandIds;
     }
 
-    public void setItemIds(final Map<String, List<String>> itemIds)
+    public void setAllItemIds(final Map<String, List<String>> itemIds)
     {
         this.itemIds = itemIds;
+    }
+
+    public void setItemIds(final List<String> itemIds)
+    {
+        this.itemIds.put(YES, itemIds);
+    }
+
+    public void setNoItemIds(final List<String> noItemIds)
+    {
+        this.itemIds.put(NO, noItemIds);
+    }
+
+    public void setAllEventIds(final Map<String, List<String>> eventIds)
+    {
+        this.eventIds = eventIds;
+    }
+
+    public void setEventIds(final List<String> eventIds)
+    {
+        this.eventIds.put(YES, eventIds);
+    }
+
+    public void setNoEventIds(final List<String> noEventIds)
+    {
+        this.eventIds.put(NO, noEventIds);
     }
 
 }
