@@ -19,8 +19,6 @@ import storybuilder.validation.SBException;
 public class SectionDetailView extends AbstractDetailView
 {
 
-    private final static int NONE_EXPANDED = -1;
-
     private final static int EXPAND_PARAGRAPHS = 1;
 
     private final static int EXPAND_LINKS = 2;
@@ -28,6 +26,8 @@ public class SectionDetailView extends AbstractDetailView
     private final static int EXPAND_GETS = 3;
 
     private final static int EXPAND_DROPS = 4;
+
+    private final static int EXPAND_PAR_SWITCHES = 5;
 
     private final static String PARAGRAPHS_PANE_TITLE = "Paragraphs";
 
@@ -37,11 +37,15 @@ public class SectionDetailView extends AbstractDetailView
 
     private final static String DROPS_PANE_TITLE = "Items to drop";
 
+    private final static String PAR_SWITCHES_PANE_TITLE = "Paragraphs to change";
+
     private CheckBox endingField;
 
     private ParagraphsTable paragraphsTable;
 
     private LinksTable linksTable;
+
+    private ParagraphSwitchView paragraphSwitchView;
 
     private GetView getView;
 
@@ -85,6 +89,9 @@ public class SectionDetailView extends AbstractDetailView
                     case DROPS_PANE_TITLE:
                         sectionsView.setExpandedPane(EXPAND_DROPS);
                         break;
+                    case PAR_SWITCHES_PANE_TITLE:
+                        sectionsView.setExpandedPane(EXPAND_PAR_SWITCHES);
+                        break;
                 }
             }
         });
@@ -105,6 +112,10 @@ public class SectionDetailView extends AbstractDetailView
         TitledPane dropPane = new TitledPane(DROPS_PANE_TITLE, dropView);
         accordion.getPanes().add(dropPane);
 
+        paragraphSwitchView = new ParagraphSwitchView(section);
+        TitledPane parSwitchPane = new TitledPane(PAR_SWITCHES_PANE_TITLE, paragraphSwitchView);
+        accordion.getPanes().add(parSwitchPane);
+
         // remembers which pane was open in the previously viewed section detail
         final int expandedPane = ((SectionsView) tableView).getExpandedPane();
         if (expandedPane == EXPAND_LINKS) {
@@ -113,6 +124,8 @@ public class SectionDetailView extends AbstractDetailView
             accordion.setExpandedPane(getPane);
         } else if (expandedPane == EXPAND_DROPS) {
             accordion.setExpandedPane(dropPane);
+        } else if (expandedPane == EXPAND_PAR_SWITCHES) {
+            accordion.setExpandedPane(parSwitchPane);
         } else {
             accordion.setExpandedPane(paragraphsPane);
         }
@@ -127,6 +140,7 @@ public class SectionDetailView extends AbstractDetailView
         section.setEnding(endingField.isSelected());
         section.setParagraphs(paragraphsTable.getParagraphsData());
         section.setLinks(linksTable.getLinksData());
+        section.setParagraphSwitches(paragraphSwitchView.getSwitches());
         updateGet(section);
         updateDrop(section);
     }
@@ -167,7 +181,9 @@ public class SectionDetailView extends AbstractDetailView
         endingField.setDisable(true);
         paragraphsTable.setDisable(true);
         linksTable.setDisable(true);
+        paragraphSwitchView.setDisable(true);
         getView.setDisable(true);
+        dropView.setDisable(true);
     }
 
     boolean isNewSection()

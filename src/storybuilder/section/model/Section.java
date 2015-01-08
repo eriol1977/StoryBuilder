@@ -27,6 +27,8 @@ public class Section extends StoryElement
 
     private List<Link> links = new ArrayList<>();
 
+    private List<ParagraphSwitch> paragraphSwitches = new ArrayList<>();
+
     private boolean ending = false;
 
     private Get get;
@@ -43,6 +45,7 @@ public class Section extends StoryElement
         this(another.getName(), another.isDefault());
         setParagraphs(another.getParagraphs());
         setLinks(another.getLinks());
+        setParagraphSwitches(another.getParagraphSwitches());
         setGet(another.getGet());
         setDrop(another.getDrop());
     }
@@ -75,6 +78,7 @@ public class Section extends StoryElement
         setName(anotherSection.getName());
         setParagraphs(anotherSection.getParagraphs());
         setLinks(anotherSection.getLinks());
+        setParagraphSwitches(anotherSection.getParagraphSwitches());
         setGet(anotherSection.getGet());
         setDrop(anotherSection.getDrop());
         setDefault(anotherSection.isDefault());
@@ -88,6 +92,7 @@ public class Section extends StoryElement
             section = new Section(defaultSectionName, true);
             section.loadParagraphs();
             section.loadLinks();
+            section.loadParagraphSwitches();
             defaultSections.add(section);
         }
         return defaultSections;
@@ -103,6 +108,7 @@ public class Section extends StoryElement
             section.loadIsEnding(story);
             section.loadParagraphs();
             section.loadLinks();
+            section.loadParagraphSwitches();
             section.loadGet();
             section.loadDrop();
             // if some sections have been deleted, the sections counter still
@@ -120,6 +126,7 @@ public class Section extends StoryElement
         loadIsEnding(story);
         loadParagraphs();
         loadLinks();
+        loadParagraphSwitches();
         loadGet();
         loadDrop();
     }
@@ -152,6 +159,15 @@ public class Section extends StoryElement
             setLinks(Link.load("resources/default.xml", true, getName()));
         } else {
             setLinks(Link.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), false, getName()));
+        }
+    }
+
+    private void loadParagraphSwitches() throws SBException
+    {
+        if (isDefault()) {
+            setParagraphSwitches(ParagraphSwitch.load("resources/default.xml", true, getName()));
+        } else {
+            setParagraphSwitches(ParagraphSwitch.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), false, getName()));
         }
     }
 
@@ -220,6 +236,16 @@ public class Section extends StoryElement
     public void setLinks(final List<Link> links)
     {
         this.links = links;
+    }
+
+    public List<ParagraphSwitch> getParagraphSwitches()
+    {
+        return paragraphSwitches;
+    }
+
+    public void setParagraphSwitches(final List<ParagraphSwitch> paragraphSwitches)
+    {
+        this.paragraphSwitches = paragraphSwitches;
     }
 
     public boolean isEnding()

@@ -20,6 +20,7 @@ import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.Paragraph;
+import storybuilder.section.model.ParagraphSwitch;
 import storybuilder.section.model.Section;
 import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
@@ -286,6 +287,9 @@ public class Story
         }
         for (final Link link : section.getLinks()) {
             saveStoryElement(link);
+        }
+        for (final ParagraphSwitch paragraphSwitch : section.getParagraphSwitches()) {
+            saveStoryElement(paragraphSwitch);
         }
         if (section.getGet() != null) {
             saveStoryElement(section.getGet());
