@@ -54,6 +54,22 @@ public class Link extends StoryElement
     {
         super(node, defaultElement);
         final String[] linkInfo = textContent.split(":");
+        buildLink(linkInfo);
+    }
+
+    /**
+     * Used to create a LinkSwitch
+     *
+     * @param linkInfo
+     */
+    Link(final String[] linkInfo)
+    {
+        super("", false);
+        buildLink(linkInfo);
+    }
+
+    private void buildLink(final String[] linkInfo)
+    {
         this.sectionId = linkInfo[0];
         if (linkInfo.length > 1) {
             commandIds.addAll(Arrays.asList(linkInfo[1].split(",")));

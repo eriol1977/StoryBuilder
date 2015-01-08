@@ -29,6 +29,8 @@ public class Section extends StoryElement
 
     private List<ParagraphSwitch> paragraphSwitches = new ArrayList<>();
 
+    private List<LinkSwitch> linkSwitches = new ArrayList<>();
+
     private boolean ending = false;
 
     private Get get;
@@ -46,6 +48,7 @@ public class Section extends StoryElement
         setParagraphs(another.getParagraphs());
         setLinks(another.getLinks());
         setParagraphSwitches(another.getParagraphSwitches());
+        setLinkSwitches(another.getLinkSwitches());
         setGet(another.getGet());
         setDrop(another.getDrop());
     }
@@ -79,6 +82,7 @@ public class Section extends StoryElement
         setParagraphs(anotherSection.getParagraphs());
         setLinks(anotherSection.getLinks());
         setParagraphSwitches(anotherSection.getParagraphSwitches());
+        setLinkSwitches(anotherSection.getLinkSwitches());
         setGet(anotherSection.getGet());
         setDrop(anotherSection.getDrop());
         setDefault(anotherSection.isDefault());
@@ -93,6 +97,7 @@ public class Section extends StoryElement
             section.loadParagraphs();
             section.loadLinks();
             section.loadParagraphSwitches();
+            section.loadLinkSwitches();
             defaultSections.add(section);
         }
         return defaultSections;
@@ -109,6 +114,7 @@ public class Section extends StoryElement
             section.loadParagraphs();
             section.loadLinks();
             section.loadParagraphSwitches();
+            section.loadLinkSwitches();
             section.loadGet();
             section.loadDrop();
             // if some sections have been deleted, the sections counter still
@@ -127,6 +133,7 @@ public class Section extends StoryElement
         loadParagraphs();
         loadLinks();
         loadParagraphSwitches();
+        loadLinkSwitches();
         loadGet();
         loadDrop();
     }
@@ -168,6 +175,15 @@ public class Section extends StoryElement
             setParagraphSwitches(ParagraphSwitch.load("resources/default.xml", true, getName()));
         } else {
             setParagraphSwitches(ParagraphSwitch.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), false, getName()));
+        }
+    }
+
+    private void loadLinkSwitches() throws SBException
+    {
+        if (isDefault()) {
+            setLinkSwitches(LinkSwitch.load("resources/default.xml", true, getName()));
+        } else {
+            setLinkSwitches(LinkSwitch.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), false, getName()));
         }
     }
 
@@ -219,8 +235,6 @@ public class Section extends StoryElement
     }
 
     /**
-     * TODO considerare anche i LinkSwitch!
-     *
      * @return prossimo numero utilizzabile per salvare uno switch
      */
     public int getNextSwitchNumber()
@@ -228,7 +242,12 @@ public class Section extends StoryElement
         int maxFromParagraphSwitches = paragraphSwitches.isEmpty() ? 0
                 : paragraphSwitches.stream()
                 .mapToInt(ps -> ps.getNumber(getName())).max().getAsInt();
-        return maxFromParagraphSwitches + 1;
+        int maxFromLinkSwitches = linkSwitches.isEmpty() ? 0
+                : linkSwitches.stream()
+                .mapToInt(ps -> ps.getNumber(getName())).max().getAsInt();
+        int max = (maxFromParagraphSwitches > maxFromLinkSwitches
+                ? maxFromParagraphSwitches : maxFromLinkSwitches);
+        return max + 1;
     }
 
     @Override
@@ -265,6 +284,16 @@ public class Section extends StoryElement
     public void setParagraphSwitches(final List<ParagraphSwitch> paragraphSwitches)
     {
         this.paragraphSwitches = paragraphSwitches;
+    }
+
+    public List<LinkSwitch> getLinkSwitches()
+    {
+        return linkSwitches;
+    }
+
+    public void setLinkSwitches(List<LinkSwitch> linkSwitches)
+    {
+        this.linkSwitches = linkSwitches;
     }
 
     public boolean isEnding()

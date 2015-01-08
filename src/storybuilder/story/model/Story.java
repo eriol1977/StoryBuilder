@@ -19,6 +19,7 @@ import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.section.model.Link;
+import storybuilder.section.model.LinkSwitch;
 import storybuilder.section.model.Paragraph;
 import storybuilder.section.model.ParagraphSwitch;
 import storybuilder.section.model.Section;
@@ -290,6 +291,9 @@ public class Story
         }
         for (final ParagraphSwitch paragraphSwitch : section.getParagraphSwitches()) {
             saveStoryElement(paragraphSwitch);
+        }
+        for (final LinkSwitch linkSwitch : section.getLinkSwitches()) {
+            saveStoryElement(linkSwitch);
         }
         if (section.getGet() != null) {
             saveStoryElement(section.getGet());
