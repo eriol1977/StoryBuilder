@@ -1,5 +1,7 @@
 package storybuilder.section.view;
 
+import storybuilder.section.view.paragraphswitch.ParagraphSwitchView;
+import storybuilder.section.view.link.LinksTable;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.CheckBox;
@@ -186,7 +188,7 @@ public class SectionDetailView extends AbstractDetailView
         dropView.setDisable(true);
     }
 
-    boolean isNewSection()
+    public boolean isNewSection()
     {
         return this.isNewElement;
     }

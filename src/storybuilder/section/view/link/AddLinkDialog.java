@@ -1,9 +1,7 @@
-package storybuilder.section.view;
+package storybuilder.section.view.link;
 
-import storybuilder.main.Cache;
 import storybuilder.main.view.MainWindowController;
 import storybuilder.section.model.Link;
-import storybuilder.section.model.Section;
 import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 

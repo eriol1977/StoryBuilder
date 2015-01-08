@@ -1,4 +1,4 @@
-package storybuilder.section.view;
+package storybuilder.section.view.link;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -23,6 +23,7 @@ import storybuilder.main.view.MainWindowController;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.Section;
+import storybuilder.section.view.SectionDetailView;
 import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 

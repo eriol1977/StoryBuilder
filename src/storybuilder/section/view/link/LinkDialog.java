@@ -1,4 +1,4 @@
-package storybuilder.section.view;
+package storybuilder.section.view.link;
 
 import java.util.ArrayList;
 import javafx.beans.value.ObservableValue;

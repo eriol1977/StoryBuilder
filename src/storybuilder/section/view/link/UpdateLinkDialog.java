@@ -1,4 +1,4 @@
-package storybuilder.section.view;
+package storybuilder.section.view.link;
 
 import storybuilder.main.view.MainWindowController;
 import storybuilder.section.model.Link;

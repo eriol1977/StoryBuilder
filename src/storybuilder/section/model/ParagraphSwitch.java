@@ -164,6 +164,13 @@ public class ParagraphSwitch extends StoryElement
         return parToChangeOriginalText;
     }
 
+    public int getNumber(final String sectionName)
+    {
+        final String prefix = sectionName + "_switch_";
+        final int index = prefix.length();
+        return Integer.valueOf(getName().substring(index, getName().length()));
+    }
+
     public String getText()
     {
         return text.get();

@@ -212,6 +212,25 @@ public class Section extends StoryElement
         return super.compareTo(another);
     }
 
+    public int getNextParagraphNumber()
+    {
+        return paragraphs.isEmpty() ? 1
+                : paragraphs.stream().mapToInt(p -> Integer.valueOf(p.getNumber())).max().getAsInt() + 1;
+    }
+
+    /**
+     * TODO considerare anche i LinkSwitch!
+     *
+     * @return prossimo numero utilizzabile per salvare uno switch
+     */
+    public int getNextSwitchNumber()
+    {
+        int maxFromParagraphSwitches = paragraphSwitches.isEmpty() ? 0
+                : paragraphSwitches.stream()
+                .mapToInt(ps -> ps.getNumber(getName())).max().getAsInt();
+        return maxFromParagraphSwitches + 1;
+    }
+
     @Override
     public String toString()
     {
