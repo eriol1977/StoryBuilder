@@ -170,8 +170,8 @@ public class SectionDetailView extends AbstractDetailView
         getView.setDisable(true);
     }
 
-    void addNewSectionToTable(final Section section)
+    boolean isNewSection()
     {
-        tableView.addElementStraightAway(section);
+        return this.isNewElement;
     }
 }

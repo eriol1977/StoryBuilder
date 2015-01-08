@@ -24,7 +24,7 @@ public class Section extends StoryElement
     public final static String[] DEFAULT_SECTION_NAMES = {"home", "help", "end", "quit"};
 
     private List<Paragraph> paragraphs = new ArrayList<>();
-    
+
     private List<Link> links = new ArrayList<>();
 
     private boolean ending = false;
@@ -154,7 +154,7 @@ public class Section extends StoryElement
             setLinks(Link.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), false, getName()));
         }
     }
-    
+
     private void loadGet() throws SBException
     {
         if (!isDefault()) {
@@ -185,6 +185,15 @@ public class Section extends StoryElement
         if (!isEnding() && links.isEmpty()) {
             throw new ValidationFailed("A minimum of one link is required, if this is not an ending section.");
         }
+    }
+
+    @Override
+    public int compareTo(final StoryElement another)
+    {
+        if (getNameWithoutPrefix().matches("\\d+") && another.getNameWithoutPrefix().matches("\\d+")) {
+            return Integer.valueOf(getNameWithoutPrefix()).compareTo(Integer.valueOf(another.getNameWithoutPrefix()));
+        }
+        return super.compareTo(another);
     }
 
     @Override

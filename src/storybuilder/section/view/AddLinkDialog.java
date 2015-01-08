@@ -37,10 +37,6 @@ public class AddLinkDialog extends LinkDialog
                 events.getRightItems(), noEvents.getRightItems(), false);
         linksTable.addLink(link);
 
-        if (newSectionCheckBox.isSelected()) {
-            final Section section = Cache.getInstance().getStory().getSection(nextSectionId);
-            linksTable.getSectionDetailView().addNewSectionToTable(section);
-        }
         close();
     }
 

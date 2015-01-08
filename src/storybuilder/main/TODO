@@ -1,7 +1,3 @@
--- bug: cancellare sezione 1 del file di esempio
--- bug: creare una nuova sezione con un link a una nuova sezione: viene utilizzato lo stesso id di sezione!
--- bug: creare link con sezione e comando: restano i ":" in fondo
-
 -- paragraph switch
 -- link switch
 -- minigame

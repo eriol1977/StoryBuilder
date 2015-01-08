@@ -2,6 +2,7 @@ package storybuilder.story.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
@@ -157,7 +158,7 @@ public class Story
 
     public List<Command> getCommands()
     {
-        return commands;
+        return new ArrayList<>(commands);
     }
 
     public List<String> getCommandIds()
@@ -196,7 +197,7 @@ public class Story
 
     public List<Event> getEvents()
     {
-        return events;
+        return new ArrayList<>(events);
     }
 
     public Event getEvent(final String id)
@@ -229,7 +230,9 @@ public class Story
     /////////// SECTIONS
     public List<Section> getSections()
     {
-        return sections;
+        final List<Section> list = new ArrayList<>(sections);
+        Collections.sort(list);
+        return list;
     }
 
     public List<String> getSectionIds(final boolean noDefaults)
@@ -266,9 +269,9 @@ public class Story
         incrementLastSectionId();
     }
 
-    public Section addNewEmptySection() throws SBException
+    public Section addNewEmptySection(final String idNumber) throws SBException
     {
-        final Section section = new Section(Section.PREFIX + (getLastSectionId() + 1), false);
+        final Section section = new Section(Section.PREFIX + idNumber, false);
         final List<Paragraph> paragraphs = new ArrayList<>(1);
         paragraphs.add(new Paragraph(section.getName() + "_1", "<<write me>>", false));
         section.setParagraphs(paragraphs);
@@ -369,7 +372,9 @@ public class Story
                 sb.append(id).append(",");
             }
         }
-        sb.delete(sb.length() - 1, sb.length());
+        if (sb.toString().endsWith(",")) {
+            sb.delete(sb.length() - 1, sb.length());
+        }
         endingElement.setTextContent(sb.toString());
         saveXmlDoc(doc);
     }
@@ -402,7 +407,7 @@ public class Story
 
     public List<Item> getItems()
     {
-        return items;
+        return new ArrayList<>(items);
     }
 
     public List<String> getItemIds()
@@ -468,7 +473,7 @@ public class Story
 
     public List<Join> getJoins()
     {
-        return joins;
+        return new ArrayList<>(joins);
     }
 
     public void addJoin(final Join join) throws SBException

@@ -17,11 +17,13 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import storybuilder.main.Cache;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.main.view.MainWindowController;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.Section;
+import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -32,7 +34,7 @@ public class LinksTable extends TableView<Link>
 {
 
     private final SectionDetailView sectionDetailView;
-    
+
     private final Section section;
 
     private ObservableList<Link> linksData;
@@ -196,6 +198,23 @@ public class LinksTable extends TableView<Link>
         return section.getName() + "_link_" + id;
     }
 
+    /**
+     * Quando si crea un link a una nuova sezione, bisogna considerare il caso
+     * in cui stiamo creando anche la sezione che contiene il link: in questo caso 
+     * dobbiamo sempre incrementare l'id di uno per evitare sovrapposizione
+     * 
+     * @return Id della nuova sezione associata al nuovo link
+     * @throws SBException 
+     */
+    String getNewLinkSectionId() throws SBException
+    {
+        int number = Cache.getInstance().getStory().getLastSectionId() + 1;
+        if (sectionDetailView.isNewSection()) {
+            number++;
+        }
+        return String.valueOf(number);
+    }
+
     private void renameLinks()
     {
         final String sectionName = section.getName();
@@ -223,5 +242,5 @@ public class LinksTable extends TableView<Link>
     {
         return sectionDetailView;
     }
-    
+
 }

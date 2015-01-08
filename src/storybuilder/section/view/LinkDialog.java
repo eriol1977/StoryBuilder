@@ -14,9 +14,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
-import storybuilder.main.view.MainWindowController;
 import storybuilder.main.view.SBDialog;
-import storybuilder.section.model.Link;
 import storybuilder.section.model.Section;
 import storybuilder.story.model.Story;
 import storybuilder.validation.SBException;
@@ -28,6 +26,7 @@ import storybuilder.validation.ValidationFailed;
  */
 public abstract class LinkDialog extends SBDialog
 {
+
     protected final LinksTable linksTable;
     protected final ComboBox newSectionCombo;
     protected final CheckBox newSectionCheckBox;
@@ -96,7 +95,7 @@ public abstract class LinkDialog extends SBDialog
     {
         if (newSectionCheckBox.isSelected()) {
             final Story story = Cache.getInstance().getStory();
-            final Section section = story.addNewEmptySection();
+            final Section section = story.addNewEmptySection(linksTable.getNewLinkSectionId());
             return section.getNameWithoutPrefix();
         } else {
             final String sectionNumber = (String) newSectionCombo.getSelectionModel().getSelectedItem();

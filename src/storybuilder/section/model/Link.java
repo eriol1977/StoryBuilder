@@ -106,7 +106,7 @@ public class Link extends StoryElement
             sb.delete(sb.length() - 1, sb.length()); // deletes last ','
 
             // items, no_items, events and no_events
-            if (!getAllItemIds().isEmpty() || !getAllEventIds().isEmpty()) {
+            if (!getItemIds().isEmpty() || !getNoItemIds().isEmpty() || !getEventIds().isEmpty() || !getNoEventIds().isEmpty()) {
                 sb.append(":");
             }
             if (!getItemIds().isEmpty()) {

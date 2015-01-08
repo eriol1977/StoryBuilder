@@ -12,7 +12,7 @@ import storybuilder.validation.ValidationFailed;
  *
  * @author Francesco Bertolino
  */
-public abstract class StoryElement implements IStoryElement
+public abstract class StoryElement implements IStoryElement, Comparable<StoryElement>
 {
 
     protected final SimpleStringProperty name;
@@ -114,6 +114,12 @@ public abstract class StoryElement implements IStoryElement
         }
         final StoryElement other = (StoryElement) obj;
         return Objects.equals(this.name, other.name);
+    }
+
+    @Override
+    public int compareTo(final StoryElement another)
+    {
+        return getNameWithoutPrefix().compareTo(another.getNameWithoutPrefix());
     }
 
 }
