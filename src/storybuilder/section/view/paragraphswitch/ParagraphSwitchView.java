@@ -45,7 +45,7 @@ public class ParagraphSwitchView extends TableView<ParagraphSwitch>
         setMinWidth(tableWidth);
         setItems(switchesData);
         setFixedCellSize(AbstractTableView.ROW_HEIGHT);
-        final Button buttonAdd = new Button("Add");
+        final Button buttonAdd = new Button("Create switch");
         buttonAdd.setOnAction((ActionEvent event) -> {
             new AddParagraphSwitchDialog(this).show();
         });
@@ -73,11 +73,6 @@ public class ParagraphSwitchView extends TableView<ParagraphSwitch>
                 addMenuItem.setOnAction((ActionEvent event) -> {
                     new AddParagraphSwitchDialog(ParagraphSwitchView.this).show();
                 });
-                final MenuItem updateMenuItem = new MenuItem("Update switch");
-                updateMenuItem.setOnAction((ActionEvent event) -> {
-                    final ParagraphSwitch parSwitch = row.getItem();
-                    new UpdateParagraphSwitchDialog(ParagraphSwitchView.this, parSwitch).show();
-                });
                 final MenuItem removeMenuItem = new MenuItem("Remove switch");
                 removeMenuItem.setOnAction((ActionEvent event) -> {
                     final ParagraphSwitch parSwitch = row.getItem();
@@ -85,7 +80,6 @@ public class ParagraphSwitchView extends TableView<ParagraphSwitch>
                 });
                 final ContextMenu contextMenu = new ContextMenu();
                 contextMenu.getItems().add(addMenuItem);
-                contextMenu.getItems().add(updateMenuItem);
                 contextMenu.getItems().add(new SeparatorMenuItem());
                 contextMenu.getItems().add(removeMenuItem);
                 return contextMenu;
@@ -109,7 +103,7 @@ public class ParagraphSwitchView extends TableView<ParagraphSwitch>
         Button buttonYes = new Button("Yes");
         buttonYes.setOnAction((ActionEvent event) -> {
             switchesData.remove(parSwitch);
-            renameSwitches();
+            renameSwitches(parSwitch.getNumber(section.getName()));
             resizeTableHeight();
             dialog.close();
         });
@@ -134,28 +128,35 @@ public class ParagraphSwitchView extends TableView<ParagraphSwitch>
         }
     }
 
-    void updateSwitch(final ParagraphSwitch parSwitch)
-    {
-        try {
-            parSwitch.validate();
-            AbstractTableView.refreshTable(this, switchesData);
-        } catch (final ValidationFailed ex) {
-            MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
-        }
-    }
-
+    /**
+     * @return Id for the new switch, considering the ones that are still being
+     * edited, as well as those which were already saved in the section
+     * (considering the LinkSwitches too).
+     */
     String getNewSwitchId()
     {
-        return section.getName() + "_switch_" + section.getNextSwitchNumber();
+        final int nextSwitchNumberFromSaved = section.getNextSwitchNumber();
+        final int nextSwitchNumberFromHere = switchesData.isEmpty() ? 1
+                : switchesData.stream().mapToInt(s -> s.getNumber(section.getName())).max().getAsInt() + 1;
+        return section.getName() + "_switch_"
+                + (nextSwitchNumberFromHere > nextSwitchNumberFromSaved ? nextSwitchNumberFromHere : nextSwitchNumberFromSaved);
     }
 
-    private void renameSwitches()
+    /**
+     * Subtracts 1 from the number of a switch, when this is greater than the
+     * number of the removed switch.
+     *
+     * @param removedParagraphNumber
+     */
+    private void renameSwitches(final int removedParagraphNumber)
     {
-        // TODO ci sono di mezzo anche i LinkSwitch, cercare di capire meglio...
         final String sectionName = section.getName();
-        //final int max = section.getNextSwitchNumber() - 1;
-        for (int id = 1; id <= switchesData.size(); id++) {
-            switchesData.get(id - 1).setName(sectionName + "_switch_" + id);
+        int number;
+        for (final ParagraphSwitch ps : switchesData) {
+            number = ps.getNumber(sectionName);
+            if (number > removedParagraphNumber) {
+                ps.setName(sectionName + "_switch_" + (--number));
+            }
         }
     }
 

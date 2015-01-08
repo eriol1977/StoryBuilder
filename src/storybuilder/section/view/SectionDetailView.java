@@ -39,7 +39,7 @@ public class SectionDetailView extends AbstractDetailView
 
     private final static String DROPS_PANE_TITLE = "Items to drop";
 
-    private final static String PAR_SWITCHES_PANE_TITLE = "Paragraphs to change";
+    private final static String PAR_SWITCHES_PANE_TITLE = "Paragraph switches";
 
     private CheckBox endingField;
 

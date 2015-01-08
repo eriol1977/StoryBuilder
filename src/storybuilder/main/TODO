@@ -1,11 +1,7 @@
--- paragraph switch:
-1) update di uno switch
-2) fix ParagraphSwitchView.renameSwitches()
-3) verificare salvataggio su file
-
-
 -- link switch
 [non scordarsi fix Section.getNextSwitchNumber()]
+- evitare switch di update di link, soltanto "nuovo link" o "rimuovi link"
+- evitare update di linkswitch
 
 -- minigame
 

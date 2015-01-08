@@ -73,10 +73,10 @@ public class ParagraphSwitch extends StoryElement
     {
         final StringBuilder sb = new StringBuilder();
         sb.append(PAR).append(":");
-        sb.append(sectionNumber).append(":");
-        sb.append(paragraphNumber);
+        sb.append(getSectionNumber()).append(":");
+        sb.append(getParagraphNumber());
         if (getKind() != DELETE_PARAGRAPH_KIND) {
-            sb.append(":").append(text);
+            sb.append(":").append(getText());
         }
         return sb.toString();
     }
