@@ -1,6 +1,6 @@
 -- link switch
-- evitare switch di update di link, soltanto "nuovo link" o "rimuovi link"
-- evitare update di linkswitch
+--- AddLinkSwitchDialog.showCreateLinkDialog()
+--- testare salvataggio file
 
 -- minigame
 

@@ -234,6 +234,12 @@ public class Section extends StoryElement
                 : paragraphs.stream().mapToInt(p -> Integer.valueOf(p.getNumber())).max().getAsInt() + 1;
     }
 
+    public int getNextLinkNumber()
+    {
+        return links.isEmpty() ? 1
+                : links.stream().mapToInt(l -> Integer.valueOf(l.getNumber())).max().getAsInt() + 1;
+    }
+
     /**
      * @return prossimo numero utilizzabile per salvare uno switch
      */

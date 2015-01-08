@@ -12,6 +12,7 @@ import storybuilder.main.view.AbstractTableView;
 import storybuilder.section.model.Drop;
 import storybuilder.section.model.Get;
 import storybuilder.section.model.Section;
+import storybuilder.section.view.linkswitch.LinkSwitchView;
 import storybuilder.validation.SBException;
 
 /**
@@ -31,6 +32,8 @@ public class SectionDetailView extends AbstractDetailView
 
     private final static int EXPAND_PAR_SWITCHES = 5;
 
+    private final static int EXPAND_LINK_SWITCHES = 6;
+
     private final static String PARAGRAPHS_PANE_TITLE = "Paragraphs";
 
     private final static String LINKS_PANE_TITLE = "Links";
@@ -41,6 +44,8 @@ public class SectionDetailView extends AbstractDetailView
 
     private final static String PAR_SWITCHES_PANE_TITLE = "Paragraph switches";
 
+    private final static String LINK_SWITCHES_PANE_TITLE = "Link switches";
+
     private CheckBox endingField;
 
     private ParagraphsTable paragraphsTable;
@@ -48,6 +53,8 @@ public class SectionDetailView extends AbstractDetailView
     private LinksTable linksTable;
 
     private ParagraphSwitchView paragraphSwitchView;
+
+    private LinkSwitchView linkSwitchView;
 
     private GetView getView;
 
@@ -94,6 +101,9 @@ public class SectionDetailView extends AbstractDetailView
                     case PAR_SWITCHES_PANE_TITLE:
                         sectionsView.setExpandedPane(EXPAND_PAR_SWITCHES);
                         break;
+                    case LINK_SWITCHES_PANE_TITLE:
+                        sectionsView.setExpandedPane(EXPAND_LINK_SWITCHES);
+                        break;
                 }
             }
         });
@@ -118,6 +128,10 @@ public class SectionDetailView extends AbstractDetailView
         TitledPane parSwitchPane = new TitledPane(PAR_SWITCHES_PANE_TITLE, paragraphSwitchView);
         accordion.getPanes().add(parSwitchPane);
 
+        linkSwitchView = new LinkSwitchView(section);
+        TitledPane linkSwitchPane = new TitledPane(LINK_SWITCHES_PANE_TITLE, linkSwitchView);
+        accordion.getPanes().add(linkSwitchPane);
+
         // remembers which pane was open in the previously viewed section detail
         final int expandedPane = ((SectionsView) tableView).getExpandedPane();
         if (expandedPane == EXPAND_LINKS) {
@@ -128,6 +142,8 @@ public class SectionDetailView extends AbstractDetailView
             accordion.setExpandedPane(dropPane);
         } else if (expandedPane == EXPAND_PAR_SWITCHES) {
             accordion.setExpandedPane(parSwitchPane);
+        } else if (expandedPane == EXPAND_LINK_SWITCHES) {
+            accordion.setExpandedPane(linkSwitchPane);
         } else {
             accordion.setExpandedPane(paragraphsPane);
         }
@@ -143,6 +159,7 @@ public class SectionDetailView extends AbstractDetailView
         section.setParagraphs(paragraphsTable.getParagraphsData());
         section.setLinks(linksTable.getLinksData());
         section.setParagraphSwitches(paragraphSwitchView.getSwitches());
+        section.setLinkSwitches(linkSwitchView.getSwitches());
         updateGet(section);
         updateDrop(section);
     }
@@ -184,6 +201,7 @@ public class SectionDetailView extends AbstractDetailView
         paragraphsTable.setDisable(true);
         linksTable.setDisable(true);
         paragraphSwitchView.setDisable(true);
+        linkSwitchView.setDisable(true);
         getView.setDisable(true);
         dropView.setDisable(true);
     }

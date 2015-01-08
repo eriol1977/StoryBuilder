@@ -165,25 +165,25 @@ public class Link extends StoryElement
 
             // items, no_items, events and no_events
             if (!getItemIds().isEmpty()) {
-                sb.append("[Items to have: ");
+                sb.append("[Items: ");
                 getItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
                 sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
                 sb.append("] ");
             }
             if (!getNoItemIds().isEmpty()) {
-                sb.append("[Items not to have: ");
+                sb.append("[No-Items: ");
                 getNoItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
                 sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
                 sb.append("] ");
             }
             if (!getEventIds().isEmpty()) {
-                sb.append("[Events to have: ");
+                sb.append("[Events: ");
                 getEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
                 sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
                 sb.append("] ");
             }
             if (!getNoEventIds().isEmpty()) {
-                sb.append("[Events not to have: ");
+                sb.append("[No-Events: ");
                 getNoEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
                 sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
                 sb.append("] ");
