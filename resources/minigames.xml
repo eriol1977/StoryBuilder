@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<minigames>
+    <minigame name="m_wheel">
+        <title>Ruota del Destino</title>
+        <class>com.example.francesco.tunnel.minigame.wheel.DestinyWheel</class>
+        <parameters>
+            <parameter obs="numero intero" placeholder="1">Numero minimo</parameter>
+            <parameter obs="numero intero maggiore del minimo" placeholder="10">Numero massimo</parameter>
+            <parameter obs="numero intero compreso tra il minimo e il massimo" placeholder="5">Numero minimo per vincere</parameter>
+        </parameters>
+    </minigame>
+    <minigame name="m_lockpick">
+        <title>Ruota del Destino</title>
+        <class>com.example.francesco.tunnel.minigame.lockpick.Lockpick</class>
+        <parameters>
+            <parameter obs="numero intero" placeholder="6">Numero massimo di tentativi</parameter>
+            <parameter obs="numero intero compatibile con le dimensioni di uno schermo" placeholder="4">Numero di righe/colonne della griglia</parameter>
+        </parameters>
+    </minigame>
+    <minigame name="m_fight">
+        <title>Ruota del Destino</title>
+        <class>com.example.francesco.tunnel.minigame.fight.Fight</class>
+        <parameters>
+            <parameter obs="'true' o 'false'" placeholder="true">Il giocatore attacca per primo</parameter>
+            <parameter obs="numero intero" placeholder="3">Colpi da mettere a segno per vincere</parameter>
+            <parameter obs="numero intero" placeholder="3">Colpi da subire per perdere</parameter>
+            <parameter obs="numero intero o 0 per non imporre limiti" placeholder="0">Numero massimo di rounds</parameter>
+            <parameter obs="numero intero" placeholder="5">Numero di mosse per ogni round</parameter>
+            <parameter obs="numero di millisecondi" placeholder="1000">Limite di tempo per l'esecuzione di ogni mossa</parameter>
+            <parameter obs="percentuale" placeholder="20">Frequenza delle combo rispetto alle mosse semplici</parameter>
+            <parameter obs="numero intero" placeholder="3">Numero di mosse per ogni combo</parameter>
+        </parameters>
+    </minigame>
+</minigames>
