@@ -175,4 +175,8 @@ public class LinkSwitchView extends TableView<LinkSwitch>
         return switchesData;
     }
 
+    Section getSection()
+    {
+        return this.section;
+    }
 }

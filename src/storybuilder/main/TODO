@@ -1,9 +1,7 @@
--- link switch
---- AddLinkSwitchDialog.showCreateLinkDialog()
---- testare salvataggio file
-
 -- minigame
 
 -- export well formed XML
 -- ergonomia: pulsanti per creare comando, oggetto, ecc, quando serve, per esempio direttamente dalla schermata di sezione
 -- ergonomia: tasto back per tornare alla schermata e selezione precedente
+-- ergonomia: click destro nella tabella delle sezioni per aprire una dialog che mostri tutti i link e link switch
+   che puntano alla stessa

@@ -1,4 +1,4 @@
-package storybuilder.section.view.link;
+package storybuilder.section.view.linkswitch;
 
 import java.util.ArrayList;
 import javafx.beans.value.ObservableValue;
@@ -16,41 +16,29 @@ import javafx.scene.layout.HBox;
 import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
 import storybuilder.main.view.SBDialog;
-import storybuilder.section.model.Section;
+import storybuilder.section.model.Link;
 import storybuilder.story.model.Story;
 import storybuilder.validation.SBException;
-import storybuilder.validation.ValidationFailed;
 
 /**
  *
  * @author Francesco Bertolino
  */
-public abstract class LinkDialog extends SBDialog
+public class LinkSwitchAddLinkDialog extends SBDialog
 {
 
-    protected final LinksTable linksTable;
-    protected final ComboBox newSectionCombo;
-    protected final CheckBox newSectionCheckBox;
-    protected final DoubleList commands;
-    protected final DoubleList items;
-    protected final DoubleList noItems;
-    protected final DoubleList events;
-    protected final DoubleList noEvents;
-
-    public LinkDialog(final String title, final LinksTable linksTable)
+    public LinkSwitchAddLinkDialog(final AddLinkSwitchDialog view)
     {
-        this.linksTable = linksTable;
-
         setMinHeight(500);
-        add(new Label(title));
+        add(new Label("Create a new link"));
 
         final ObservableList<String> options
                 = FXCollections.observableArrayList(
                         Cache.getInstance().getStory().getSectionIds(true)
                 );
-        newSectionCombo = new ComboBox(options);
+        final ComboBox newSectionCombo = new ComboBox(options);
         newSectionCombo.setPromptText("Next section");
-        newSectionCheckBox = new CheckBox("Create new");
+        final CheckBox newSectionCheckBox = new CheckBox("Create new");
         newSectionCheckBox.setSelected(true);
         newSectionCheckBox.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
             if (new_val) {
@@ -69,45 +57,48 @@ public abstract class LinkDialog extends SBDialog
         add(sectionBox);
 
         final Accordion accordion = new Accordion();
-        commands = new DoubleList(Cache.getInstance().getStory().getCommandIds(), new ArrayList<>());
+        final DoubleList commands = new DoubleList(Cache.getInstance().getStory().getCommandIds(), new ArrayList<>());
         final TitledPane commandsPane = new TitledPane("Commands", commands);
         accordion.getPanes().add(commandsPane);
-        items = new DoubleList(Cache.getInstance().getStory().getItemIds(), new ArrayList<>());
+        final DoubleList items = new DoubleList(Cache.getInstance().getStory().getItemIds(), new ArrayList<>());
         final TitledPane itemsPane = new TitledPane("Items", items);
         accordion.getPanes().add(itemsPane);
-        noItems = new DoubleList(Cache.getInstance().getStory().getItemIds(), new ArrayList<>());
+        final DoubleList noItems = new DoubleList(Cache.getInstance().getStory().getItemIds(), new ArrayList<>());
         final TitledPane noItemsPane = new TitledPane("No-Items", noItems);
         accordion.getPanes().add(noItemsPane);
-        events = new DoubleList(Cache.getInstance().getStory().getEventIds(), new ArrayList<>());
+        final DoubleList events = new DoubleList(Cache.getInstance().getStory().getEventIds(), new ArrayList<>());
         final TitledPane eventsPane = new TitledPane("Events", events);
         accordion.getPanes().add(eventsPane);
-        noEvents = new DoubleList(Cache.getInstance().getStory().getEventIds(), new ArrayList<>());
+        final DoubleList noEvents = new DoubleList(Cache.getInstance().getStory().getEventIds(), new ArrayList<>());
         final TitledPane noEventsPane = new TitledPane("No-Events", noEvents);
         accordion.getPanes().add(noEventsPane);
         accordion.setExpandedPane(commandsPane);
         add(accordion);
 
-        final Button button = new Button(title);
+        final Button button = new Button("Create");
         button.setOnAction((ActionEvent event) -> {
-            doSomething();
+            final String sectionNumber;
+            if (newSectionCheckBox.isSelected()) {
+                try {
+                    final Story story = Cache.getInstance().getStory();
+                    sectionNumber = String.valueOf(story.getLastSectionId() + 1);
+                    view.setNewSectionNumber(sectionNumber);
+                } catch (SBException ex) {
+                    view.setResult(ex.getFailCause());
+                    close();
+                    return;
+                }
+            } else {
+                sectionNumber = (String) newSectionCombo.getSelectionModel().getSelectedItem();
+            }
+            // id doesn't matter, this Link serves only as a mean to write the LinkSwitch content
+            final Link link = new Link("", sectionNumber,
+                    commands.getRightItems(), items.getRightItems(), noItems.getRightItems(),
+                    events.getRightItems(), noEvents.getRightItems(), false);
+            view.addCreateLinkSwitch(link);
+            close();
         });
         add(button);
     }
 
-    protected abstract void doSomething();
-
-    protected String getNextSectionId() throws ValidationFailed, SBException
-    {
-        if (newSectionCheckBox.isSelected()) {
-            final Story story = Cache.getInstance().getStory();
-            final Section section = story.addNewEmptySection(linksTable.getNewLinkSectionId(), "link in section " + linksTable.getSection().getNameWithoutPrefix());
-            return section.getNameWithoutPrefix();
-        } else {
-            final String sectionNumber = (String) newSectionCombo.getSelectionModel().getSelectedItem();
-            if (sectionNumber == null || sectionNumber.isEmpty()) {
-                throw new ValidationFailed("Next section is required");
-            }
-            return sectionNumber;
-        }
-    }
 }

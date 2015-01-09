@@ -244,4 +244,8 @@ public class LinksTable extends TableView<Link>
         return sectionDetailView;
     }
 
+    Section getSection()
+    {
+        return this.section;
+    }
 }

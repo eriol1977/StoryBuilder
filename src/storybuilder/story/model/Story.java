@@ -271,11 +271,11 @@ public class Story
         incrementLastSectionId();
     }
 
-    public Section addNewEmptySection(final String idNumber) throws SBException
+    public Section addNewEmptySection(final String idNumber, final String cause) throws SBException
     {
         final Section section = new Section(Section.PREFIX + idNumber, false);
         final List<Paragraph> paragraphs = new ArrayList<>(1);
-        paragraphs.add(new Paragraph(section.getName() + "_1", "<<write me>>", false));
+        paragraphs.add(new Paragraph(section.getName() + "_1", "<<created automatically by a " + cause + ">>", false));
         section.setParagraphs(paragraphs);
         addSection(section);
         return section;
