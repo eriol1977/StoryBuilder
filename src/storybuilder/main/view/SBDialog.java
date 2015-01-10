@@ -31,4 +31,10 @@ public class SBDialog extends Stage
     {
         dialogVbox.getChildren().add(node);
     }
+
+    public void replaceLastNode(final Node node)
+    {
+        dialogVbox.getChildren().remove(dialogVbox.getChildren().size() - 1);
+        add(node);
+    }
 }

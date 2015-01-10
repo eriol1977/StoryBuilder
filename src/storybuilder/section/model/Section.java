@@ -33,6 +33,8 @@ public class Section extends StoryElement
 
     private boolean ending = false;
 
+    private MinigameInstance minigame;
+
     private Get get;
 
     private Drop drop;
@@ -49,6 +51,7 @@ public class Section extends StoryElement
         setLinks(another.getLinks());
         setParagraphSwitches(another.getParagraphSwitches());
         setLinkSwitches(another.getLinkSwitches());
+        setMinigame(another.getMinigame());
         setGet(another.getGet());
         setDrop(another.getDrop());
     }
@@ -83,6 +86,7 @@ public class Section extends StoryElement
         setLinks(anotherSection.getLinks());
         setParagraphSwitches(anotherSection.getParagraphSwitches());
         setLinkSwitches(anotherSection.getLinkSwitches());
+        setMinigame(anotherSection.getMinigame());
         setGet(anotherSection.getGet());
         setDrop(anotherSection.getDrop());
         setDefault(anotherSection.isDefault());
@@ -117,6 +121,7 @@ public class Section extends StoryElement
             section.loadLinkSwitches();
             section.loadGet();
             section.loadDrop();
+            section.loadMinigame();
             // if some sections have been deleted, the sections counter still
             // has the last id number used, but some of the sections don't
             // exist anymore (they don't have any paragraphs)
@@ -136,6 +141,7 @@ public class Section extends StoryElement
         loadLinkSwitches();
         loadGet();
         loadDrop();
+        loadMinigame();
     }
 
     private void loadIsEnding(final Story story) throws SBException
@@ -203,6 +209,16 @@ public class Section extends StoryElement
             final Drop loadedDrop = Drop.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), getName());
             if (loadedDrop != null) {
                 setDrop(loadedDrop);
+            }
+        }
+    }
+
+    private void loadMinigame() throws SBException
+    {
+        if (!isDefault()) {
+            final MinigameInstance loadedGame = MinigameInstance.load(FileManager.getStoryFilenameWithAbsolutePath(Cache.getInstance().getStory()), getName());
+            if (loadedGame != null) {
+                setMinigame(loadedGame);
             }
         }
     }
@@ -330,6 +346,16 @@ public class Section extends StoryElement
     public void setDrop(Drop drop)
     {
         this.drop = drop;
+    }
+
+    public MinigameInstance getMinigame()
+    {
+        return minigame;
+    }
+
+    public void setMinigame(MinigameInstance minigame)
+    {
+        this.minigame = minigame;
     }
 
 }

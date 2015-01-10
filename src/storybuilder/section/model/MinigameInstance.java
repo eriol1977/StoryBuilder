@@ -1,10 +1,11 @@
 package storybuilder.section.model;
 
-import storybuilder.minigame.model.MinigameKind;
 import java.util.ArrayList;
+import storybuilder.minigame.model.MinigameKind;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
@@ -40,7 +41,14 @@ public class MinigameInstance extends StoryElement
     public MinigameInstance(Node node, boolean defaultElement)
     {
         super(node, defaultElement);
-        // TODO
+        final String[] gameInfo = textContent.split(":");
+        this.kind = Cache.getInstance().getStory().getMinigame(gameInfo[0]);
+        this.winningSectionNumber = gameInfo[1];
+        this.losingSectionNumber = gameInfo[2];
+        this.values = new ArrayList<>(gameInfo.length - 3);
+        for (int i = 3; i < gameInfo.length; i++) {
+            this.values.add(gameInfo[i]);
+        }
     }
 
     public MinigameInstance(final MinigameInstance another)
@@ -58,8 +66,24 @@ public class MinigameInstance extends StoryElement
     @Override
     public String getContent()
     {
-        // TODO
-        return null;
+        final StringBuilder sb = new StringBuilder();
+        sb.append(kind.getCode()).append(":");
+        sb.append(winningSectionNumber).append(":");
+        sb.append(losingSectionNumber).append(":");
+        values.stream().forEach((value) -> {
+            sb.append(value).append(":");
+        });
+        sb.delete(sb.length() - 1, sb.length());
+        return sb.toString();
+    }
+
+    public String getResume()
+    {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(kind.getTitle()).append(" (");
+        sb.append("winner goes to ").append(winningSectionNumber).append(" - ");
+        sb.append("loser goes to ").append(losingSectionNumber).append(")");
+        return sb.toString();
     }
 
     @Override
@@ -74,16 +98,14 @@ public class MinigameInstance extends StoryElement
         setDefault(anotherParagraph.isDefault());
     }
 
-    public static List<MinigameInstance> load(final String fileName, final boolean defaultElements, final String sectionName) throws SBException
+    public static MinigameInstance load(final String fileName, final String sectionName) throws SBException
     {
-        // TODO
-        final List<MinigameInstance> paragraphs = new ArrayList<>();
         final Document doc = FileManager.openDocument(fileName);
-        final List<Node> elements = FileManager.findElementsMatching(sectionName + "_\\d+", doc);
-        elements.stream().forEach((element) -> {
-            paragraphs.add(new MinigameInstance(element, defaultElements));
-        });
-        return paragraphs;
+        final Node element = FileManager.findElementNamed(sectionName + "_minigame", doc);
+        if (element != null) {
+            return new MinigameInstance(element, false);
+        }
+        return null;
     }
 
     @Override

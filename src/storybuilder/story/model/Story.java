@@ -166,6 +166,15 @@ public class Story
         return new ArrayList<>(minigames);
     }
 
+    public MinigameKind getMinigame(final String code)
+    {
+        final List<MinigameKind> filtered = minigames.stream().filter(m -> m.getCode().equals(code)).collect(Collectors.toList());
+        if (!filtered.isEmpty()) {
+            return filtered.get(0);
+        }
+        return null;
+    }
+
     /////////// COMMANDS
     private void loadCommands() throws SBException
     {
@@ -185,7 +194,11 @@ public class Story
 
     public Command getCommand(final String id)
     {
-        return commands.stream().filter(command -> command.getName().equals(id)).collect(Collectors.toList()).get(0);
+        final List<Command> filtered = commands.stream().filter(command -> command.getName().equals(id)).collect(Collectors.toList());
+        if (!filtered.isEmpty()) {
+            return filtered.get(0);
+        }
+        return null;
     }
 
     public void addCommand(final Command command) throws SBException
@@ -219,7 +232,11 @@ public class Story
 
     public Event getEvent(final String id)
     {
-        return events.stream().filter(event -> event.getName().equals(id)).collect(Collectors.toList()).get(0);
+        final List<Event> filtered = events.stream().filter(event -> event.getName().equals(id)).collect(Collectors.toList());
+        if (!filtered.isEmpty()) {
+            return filtered.get(0);
+        }
+        return null;
     }
 
     public List<String> getEventIds()
@@ -315,6 +332,9 @@ public class Story
         }
         if (section.getDrop() != null) {
             saveStoryElement(section.getDrop());
+        }
+        if (section.getMinigame() != null) {
+            saveStoryElement(section.getMinigame());
         }
     }
 
@@ -440,7 +460,11 @@ public class Story
 
     public Item getItem(final String id)
     {
-        return items.stream().filter(item -> item.getName().equals(id)).collect(Collectors.toList()).get(0);
+        final List<Item> filtered = items.stream().filter(item -> item.getName().equals(id)).collect(Collectors.toList());
+        if (!filtered.isEmpty()) {
+            return filtered.get(0);
+        }
+        return null;
     }
 
     public void addItem(final Item item) throws SBException

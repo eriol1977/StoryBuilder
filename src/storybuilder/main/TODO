@@ -1,12 +1,10 @@
 -- minigame
-
-1) all'inizio vengono caricati tutti i minigame dall'XML, si riempie una tabella consultabile
-2) quando crea un minigame in una sezione, l'utente sceglie un tipo da una combo, riempie un text field per ogni
-parametro più due per la sezione vincitrice e per quella perdente, e da questa combinazione viene generato l'xml
-3) il tipo di minigame in sé e le sue istanze, con i valori dei parametri e delle sezioni compilate, sono due
-classi differenti!
+--- terminare add in MinigameInstanceView, poi remove e update
+--- testare salvataggio
 
 -- export well formed XML
+
+-- profiling e migliorie di performance
 -- ergonomia: pulsanti per creare comando, oggetto, ecc, quando serve, per esempio direttamente dalla schermata di sezione
 -- ergonomia: tasto back per tornare alla schermata e selezione precedente
 -- ergonomia: click destro nella tabella delle sezioni per aprire una dialog che mostri tutti i link e link switch

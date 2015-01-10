@@ -11,6 +11,7 @@ import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.section.model.Drop;
 import storybuilder.section.model.Get;
+import storybuilder.section.model.MinigameInstance;
 import storybuilder.section.model.Section;
 import storybuilder.section.view.linkswitch.LinkSwitchView;
 import storybuilder.validation.SBException;
@@ -34,6 +35,8 @@ public class SectionDetailView extends AbstractDetailView
 
     private final static int EXPAND_LINK_SWITCHES = 6;
 
+    private final static int EXPAND_MINIGAME = 7;
+
     private final static String PARAGRAPHS_PANE_TITLE = "Paragraphs";
 
     private final static String LINKS_PANE_TITLE = "Links";
@@ -45,6 +48,8 @@ public class SectionDetailView extends AbstractDetailView
     private final static String PAR_SWITCHES_PANE_TITLE = "Paragraph switches";
 
     private final static String LINK_SWITCHES_PANE_TITLE = "Link switches";
+
+    private final static String MINIGAME_PANE_TITLE = "Minigame";
 
     private CheckBox endingField;
 
@@ -59,6 +64,8 @@ public class SectionDetailView extends AbstractDetailView
     private GetView getView;
 
     private DropView dropView;
+
+    private MinigameInstanceView minigameView;
 
     public SectionDetailView(final boolean isNewElement, final IStoryElement element, final AbstractTableView tableView)
     {
@@ -104,6 +111,9 @@ public class SectionDetailView extends AbstractDetailView
                     case LINK_SWITCHES_PANE_TITLE:
                         sectionsView.setExpandedPane(EXPAND_LINK_SWITCHES);
                         break;
+                    case MINIGAME_PANE_TITLE:
+                        sectionsView.setExpandedPane(EXPAND_MINIGAME);
+                        break;
                 }
             }
         });
@@ -132,6 +142,10 @@ public class SectionDetailView extends AbstractDetailView
         TitledPane linkSwitchPane = new TitledPane(LINK_SWITCHES_PANE_TITLE, linkSwitchView);
         accordion.getPanes().add(linkSwitchPane);
 
+        minigameView = new MinigameInstanceView(section);
+        TitledPane minigamePane = new TitledPane(MINIGAME_PANE_TITLE, minigameView);
+        accordion.getPanes().add(minigamePane);
+
         // remembers which pane was open in the previously viewed section detail
         final int expandedPane = ((SectionsView) tableView).getExpandedPane();
         if (expandedPane == EXPAND_LINKS) {
@@ -144,6 +158,8 @@ public class SectionDetailView extends AbstractDetailView
             accordion.setExpandedPane(parSwitchPane);
         } else if (expandedPane == EXPAND_LINK_SWITCHES) {
             accordion.setExpandedPane(linkSwitchPane);
+        } else if (expandedPane == EXPAND_MINIGAME) {
+            accordion.setExpandedPane(minigamePane);
         } else {
             accordion.setExpandedPane(paragraphsPane);
         }
@@ -162,6 +178,7 @@ public class SectionDetailView extends AbstractDetailView
         section.setLinkSwitches(linkSwitchView.getSwitches());
         updateGet(section);
         updateDrop(section);
+        updateMinigame(section);
     }
 
     private void updateGet(final Section section)
@@ -193,6 +210,22 @@ public class SectionDetailView extends AbstractDetailView
             }
         }
     }
+    
+    // TODO
+    private void updateMinigame(final Section section)
+    {
+        MinigameInstance minigame = section.getMinigame();
+//        if (minigame == null && !dropView.getIds().isEmpty()) {
+//            minigame = new Drop(section.getName() + "_drop", false, dropView.getIdsArray());
+//            section.setDrop(minigame);
+//        } else if (minigame != null) {
+//            if (dropView.getIds().isEmpty()) {
+//                section.setDrop(null);
+//            } else {
+//                minigame.setIds(dropView.getIds());
+//            }
+//        }
+    }
 
     @Override
     protected void disableFields()
@@ -204,6 +237,7 @@ public class SectionDetailView extends AbstractDetailView
         linkSwitchView.setDisable(true);
         getView.setDisable(true);
         dropView.setDisable(true);
+        minigameView.setDisable(true);
     }
 
     public boolean isNewSection()
