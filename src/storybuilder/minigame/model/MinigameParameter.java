@@ -1,4 +1,4 @@
-package storybuilder.section.model.minigame;
+package storybuilder.minigame.model;
 
 import java.util.Objects;
 
@@ -61,10 +61,7 @@ public class MinigameParameter
             return false;
         }
         final MinigameParameter other = (MinigameParameter) obj;
-        if (!Objects.equals(this.definition, other.definition)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.definition, other.definition);
     }
-    
+
 }

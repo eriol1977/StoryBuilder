@@ -10,7 +10,7 @@
         </parameters>
     </minigame>
     <minigame name="m_lockpick">
-        <title>Ruota del Destino</title>
+        <title>Scassinatore</title>
         <class>com.example.francesco.tunnel.minigame.lockpick.Lockpick</class>
         <parameters>
             <parameter obs="numero intero" placeholder="6">Numero massimo di tentativi</parameter>
@@ -18,7 +18,7 @@
         </parameters>
     </minigame>
     <minigame name="m_fight">
-        <title>Ruota del Destino</title>
+        <title>Combattimento</title>
         <class>com.example.francesco.tunnel.minigame.fight.Fight</class>
         <parameters>
             <parameter obs="'true' o 'false'" placeholder="true">Il giocatore attacca per primo</parameter>

@@ -18,6 +18,7 @@ import storybuilder.join.model.Join;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.minigame.model.MinigameKind;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;
 import storybuilder.section.model.Paragraph;
@@ -46,6 +47,8 @@ public class Story
     private final List<Item> items = new ArrayList<>();
 
     private final List<Join> joins = new ArrayList<>();
+
+    private final List<MinigameKind> minigames = new ArrayList<>();
 
     private final List<Section> sections = new ArrayList<>();
 
@@ -81,6 +84,7 @@ public class Story
         loadSections();
         loadItems();
         loadJoins();
+        loadMinigames();
     }
 
     private void updateStoriesFile() throws SBException
@@ -149,6 +153,17 @@ public class Story
         if (!indexes.isEmpty()) {
             throw new ValidationFailed("Filename cannot contain illegal characters");
         }
+    }
+
+    /////////// MINIGAMES
+    private void loadMinigames() throws SBException
+    {
+        minigames.addAll(MinigameKind.load());
+    }
+
+    public List<MinigameKind> getMinigames()
+    {
+        return new ArrayList<>(minigames);
     }
 
     /////////// COMMANDS

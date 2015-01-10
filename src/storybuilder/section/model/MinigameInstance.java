@@ -1,5 +1,6 @@
-package storybuilder.section.model.minigame;
+package storybuilder.section.model;
 
+import storybuilder.minigame.model.MinigameKind;
 import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;

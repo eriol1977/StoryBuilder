@@ -31,6 +31,8 @@ public class SBMenuBar extends MenuBar
     private final Menu menuItems;
 
     private final Menu menuJoins;
+    
+    private final Menu menuMinigames;
 
     private final Menu menuSections;
 
@@ -42,8 +44,9 @@ public class SBMenuBar extends MenuBar
         menuEvents = buildMenuButton("Events", KeyCode.E, "storybuilder.event.view.EventsView");
         menuItems = buildMenuButton("Items", KeyCode.I, "storybuilder.item.view.ItemsView");
         menuJoins = buildMenuButton("Joins", KeyCode.J, "storybuilder.join.view.JoinsView");
+        menuMinigames = buildMenuButton("Minigames", KeyCode.M, "storybuilder.minigame.view.MinigamesView");
         menuSections = buildMenuButton("Sections", KeyCode.S, "storybuilder.section.view.SectionsView");
-        getMenus().addAll(menuStory, menuCommands, menuEvents, menuItems, menuJoins, menuSections);
+        getMenus().addAll(menuStory, menuCommands, menuEvents, menuItems, menuJoins, menuMinigames, menuSections);
         enableMenus(false);
     }
 
@@ -94,6 +97,7 @@ public class SBMenuBar extends MenuBar
         menuEvents.setDisable(!enable);
         menuItems.setDisable(!enable);
         menuJoins.setDisable(!enable);
+        menuMinigames.setDisable(!enable);
         menuSections.setDisable(!enable);
     }
 
