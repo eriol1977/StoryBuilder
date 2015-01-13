@@ -31,7 +31,7 @@ public class SBMenuBar extends MenuBar
     private final Menu menuItems;
 
     private final Menu menuJoins;
-    
+
     private final Menu menuMinigames;
 
     private final Menu menuSections;
@@ -56,8 +56,9 @@ public class SBMenuBar extends MenuBar
         final MenuItem newStory = buildMenuItem("New", KeyCode.N, "storybuilder.story.view.NewStoryView");
         final MenuItem open = buildMenuItem("Open", KeyCode.O, "storybuilder.story.view.OpenStoryView");
         final MenuItem delete = buildMenuItem("Delete", KeyCode.D, "storybuilder.story.view.DeleteStoryView");
+        final MenuItem export = buildMenuItem("Export", KeyCode.E, "storybuilder.story.view.ExportStoryView");
         final MenuItem prefs = buildMenuItem("Preferences", KeyCode.P, "storybuilder.preferences.view.PreferencesView");
-        menu.getItems().addAll(newStory, open, delete, new SeparatorMenuItem(), prefs);
+        menu.getItems().addAll(newStory, open, delete, new SeparatorMenuItem(), export, new SeparatorMenuItem(), prefs);
         return menu;
     }
 
