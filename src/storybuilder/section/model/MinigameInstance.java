@@ -124,6 +124,12 @@ public class MinigameInstance extends StoryElement
         if (values == null || values.isEmpty() || values.size() != kind.getParameters().size()) {
             throw new ValidationFailed("A value is required for each minigame parameter");
         }
+        for (int i = 0; i < values.size(); i++) {
+            if (values.get(i).isEmpty()) {
+                throw new ValidationFailed("A value is required for parameter \""
+                        + kind.getParameters().get(i).getDefinition() + "\"");
+            }
+        }
     }
 
     public MinigameKind getKind()

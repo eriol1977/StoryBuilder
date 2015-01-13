@@ -11,7 +11,6 @@ import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.section.model.Drop;
 import storybuilder.section.model.Get;
-import storybuilder.section.model.MinigameInstance;
 import storybuilder.section.model.Section;
 import storybuilder.section.view.linkswitch.LinkSwitchView;
 import storybuilder.validation.SBException;
@@ -210,21 +209,10 @@ public class SectionDetailView extends AbstractDetailView
             }
         }
     }
-    
-    // TODO
+
     private void updateMinigame(final Section section)
     {
-        MinigameInstance minigame = section.getMinigame();
-//        if (minigame == null && !dropView.getIds().isEmpty()) {
-//            minigame = new Drop(section.getName() + "_drop", false, dropView.getIdsArray());
-//            section.setDrop(minigame);
-//        } else if (minigame != null) {
-//            if (dropView.getIds().isEmpty()) {
-//                section.setDrop(null);
-//            } else {
-//                minigame.setIds(dropView.getIds());
-//            }
-//        }
+        section.setMinigame(minigameView.getMinigame());
     }
 
     @Override
