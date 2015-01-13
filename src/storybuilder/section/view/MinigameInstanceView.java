@@ -153,6 +153,7 @@ public class MinigameInstanceView extends AbstractView
             gameKinds.getSelectionModel().selectFirst();
         } else {
             gameKinds.getSelectionModel().select(minigame.getKind());
+            gameKinds.setDisable(true);
         }
         dialog.show();
     }

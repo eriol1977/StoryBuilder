@@ -227,11 +227,29 @@ public class Section extends StoryElement
     public void validate() throws ValidationFailed
     {
         super.validate();
+
         if (paragraphs.isEmpty()) {
             throw new ValidationFailed("A minimum of one paragraph is required.");
         }
-        if (!isEnding() && links.isEmpty()) {
-            throw new ValidationFailed("A minimum of one link is required, if this is not an ending section.");
+
+        if (!isEnding() && links.isEmpty() && minigame == null) {
+            throw new ValidationFailed("A minimum of one link/minigame is required, if this is not an ending section.");
+        } else if (isEnding() && (!links.isEmpty() || minigame != null)) {
+            throw new ValidationFailed("An ending section cannot have links or a minigame.");
+        }
+
+        int directLinkCount = 0;
+        for (final Link link : links) {
+            if (link.isDirectLink()) {
+                directLinkCount++;
+                if (directLinkCount > 1) {
+                    throw new ValidationFailed("A maximum of one direct link is allowed.");
+                }
+            }
+        }
+
+        if (!links.isEmpty() && minigame != null) {
+            throw new ValidationFailed("A section cannot have links and a minigame at the same time.");
         }
     }
 

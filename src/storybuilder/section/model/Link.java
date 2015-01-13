@@ -286,6 +286,12 @@ public class Link extends StoryElement
         return noEvents;
     }
 
+    public boolean isDirectLink()
+    {
+        return getCommandIds().isEmpty() && getItemIds().isEmpty()
+                && getNoItemIds().isEmpty() && getEventIds().isEmpty() && getNoEventIds().isEmpty();
+    }
+
     public void setSectionId(final String sectionId)
     {
         this.sectionId = sectionId;
