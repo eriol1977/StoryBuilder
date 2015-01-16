@@ -2,11 +2,19 @@ package storybuilder.section.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
+import storybuilder.main.view.MainWindowController;
 import storybuilder.section.model.Get;
+import storybuilder.section.model.Section;
+import storybuilder.story.model.Story;
 
 /**
  *
@@ -19,14 +27,32 @@ public class GetView extends VBox
 
     private final DoubleList eventsField;
 
-    public GetView(final Get get)
+    public GetView(final Section section)
     {
-        getChildren().add(new Label("Items to get"));
+        final Get get = section.getGet();
+        final Story story = Cache.getInstance().getStory();
 
-        itemsField = new DoubleList(Cache.getInstance().getStory().getItemIds(), get != null ? get.getItemIds() : new ArrayList<>());
+        setSpacing(10);
+        setPadding(new Insets(10));
+
+        final Label itemsLabel = new Label("Items to get");
+        final Button newItem = new Button("New");
+        newItem.setOnAction((ActionEvent event) -> {
+            MainWindowController.getInstance().switchToNewItem(section.getNameWithoutPrefix(), SectionDetailView.EXPAND_GETS);
+        });
+        getChildren().add(new HBox(10, itemsLabel, newItem));
+
+        itemsField = new DoubleList(story.getItemIds(), get != null ? get.getItemIds() : new ArrayList<>());
         getChildren().add(itemsField);
 
-        getChildren().add(new Label("Events to add"));
+        getChildren().add(new Separator());
+
+        final Label eventsLabel = new Label("Events to add");
+        final Button newEvent = new Button("New");
+        newEvent.setOnAction((ActionEvent event) -> {
+            MainWindowController.getInstance().switchToNewEvent(section.getNameWithoutPrefix(), SectionDetailView.EXPAND_GETS);
+        });
+        getChildren().add(new HBox(10, eventsLabel, newEvent));
 
         eventsField = new DoubleList(Cache.getInstance().getStory().getEventIds(), get != null ? get.getEventIds() : new ArrayList<>());
         getChildren().add(eventsField);

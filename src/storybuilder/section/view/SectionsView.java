@@ -12,12 +12,12 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Section;
@@ -74,7 +74,7 @@ public class SectionsView extends AbstractTableView
                         dialog.setHeight(h > 120 ? h : 120);
                         list.getSelectionModel().selectedItemProperty().
                                 addListener((ObservableValue<? extends String> ov, String old_val, String new_val) -> {
-                                    mwc.switchToSection(new_val);
+                                    mwc.switchToSection(new_val, SectionDetailView.EXPAND_PARAGRAPHS);
                                     dialog.close();
                                 });
                         dialog.add(list);
@@ -96,20 +96,22 @@ public class SectionsView extends AbstractTableView
     }
 
     @Override
-    protected void showDetailView(final boolean isNewElement, final IStoryElement element)
+    protected AbstractDetailView showDetailView(final boolean isNewElement, final IStoryElement element)
     {
         if (layout.getChildren().size() > 1) {
             layout.getChildren().remove(1);
         }
         stashed = new Section((Section) element);
-        layout.getChildren().add(new SectionDetailView(isNewElement, element, this));
+        final SectionDetailView sectionDetailView = new SectionDetailView(isNewElement, element, this);
+        layout.getChildren().add(sectionDetailView);
+        return sectionDetailView;
     }
 
     @Override
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Code", "nameWithoutPrefix", 150));
+        columns.add(getColumn("Code", "nameWithoutPrefix", 100));
         return columns;
     }
 
@@ -160,7 +162,7 @@ public class SectionsView extends AbstractTableView
         return expandedPane;
     }
 
-    void setExpandedPane(final int expandedPane)
+    public void setExpandedPane(final int expandedPane)
     {
         this.expandedPane = expandedPane;
     }

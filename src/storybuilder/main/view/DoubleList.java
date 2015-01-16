@@ -101,4 +101,8 @@ public class DoubleList extends HBox
         rightListModel.addAll(items);
         leftListModel.removeAll(items);
     }
+    
+    public void newRightItem(final String item) {
+        rightListModel.add(item);
+    }
 }

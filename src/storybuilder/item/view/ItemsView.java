@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.scene.control.TableColumn;
 import storybuilder.item.model.Item;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.validation.SBException;
 
@@ -27,20 +28,22 @@ public class ItemsView extends AbstractTableView
     }
 
     @Override
-    protected void showDetailView(final boolean isNewElement, final IStoryElement element)
+    protected AbstractDetailView showDetailView(final boolean isNewElement, final IStoryElement element)
     {
         if (layout.getChildren().size() > 1) {
             layout.getChildren().remove(1);
         }
         stashed = new Item((Item) element);
-        layout.getChildren().add(new ItemDetailView(isNewElement, element, this));
+        final ItemDetailView itemDetailView = new ItemDetailView(isNewElement, element, this);
+        layout.getChildren().add(itemDetailView);
+        return itemDetailView;
     }
 
     @Override
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Code", "nameWithoutPrefix", 150));
+        columns.add(getColumn("Code", "nameWithoutPrefix", 100));
         return columns;
     }
 

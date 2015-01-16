@@ -7,6 +7,7 @@ import storybuilder.item.model.Item;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.section.view.SectionDetailView;
 import storybuilder.validation.SBException;
 
 /**
@@ -40,7 +41,7 @@ public class ItemDetailView extends AbstractDetailView
         if (!isNewElement && !item.getSectionId().isEmpty()) {
             final Button button = addButton("Go to description section (" + item.getSectionId() + ")");
             button.setOnAction((ActionEvent event) -> {
-                mwc.switchToSection(item.getSectionId());
+                mwc.switchToSection(item.getSectionId(), SectionDetailView.EXPAND_PARAGRAPHS);
             });
         }
     }

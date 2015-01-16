@@ -41,8 +41,6 @@ public class ParagraphsTable extends TableView<Paragraph>
         this.section = section;
         paragraphsData = FXCollections.observableArrayList();
         paragraphsData.addAll(section.getParagraphs());
-        final double tableWidth = MainWindowController.getInstance().getScreenWidth() - 320;
-        setMinWidth(tableWidth);
         setItems(paragraphsData);
         setFixedCellSize(AbstractTableView.ROW_HEIGHT);
         final Button buttonAdd = new Button("Add");
@@ -136,11 +134,11 @@ public class ParagraphsTable extends TableView<Paragraph>
         getColumns().add(numberColumn);
 
         final TableColumn column = new TableColumn("Paragraphs");
-        column.setMinWidth(tableWidth - 40);
-        column.setMaxWidth(tableWidth - 40);
         column.setCellValueFactory(new PropertyValueFactory<>("text"));
         column.setCellFactory(TextFieldTableCell.forTableColumn());
         getColumns().add(column);
+        
+        setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void showAddParagraphDialog()

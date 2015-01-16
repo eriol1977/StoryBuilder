@@ -22,19 +22,19 @@ import storybuilder.validation.SBException;
 public class SectionDetailView extends AbstractDetailView
 {
 
-    private final static int EXPAND_PARAGRAPHS = 1;
+    public final static int EXPAND_PARAGRAPHS = 1;
 
-    private final static int EXPAND_LINKS = 2;
+    public final static int EXPAND_LINKS = 2;
 
-    private final static int EXPAND_GETS = 3;
+    public final static int EXPAND_GETS = 3;
 
-    private final static int EXPAND_DROPS = 4;
+    public final static int EXPAND_DROPS = 4;
 
-    private final static int EXPAND_PAR_SWITCHES = 5;
+    public final static int EXPAND_PAR_SWITCHES = 5;
 
-    private final static int EXPAND_LINK_SWITCHES = 6;
+    public final static int EXPAND_LINK_SWITCHES = 6;
 
-    private final static int EXPAND_MINIGAME = 7;
+    public final static int EXPAND_MINIGAME = 7;
 
     private final static String PARAGRAPHS_PANE_TITLE = "Paragraphs";
 
@@ -125,7 +125,7 @@ public class SectionDetailView extends AbstractDetailView
         TitledPane linksPane = new TitledPane(LINKS_PANE_TITLE, linksTable);
         accordion.getPanes().add(linksPane);
 
-        getView = new GetView(section.getGet());
+        getView = new GetView(section);
         TitledPane getPane = new TitledPane(GETS_PANE_TITLE, getView);
         accordion.getPanes().add(getPane);
 

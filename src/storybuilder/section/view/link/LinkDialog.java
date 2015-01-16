@@ -13,6 +13,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import storybuilder.item.view.NewItemDialog;
 import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
 import storybuilder.main.view.SBDialog;
@@ -70,7 +72,11 @@ public abstract class LinkDialog extends SBDialog
 
         final Accordion accordion = new Accordion();
         commands = new DoubleList(Cache.getInstance().getStory().getCommandIds(), new ArrayList<>());
-        final TitledPane commandsPane = new TitledPane("Commands", commands);
+        final Button newCommand = new Button("New");
+        newCommand.setOnAction((ActionEvent event) -> {
+            new NewItemDialog(commands.getRightItems()).show();
+        });
+        final TitledPane commandsPane = new TitledPane("Commands", new VBox(10, newCommand, commands));
         accordion.getPanes().add(commandsPane);
         items = new DoubleList(Cache.getInstance().getStory().getItemIds(), new ArrayList<>());
         final TitledPane itemsPane = new TitledPane("Items", items);

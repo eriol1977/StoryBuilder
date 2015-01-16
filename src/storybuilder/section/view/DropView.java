@@ -2,6 +2,7 @@ package storybuilder.section.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import storybuilder.main.Cache;
@@ -19,7 +20,10 @@ public class DropView extends VBox
 
     public DropView(final Drop drop)
     {
-        getChildren().add(new Label("Items to get"));
+        setSpacing(10);
+        setPadding(new Insets(10));
+
+        getChildren().add(new Label("Items to drop"));
 
         itemsField = new DoubleList(Cache.getInstance().getStory().getItemIds(), drop != null ? drop.getItemIds() : new ArrayList<>());
         getChildren().add(itemsField);

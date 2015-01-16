@@ -3,7 +3,9 @@ package storybuilder.story.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -290,14 +292,16 @@ public class Story
 
     public List<Section> getSectionsPointingTo(final Section section)
     {
-        final List<Section> result = new ArrayList<>();
+        final Set<Section> result = new HashSet<>();
         final String sectionNumber = section.getNameWithoutPrefix();
         List<Link> links;
         MinigameInstance minigame;
+        List<LinkSwitch> switches;
         final List<Section> ss = getSections();
         for (final Section s : ss) {
             links = s.getLinks();
             minigame = s.getMinigame();
+            switches = s.getLinkSwitches();
             if (minigame != null) {
                 if (minigame.getWinningSectionNumber().equals(sectionNumber)
                         || minigame.getLosingSectionNumber().equals(sectionNumber)) {
@@ -311,8 +315,16 @@ public class Story
                     break;
                 }
             }
+
+            for (final LinkSwitch linkSwitch : switches) {
+                if (linkSwitch.getLink() != null && linkSwitch.getLink().getSectionId().equals(sectionNumber)) {
+                    result.add(getSection(linkSwitch.getSectionNumber()));
+                }
+            }
         }
-        return result;
+        final List<Section> list = new ArrayList<>(result);
+        Collections.sort(list);
+        return list;
     }
 
     private void loadSections() throws SBException

@@ -37,12 +37,17 @@ public abstract class AbstractTableView extends AbstractView
 
     protected IStoryElement stashed;
 
+    protected AbstractDetailView detailView;
+
     public AbstractTableView()
     {
         layout = new HBox(10);
 
         table = new TableView();
-        table.setMaxWidth(202);
+        table.setMinWidth(142);
+        table.setMaxWidth(142);
+        table.setMinHeight(mwc.getScreenHeight() - 150);
+        table.setMaxHeight(mwc.getScreenHeight() - 150);
         table.setFixedCellSize(ROW_HEIGHT);
         layout.getChildren().add(table);
 
@@ -56,14 +61,16 @@ public abstract class AbstractTableView extends AbstractView
         table.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             final IStoryElement selected = (IStoryElement) table.getSelectionModel().getSelectedItem();
             if (selected != null) {
-                showDetailView(false, selected);
+                detailView = showDetailView(false, selected);
             }
         });
+
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         final Button newButton = addButton("New");
         newButton.setOnAction((ActionEvent event) -> {
             try {
-                showDetailView(true, getNewElement());
+                detailView = showDetailView(true, getNewElement());
             } catch (SBException ex) {
                 ErrorManager.showErrorMessage(ex.getFailCause());
             }
@@ -74,14 +81,28 @@ public abstract class AbstractTableView extends AbstractView
 
     protected abstract IStoryElement getNewElement() throws SBException;
 
-    protected abstract void showDetailView(boolean isNewElement, final IStoryElement element);
+    protected abstract AbstractDetailView showDetailView(boolean isNewElement, final IStoryElement element);
+
+    public void showNewElementView(final String callingSectionId, final int callingAccordionSection) throws SBException
+    {
+        detailView = showDetailView(true, getNewElement());
+        final Button saveButton = detailView.getSaveButton();
+        detailView.remove(saveButton);
+        final Button backToSection = new Button("Save");
+        backToSection.setOnAction((ActionEvent event) -> {
+            saveButton.fire();
+            mwc.switchToSection(callingSectionId, callingAccordionSection);
+        });
+        detailView.add(backToSection);
+    }
 
     protected abstract List<TableColumn> getColumns();
 
-    protected TableColumn getColumn(final String label, final String fieldName, final double minWidth)
+    protected TableColumn getColumn(final String label, final String fieldName, final double width)
     {
         final TableColumn column = new TableColumn(label);
-        column.setMinWidth(minWidth);
+        column.setMinWidth(width);
+        column.setMaxWidth(width);
         column.setCellValueFactory(new PropertyValueFactory<>(fieldName));
         column.setCellFactory(TextFieldTableCell.forTableColumn());
         return column;
@@ -91,6 +112,7 @@ public abstract class AbstractTableView extends AbstractView
     {
         TableColumn deleteCol = new TableColumn<>("Del");
         deleteCol.setSortable(false);
+        deleteCol.setMinWidth(30);
         deleteCol.setMaxWidth(30);
         deleteCol.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Object, Boolean>, ObservableValue<Boolean>>()
@@ -160,11 +182,11 @@ public abstract class AbstractTableView extends AbstractView
         } catch (ValidationFailed ex) {
             ErrorManager.showErrorMessage(ex.getFailCause());
             element.copyData(stashed);
-            showDetailView(false, element);
+            detailView = showDetailView(false, element);
         } catch (SBException ex) {
             ErrorManager.showErrorMessage(ex.getFailCause());
             element.copyData(stashed);
-            showDetailView(false, element);
+            detailView = showDetailView(false, element);
         }
     }
 

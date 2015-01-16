@@ -81,4 +81,8 @@ public abstract class AbstractView extends VBox
         add(button);
         return button;
     }
+    
+    protected void remove(final Node node) {
+        getChildren().remove(node);
+    }
 }

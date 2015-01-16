@@ -22,6 +22,8 @@ public abstract class AbstractDetailView extends AbstractView
     protected final TextField nameField;
 
     protected final boolean isNewElement;
+    
+    protected Button saveButton;
 
     public AbstractDetailView()
     {
@@ -51,7 +53,7 @@ public abstract class AbstractDetailView extends AbstractView
             ErrorManager.showErrorMessage(ex.getFailCause());
         }
 
-        final Button saveButton = addButton("Save");
+        saveButton = addButton("Save");
         saveButton.setOnAction((ActionEvent e) -> {
             setElementValues();
             if (isNewElement) {
@@ -74,4 +76,8 @@ public abstract class AbstractDetailView extends AbstractView
 
     protected abstract void disableFields();
 
+    public Button getSaveButton()
+    {
+        return saveButton;
+    }
 }

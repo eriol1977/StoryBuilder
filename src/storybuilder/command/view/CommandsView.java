@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.scene.control.TableColumn;
 import storybuilder.command.model.Command;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.validation.SBException;
 
@@ -33,20 +34,22 @@ public class CommandsView extends AbstractTableView
     }
 
     @Override
-    protected void showDetailView(final boolean isNewElement, final IStoryElement element)
+    protected AbstractDetailView showDetailView(final boolean isNewElement, final IStoryElement element)
     {
         if (layout.getChildren().size() > 1) {
             layout.getChildren().remove(1);
         }
         stashed = new Command((Command) element);
-        layout.getChildren().add(new CommandDetailView(isNewElement, (Command) element, this));
+        final CommandDetailView commandDetailView = new CommandDetailView(isNewElement, (Command) element, this);
+        layout.getChildren().add(commandDetailView);
+        return commandDetailView;
     }
 
     @Override
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Code", "nameWithoutPrefix", 150));
+        columns.add(getColumn("Code", "nameWithoutPrefix", 100));
         return columns;
     }
 

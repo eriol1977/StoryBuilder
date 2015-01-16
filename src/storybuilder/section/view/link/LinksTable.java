@@ -46,8 +46,6 @@ public class LinksTable extends TableView<Link>
         this.section = section;
         linksData = FXCollections.observableArrayList();
         linksData.addAll(section.getLinks());
-        final double tableWidth = MainWindowController.getInstance().getScreenWidth() - 320;
-        setMinWidth(tableWidth);
         setItems(linksData);
         setFixedCellSize(AbstractTableView.ROW_HEIGHT);
         final Button buttonAdd = new Button("Add");
@@ -141,11 +139,11 @@ public class LinksTable extends TableView<Link>
         getColumns().add(numberColumn);
 
         final TableColumn column = new TableColumn("Links");
-        column.setMinWidth(tableWidth - 40);
-        column.setMaxWidth(tableWidth - 40);
         column.setCellValueFactory(new PropertyValueFactory<>("readableContent"));
         column.setCellFactory(TextFieldTableCell.forTableColumn());
         getColumns().add(column);
+        
+        setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void showRemoveLinkDialog(final Link link)
