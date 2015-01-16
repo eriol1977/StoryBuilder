@@ -1,6 +1,7 @@
 package storybuilder.story.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import org.w3c.dom.Element;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.StoryElement;
 import storybuilder.main.view.AbstractView;
+import storybuilder.section.model.Section;
 import storybuilder.story.model.Story;
 import storybuilder.validation.ErrorManager;
 import storybuilder.validation.SBException;
@@ -48,24 +50,38 @@ public class ExportStoryView extends AbstractView
             Comment comment = doc.createComment("commands");
             mainRootElement.appendChild(comment);
             saveStoryElements(story.getCommands(), doc);
-            
+
             comment = doc.createComment("events");
             mainRootElement.appendChild(comment);
             saveStoryElements(story.getEvents(), doc);
-            
+
             comment = doc.createComment("joins");
             mainRootElement.appendChild(comment);
             saveStoryElements(story.getJoins(), doc);
-            
+
             comment = doc.createComment("items");
             mainRootElement.appendChild(comment);
             saveStoryElements(story.getItems(), doc);
-            
-            comment = doc.createComment("sections"); // FIXME
-            mainRootElement.appendChild(comment);
-            saveStoryElements(story.getSections(), doc);
 
-            final String fileName = cache.getPreferences().getDirectoryPath() + "\\exported.xml"; // FIXME
+            comment = doc.createComment("sections");
+            mainRootElement.appendChild(comment);
+            for (final Section section : story.getSections()) {
+                saveStoryElements(section.getParagraphs(), doc);
+                if (section.getGet() != null) {
+                    saveStoryElements(Arrays.asList(section.getGet()), doc);
+                }
+                if (section.getDrop() != null) {
+                    saveStoryElements(Arrays.asList(section.getDrop()), doc);
+                }
+                saveStoryElements(section.getParagraphSwitches(), doc);
+                saveStoryElements(section.getLinkSwitches(), doc);
+                saveStoryElements(section.getLinks(), doc);
+                if (section.getMinigame() != null) {
+                    saveStoryElements(Arrays.asList(section.getMinigame()), doc);
+                }
+            }
+
+            final String fileName = cache.getPreferences().getDirectoryPath() + "\\exported_" + story.getFileName();
             FileManager.saveDocument(doc, fileName);
 
             mwc.updateStatusBarMessage("Story exported to " + fileName);

@@ -1,8 +1,3 @@
--- export well formed XML
-    aggiustare sections
-    aggiustare nomefile
-    testare
-
 -- profiling e migliorie di performance
 -- ergonomia: pulsanti per creare comando, oggetto, ecc, quando serve, per esempio direttamente dalla schermata di sezione
 -- ergonomia: tasto back per tornare alla schermata e selezione precedente

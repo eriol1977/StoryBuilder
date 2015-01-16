@@ -81,10 +81,10 @@ public class Story
         // even if the story is new, it must load elements from the default.xml file
         loadCommands();
         loadEvents();
+        loadMinigames();
         loadSections();
         loadItems();
         loadJoins();
-        loadMinigames();
     }
 
     private void updateStoriesFile() throws SBException
