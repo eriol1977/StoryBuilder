@@ -21,6 +21,7 @@ import storybuilder.main.model.IStoryElement;
 import storybuilder.minigame.model.MinigameKind;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;
+import storybuilder.section.model.MinigameInstance;
 import storybuilder.section.model.Paragraph;
 import storybuilder.section.model.ParagraphSwitch;
 import storybuilder.section.model.Section;
@@ -285,6 +286,33 @@ public class Story
             }
         }
         return null;
+    }
+
+    public List<Section> getSectionsPointingTo(final Section section)
+    {
+        final List<Section> result = new ArrayList<>();
+        final String sectionNumber = section.getNameWithoutPrefix();
+        List<Link> links;
+        MinigameInstance minigame;
+        final List<Section> ss = getSections();
+        for (final Section s : ss) {
+            links = s.getLinks();
+            minigame = s.getMinigame();
+            if (minigame != null) {
+                if (minigame.getWinningSectionNumber().equals(sectionNumber)
+                        || minigame.getLosingSectionNumber().equals(sectionNumber)) {
+                    result.add(s);
+                    continue;
+                }
+            }
+            for (final Link link : links) {
+                if (link.getSectionId().equals(sectionNumber)) {
+                    result.add(s);
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     private void loadSections() throws SBException

@@ -1,5 +1,6 @@
+-- ergonomia: click destro nella tabella delle sezioni per aprire una dialog che mostri tutti i link e link switch
+   che puntano alla stessa FIXME testare ad es 18, 19...
+
 -- profiling e migliorie di performance
 -- ergonomia: pulsanti per creare comando, oggetto, ecc, quando serve, per esempio direttamente dalla schermata di sezione
 -- ergonomia: tasto back per tornare alla schermata e selezione precedente
--- ergonomia: click destro nella tabella delle sezioni per aprire una dialog che mostri tutti i link e link switch
-   che puntano alla stessa

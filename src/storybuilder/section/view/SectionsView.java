@@ -2,9 +2,24 @@ package storybuilder.section.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.util.Callback;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractTableView;
+import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Section;
 import storybuilder.validation.SBException;
 
@@ -23,6 +38,54 @@ public class SectionsView extends AbstractTableView
     public SectionsView()
     {
         addTitle("Sections");
+
+        table.setRowFactory(new Callback<TableView<Section>, TableRow<Section>>()
+        {
+            @Override
+            public TableRow<Section> call(TableView<Section> tableView)
+            {
+                final TableRow<Section> row = new TableRow<>();
+                final ContextMenu contextMenu = buildContextMenu(row);
+                // Set context menu on row, but use a binding to make it only show for non-empty rows:  
+                row.contextMenuProperty().bind(
+                        Bindings.when(row.emptyProperty())
+                        .then((ContextMenu) null)
+                        .otherwise(contextMenu)
+                );
+                return row;
+            }
+
+            private ContextMenu buildContextMenu(final TableRow<Section> row)
+            {
+                final MenuItem linksMenuItem = new MenuItem("Linked by");
+                linksMenuItem.setOnAction((ActionEvent event) -> {
+                    final List<Section> sections = cache.getStory().getSectionsPointingTo(row.getItem());
+                    final SBDialog dialog = new SBDialog();
+                    dialog.setWidth(200);
+                    if (sections.isEmpty()) {
+                        dialog.add(new Label("None"));
+                    } else {
+                        final int ROW_HEIGHT = 24;
+                        ObservableList<String> model
+                                = FXCollections.observableArrayList(sections.stream().map(s -> s.getNameWithoutPrefix()).collect(Collectors.toList()));
+                        final ListView<String> list = new ListView<>(model);
+                        final int h = model.size() * ROW_HEIGHT + 2;
+                        list.setPrefHeight(h);
+                        dialog.setHeight(h > 120 ? h : 120);
+                        list.getSelectionModel().selectedItemProperty().
+                                addListener((ObservableValue<? extends String> ov, String old_val, String new_val) -> {
+                                    mwc.switchToSection(new_val);
+                                    dialog.close();
+                                });
+                        dialog.add(list);
+                    }
+                    dialog.show();
+                });
+                final ContextMenu contextMenu = new ContextMenu();
+                contextMenu.getItems().add(linksMenuItem);
+                return contextMenu;
+            }
+        });
     }
 
     @Override
@@ -58,7 +121,7 @@ public class SectionsView extends AbstractTableView
         data.clear();
         loadData();
     }
-    
+
     @Override
     protected void addElementToStory(final IStoryElement element) throws SBException
     {
@@ -73,7 +136,7 @@ public class SectionsView extends AbstractTableView
         data.clear();
         loadData();
     }
-    
+
     @Override
     protected void updateElementInStory(final IStoryElement element) throws SBException
     {
