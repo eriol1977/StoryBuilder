@@ -29,7 +29,7 @@ public class EventDetailView extends AbstractDetailView
     }
 
     @Override
-    protected void setElementValues()
+    public void setElementValues()
     {
         final Event event = (Event) element;
         event.setDescription(descriptionField.getText());

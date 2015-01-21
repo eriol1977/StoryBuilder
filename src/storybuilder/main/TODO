@@ -1,7 +1,4 @@
--- continuare creazione di nuovo comando nella dialog di creazione/update link
--- fare lo stesso per oggetti ed eventi
-
--- fare lo stesso nella dialog di creazione LinkSwitch
+-- creazione diretta nuovi oggetti nella dialog di creazione LinkSwitch
 
 -- fix: nelle DoubleList compaiono sempre i prefissi c_, i_, ecc... eliminarli!
 

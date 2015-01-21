@@ -3,6 +3,7 @@ package storybuilder.join.view;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import storybuilder.item.view.ItemDoubleList;
 import storybuilder.join.model.Join;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
@@ -38,7 +39,7 @@ public class JoinDetailView extends AbstractDetailView
 
         addLabel("Items");
 
-        itemsField = new DoubleList(cache.getStory().getItemIds(), join.getItemIds());
+        itemsField = new ItemDoubleList(join.getItemIds());
         add(itemsField);
 
         textField = addLabeledTextInput("Section text", 600);
@@ -52,7 +53,7 @@ public class JoinDetailView extends AbstractDetailView
     }
 
     @Override
-    protected void setElementValues()
+    public void setElementValues()
     {
         final Join join = (Join) element;
         join.setDescription(descriptionField.getText());

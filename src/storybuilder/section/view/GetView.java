@@ -9,12 +9,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import storybuilder.main.Cache;
+import storybuilder.event.view.EventDoubleList;
+import storybuilder.item.view.ItemDoubleList;
 import storybuilder.main.view.DoubleList;
 import storybuilder.main.view.MainWindowController;
 import storybuilder.section.model.Get;
 import storybuilder.section.model.Section;
-import storybuilder.story.model.Story;
 
 /**
  *
@@ -30,7 +30,6 @@ public class GetView extends VBox
     public GetView(final Section section)
     {
         final Get get = section.getGet();
-        final Story story = Cache.getInstance().getStory();
 
         setSpacing(10);
         setPadding(new Insets(10));
@@ -42,7 +41,7 @@ public class GetView extends VBox
         });
         getChildren().add(new HBox(10, itemsLabel, newItem));
 
-        itemsField = new DoubleList(story.getItemIds(), get != null ? get.getItemIds() : new ArrayList<>());
+        itemsField = new ItemDoubleList(get != null ? get.getItemIds() : new ArrayList<>());
         getChildren().add(itemsField);
 
         getChildren().add(new Separator());
@@ -54,7 +53,7 @@ public class GetView extends VBox
         });
         getChildren().add(new HBox(10, eventsLabel, newEvent));
 
-        eventsField = new DoubleList(Cache.getInstance().getStory().getEventIds(), get != null ? get.getEventIds() : new ArrayList<>());
+        eventsField = new EventDoubleList(get != null ? get.getEventIds() : new ArrayList<>());
         getChildren().add(eventsField);
     }
 

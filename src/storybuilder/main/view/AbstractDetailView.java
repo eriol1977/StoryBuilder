@@ -22,7 +22,7 @@ public abstract class AbstractDetailView extends AbstractView
     protected final TextField nameField;
 
     protected final boolean isNewElement;
-    
+
     protected Button saveButton;
 
     public AbstractDetailView()
@@ -72,12 +72,21 @@ public abstract class AbstractDetailView extends AbstractView
 
     protected abstract void setFields() throws SBException;
 
-    protected abstract void setElementValues();
+    public abstract void setElementValues();
 
     protected abstract void disableFields();
 
     public Button getSaveButton()
     {
         return saveButton;
+    }
+
+    public StoryElement getElementToSave()
+    {
+        final StoryElement el = (StoryElement) element;
+        if (isNewElement) {
+            el.setNameWithoutPrefix(nameField.getText());
+        }
+        return el;
     }
 }

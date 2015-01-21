@@ -15,7 +15,7 @@ public class EmptyDetailView extends AbstractDetailView {
     }
 
     @Override
-    protected void setElementValues()
+    public void setElementValues()
     {
         // do nothing
     }

@@ -167,7 +167,7 @@ public class SectionDetailView extends AbstractDetailView
     }
 
     @Override
-    protected void setElementValues()
+    public void setElementValues()
     {
         final Section section = (Section) element;
         section.setEnding(endingField.isSelected());

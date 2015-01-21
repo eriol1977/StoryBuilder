@@ -47,7 +47,7 @@ public class ItemDetailView extends AbstractDetailView
     }
 
     @Override
-    protected void setElementValues()
+    public void setElementValues()
     {
         final Item item = (Item) element;
         item.setItemName(itemNameField.getText());

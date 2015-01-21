@@ -1,28 +1,30 @@
 package storybuilder.item.view;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import storybuilder.main.view.SBDialog;
+import storybuilder.item.model.Item;
+import storybuilder.main.Cache;
+import storybuilder.main.model.StoryElement;
+import storybuilder.main.view.NewElementDialog;
+import storybuilder.validation.SBException;
 
 /**
  *
  * @author Francesco Bertolino
  */
-public class NewItemDialog extends SBDialog
+public class NewItemDialog extends NewElementDialog
 {
 
-    private final ObservableList<String> itemList;
-
-    public NewItemDialog(ObservableList<String> itemList)
+    public NewItemDialog(final ObservableList<String> itemList)
     {
-        this.itemList = itemList;
-
-        final Button save = new Button("Save");
-        save.setOnAction((ActionEvent event) -> {
-            itemList.add("UNF!");
-            close();
-        });
-        add(save);
+        super(itemList, new ItemDetailView(true, new Item("", "", "", "", false), null));
+        setMinWidth(800);
+        setMinHeight(300);
     }
+
+    @Override
+    protected void saveElement(StoryElement element) throws SBException
+    {
+        Cache.getInstance().getStory().addItem((Item) element);
+    }
+
 }

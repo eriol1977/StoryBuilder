@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
  *
  * @author Francesco Bertolino
  */
-public class DoubleList extends HBox
+public abstract class DoubleList extends HBox
 {
 
     private ListView<String> leftList;
@@ -25,7 +25,7 @@ public class DoubleList extends HBox
 
     private ObservableList<String> rightListModel;
 
-    public DoubleList(final List<String> leftItems, final List<String> rightItems)
+    public DoubleList(final List<String> rightItems)
     {
         setSpacing(10);
 
@@ -37,10 +37,17 @@ public class DoubleList extends HBox
         addButton.setDisable(true);
         removeButton.setDisable(true);
         buttonBox.getChildren().add(addButton);
+
         buttonBox.getChildren().add(removeButton);
+        final Button refreshButton = new Button("RF");
+        refreshButton.setPrefWidth(50);
+        refreshButton.setOnAction((ActionEvent event) -> {
+            refresh();
+        });
+        buttonBox.getChildren().add(refreshButton);
 
         leftListModel = FXCollections.observableArrayList();
-        leftListModel.addAll(leftItems);
+        leftListModel.addAll(loadLeftItems());
         leftListModel.removeAll(rightItems);
         leftList = new ListView<>();
         leftList.setMaxWidth(150);
@@ -94,15 +101,25 @@ public class DoubleList extends HBox
     {
         return rightListModel;
     }
-    
+
     public void setRightItems(final List<String> items)
     {
         rightListModel.clear();
         rightListModel.addAll(items);
         leftListModel.removeAll(items);
     }
-    
-    public void newRightItem(final String item) {
+
+    public void newRightItem(final String item)
+    {
         rightListModel.add(item);
+    }
+
+    protected abstract List<String> loadLeftItems();
+
+    public void refresh()
+    {
+        leftListModel.clear();
+        leftListModel.addAll(loadLeftItems());
+        leftListModel.removeAll(rightListModel);
     }
 }

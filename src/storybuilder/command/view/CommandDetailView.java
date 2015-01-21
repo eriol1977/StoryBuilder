@@ -31,7 +31,7 @@ public class CommandDetailView extends AbstractDetailView
     }
 
     @Override
-    protected void setElementValues()
+    public void setElementValues()
     {
         final Command command = (Command) element;
         command.setKeyword(keywordField.getText());
