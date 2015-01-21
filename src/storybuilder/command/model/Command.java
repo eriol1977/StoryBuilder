@@ -109,4 +109,10 @@ public class Command extends StoryElement
         return PREFIX;
     }
 
+    @Override
+    public String toString()
+    {
+        return getDescription();
+    }
+
 }

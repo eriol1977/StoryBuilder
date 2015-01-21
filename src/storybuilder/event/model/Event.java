@@ -90,4 +90,10 @@ public class Event extends StoryElement
         }
     }
 
+    @Override
+    public String toString()
+    {
+        return getDescription();
+    }
+
 }

@@ -1,7 +1,9 @@
 package storybuilder.section.view.link;
 
+import storybuilder.main.Cache;
 import storybuilder.main.view.MainWindowController;
 import storybuilder.section.model.Link;
+import storybuilder.story.model.Story;
 import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
@@ -19,12 +21,14 @@ public class UpdateLinkDialog extends LinkDialog
         super("Update link", linksTable);
         this.link = link;
 
+        final Story story = Cache.getInstance().getStory();
+
         newSectionCombo.getSelectionModel().select(link.getSectionId());
-        commands.setRightItems(link.getCommandIds());
-        items.setRightItems(link.getItemIds());
-        noItems.setRightItems(link.getNoItemIds());
-        events.setRightItems(link.getEventIds());
-        noEvents.setRightItems(link.getNoEventIds());
+        commands.setRightItems(story.getCommands(link.getCommandIds()));
+        items.setRightItems(story.getItems(link.getItemIds()));
+        noItems.setRightItems(story.getItems(link.getNoItemIds()));
+        events.setRightItems(story.getEvents(link.getEventIds()));
+        noEvents.setRightItems(story.getEvents(link.getNoEventIds()));
     }
 
     @Override
@@ -42,11 +46,11 @@ public class UpdateLinkDialog extends LinkDialog
         }
 
         link.setSectionId(nextSectionId);
-        link.setCommandIds(commands.getRightItems());
-        link.setItemIds(items.getRightItems());
-        link.setNoItemIds(noItems.getRightItems());
-        link.setEventIds(events.getRightItems());
-        link.setNoEventIds(noEvents.getRightItems());
+        link.setCommandIds(commands.getSelectedElementsIds());
+        link.setItemIds(items.getSelectedElementsIds());
+        link.setNoItemIds(noItems.getSelectedElementsIds());
+        link.setEventIds(events.getSelectedElementsIds());
+        link.setNoEventIds(noEvents.getSelectedElementsIds());
         linksTable.updateLink(link);
         close();
     }

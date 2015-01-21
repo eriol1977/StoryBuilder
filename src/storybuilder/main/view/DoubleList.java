@@ -1,6 +1,7 @@
 package storybuilder.main.view;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import storybuilder.main.model.StoryElement;
 
 /**
  *
@@ -17,15 +19,15 @@ import javafx.scene.layout.VBox;
 public abstract class DoubleList extends HBox
 {
 
-    private ListView<String> leftList;
+    private ListView<StoryElement> leftList;
 
-    private ObservableList<String> leftListModel;
+    private ObservableList<StoryElement> leftListModel;
 
-    private ListView<String> rightList;
+    private ListView<StoryElement> rightList;
 
-    private ObservableList<String> rightListModel;
+    private ObservableList<StoryElement> rightListModel;
 
-    public DoubleList(final List<String> rightItems)
+    public DoubleList(final List<? extends StoryElement> rightItems)
     {
         setSpacing(10);
 
@@ -63,58 +65,63 @@ public abstract class DoubleList extends HBox
         rightList.setItems(rightListModel);
         getChildren().add(rightList);
 
-        leftList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> ov, String old_val, String new_val) -> {
+        leftList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends StoryElement> observable, StoryElement oldValue, StoryElement newValue) -> {
             rightList.getSelectionModel().clearSelection();
             addButton.setDisable(false);
             removeButton.setDisable(true);
         });
 
-        rightList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> ov, String old_val, String new_val) -> {
+        rightList.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends StoryElement> ov, StoryElement old_val, StoryElement new_val) -> {
             leftList.getSelectionModel().clearSelection();
             addButton.setDisable(true);
             removeButton.setDisable(false);
         });
 
         addButton.setOnAction((ActionEvent event) -> {
-            final String itemId = leftList.getSelectionModel().getSelectedItem();
-            leftListModel.remove(itemId);
-            rightListModel.add(itemId);
+            final StoryElement element = leftList.getSelectionModel().getSelectedItem();
+            leftListModel.remove(element);
+            rightListModel.add(element);
             leftList.getSelectionModel().clearSelection();
             addButton.setDisable(true);
         });
 
         removeButton.setOnAction((ActionEvent event) -> {
-            final String itemId = rightList.getSelectionModel().getSelectedItem();
-            leftListModel.add(itemId);
-            rightListModel.remove(itemId);
+            final StoryElement element = rightList.getSelectionModel().getSelectedItem();
+            leftListModel.add(element);
+            rightListModel.remove(element);
             rightList.getSelectionModel().clearSelection();
             removeButton.setDisable(true);
         });
     }
 
-    public ObservableList<String> getLeftItems()
+    public ObservableList<StoryElement> getLeftItems()
     {
         return leftListModel;
     }
 
-    public ObservableList<String> getRightItems()
+    public ObservableList<StoryElement> getRightItems()
     {
         return rightListModel;
     }
 
-    public void setRightItems(final List<String> items)
+    public List<String> getSelectedElementsIds()
+    {
+        return rightListModel.stream().map(i -> i.getName()).collect(Collectors.toList());
+    }
+
+    public void setRightItems(final List<? extends StoryElement> items)
     {
         rightListModel.clear();
         rightListModel.addAll(items);
         leftListModel.removeAll(items);
     }
 
-    public void newRightItem(final String item)
+    public void newRightItem(final StoryElement item)
     {
         rightListModel.add(item);
     }
 
-    protected abstract List<String> loadLeftItems();
+    protected abstract List<? extends StoryElement> loadLeftItems();
 
     public void refresh()
     {

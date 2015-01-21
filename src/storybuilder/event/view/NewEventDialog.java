@@ -14,7 +14,7 @@ import storybuilder.validation.SBException;
 public class NewEventDialog extends NewElementDialog
 {
 
-    public NewEventDialog(final ObservableList<String> itemList)
+    public NewEventDialog(final ObservableList<StoryElement> itemList)
     {
         super(itemList, new EventDetailView(true, new Event("", "", false), null));
         setMinHeight(270);

@@ -31,8 +31,9 @@ public class AddLinkDialog extends LinkDialog
             return;
         }
         final Link link = new Link(linksTable.getNewLinkId(), nextSectionId,
-                commands.getRightItems(), items.getRightItems(), noItems.getRightItems(),
-                events.getRightItems(), noEvents.getRightItems(), false);
+                commands.getSelectedElementsIds(), items.getSelectedElementsIds(),
+                noItems.getSelectedElementsIds(), events.getSelectedElementsIds(),
+                noEvents.getSelectedElementsIds(), false);
         linksTable.addLink(link);
 
         close();

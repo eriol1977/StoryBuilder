@@ -14,7 +14,7 @@ import storybuilder.validation.SBException;
 public class NewItemDialog extends NewElementDialog
 {
 
-    public NewItemDialog(final ObservableList<String> itemList)
+    public NewItemDialog(final ObservableList<StoryElement> itemList)
     {
         super(itemList, new ItemDetailView(true, new Item("", "", "", "", false), null));
         setMinWidth(800);

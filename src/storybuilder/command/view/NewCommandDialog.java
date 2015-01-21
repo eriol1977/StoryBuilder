@@ -14,7 +14,7 @@ import storybuilder.validation.SBException;
 public class NewCommandDialog extends NewElementDialog
 {
 
-    public NewCommandDialog(final ObservableList<String> itemList)
+    public NewCommandDialog(final ObservableList<StoryElement> itemList)
     {
         super(itemList, new CommandDetailView(true, new Command("", "", "", false), null));
         setMinHeight(270);

@@ -165,4 +165,11 @@ public class Item extends StoryElement
         return PREFIX;
     }
 
+    @Override
+    public String toString()
+    {
+        return getItemName();
+    }
+
+    
 }

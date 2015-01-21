@@ -1,4 +1,6 @@
--- fix: nelle DoubleList compaiono sempre i prefissi c_, i_, ecc... eliminarli!
+-- Item/Events to get: spazio verticale troppo ristretto
+
+-- Usare nomi/descrizioni in tutte le liste, al posto dei codici
 
 -- profiling e migliorie di performance
 

@@ -14,7 +14,7 @@ import storybuilder.validation.ValidationFailed;
 public abstract class NewElementDialog extends SBDialog
 {
 
-    public NewElementDialog(final ObservableList<String> itemList, final AbstractDetailView view)
+    public NewElementDialog(final ObservableList<StoryElement> itemList, final AbstractDetailView view)
     {
         view.getSaveButton().setOnAction((ActionEvent event) -> {
             try {
@@ -22,7 +22,7 @@ public abstract class NewElementDialog extends SBDialog
                 final StoryElement element = view.getElementToSave();
                 element.validate();
                 saveElement(element);
-                itemList.add(element.getName());
+                itemList.add(element);
                 close();
             } catch (ValidationFailed ex) {
                 ErrorManager.showErrorMessage(ex.getFailCause());

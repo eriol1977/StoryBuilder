@@ -1,6 +1,7 @@
 package storybuilder.command.view;
 
 import java.util.List;
+import storybuilder.command.model.Command;
 import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
 
@@ -11,15 +12,15 @@ import storybuilder.main.view.DoubleList;
 public class CommandDoubleList extends DoubleList
 {
 
-    public CommandDoubleList(final List<String> rightItems)
+    public CommandDoubleList(final List<Command> rightItems)
     {
         super(rightItems);
     }
 
     @Override
-    protected List<String> loadLeftItems()
+    protected List<Command> loadLeftItems()
     {
-        return Cache.getInstance().getStory().getCommandIds();
+        return Cache.getInstance().getStory().getCommands();
     }
 
 }

@@ -6,8 +6,10 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import storybuilder.item.view.ItemDoubleList;
+import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
 import storybuilder.section.model.Drop;
+import storybuilder.story.model.Story;
 
 /**
  *
@@ -25,13 +27,14 @@ public class DropView extends VBox
 
         getChildren().add(new Label("Items to drop"));
 
-        itemsField = new ItemDoubleList(drop != null ? drop.getItemIds() : new ArrayList<>());
+        final Story story = Cache.getInstance().getStory();
+        itemsField = new ItemDoubleList(drop != null ? story.getItems(drop.getItemIds()) : new ArrayList<>());
         getChildren().add(itemsField);
     }
 
     public List<String> getItemIds()
     {
-        return itemsField.getRightItems();
+        return itemsField.getSelectedElementsIds();
     }
 
     public List<String> getIds()

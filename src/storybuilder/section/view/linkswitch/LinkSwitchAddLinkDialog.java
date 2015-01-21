@@ -70,7 +70,7 @@ public class LinkSwitchAddLinkDialog extends SBDialog
         });
         final TitledPane commandsPane = new TitledPane("Commands", new HBox(10, commands, newCommand));
         accordion.getPanes().add(commandsPane);
-        
+
         final DoubleList items = new ItemDoubleList(new ArrayList<>());
         final Button newItem = new Button("New");
         newItem.setOnAction((ActionEvent event) -> {
@@ -78,7 +78,7 @@ public class LinkSwitchAddLinkDialog extends SBDialog
         });
         final TitledPane itemsPane = new TitledPane("Items", new HBox(10, items, newItem));
         accordion.getPanes().add(itemsPane);
-        
+
         final DoubleList noItems = new ItemDoubleList(new ArrayList<>());
         final Button newNoItem = new Button("New");
         newNoItem.setOnAction((ActionEvent event) -> {
@@ -86,7 +86,7 @@ public class LinkSwitchAddLinkDialog extends SBDialog
         });
         final TitledPane noItemsPane = new TitledPane("No-Items", new HBox(10, noItems, newNoItem));
         accordion.getPanes().add(noItemsPane);
-        
+
         final DoubleList events = new EventDoubleList(new ArrayList<>());
         final Button newEvent = new Button("New");
         newEvent.setOnAction((ActionEvent event) -> {
@@ -94,7 +94,7 @@ public class LinkSwitchAddLinkDialog extends SBDialog
         });
         final TitledPane eventsPane = new TitledPane("Events", new HBox(10, events, newEvent));
         accordion.getPanes().add(eventsPane);
-        
+
         final DoubleList noEvents = new EventDoubleList(new ArrayList<>());
         final Button newNoEvent = new Button("New");
         newNoEvent.setOnAction((ActionEvent event) -> {
@@ -102,7 +102,7 @@ public class LinkSwitchAddLinkDialog extends SBDialog
         });
         final TitledPane noEventsPane = new TitledPane("No-Events", new HBox(10, noEvents, newNoEvent));
         accordion.getPanes().add(noEventsPane);
-        
+
         accordion.setExpandedPane(commandsPane);
         add(accordion);
 
@@ -124,8 +124,9 @@ public class LinkSwitchAddLinkDialog extends SBDialog
             }
             // id doesn't matter, this Link serves only as a mean to write the LinkSwitch content
             final Link link = new Link("", sectionNumber,
-                    commands.getRightItems(), items.getRightItems(), noItems.getRightItems(),
-                    events.getRightItems(), noEvents.getRightItems(), false);
+                    commands.getSelectedElementsIds(), items.getSelectedElementsIds(),
+                    noItems.getSelectedElementsIds(), events.getSelectedElementsIds(),
+                    noEvents.getSelectedElementsIds(), false);
             view.addCreateLinkSwitch(link);
             close();
         });

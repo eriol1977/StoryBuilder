@@ -11,10 +11,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import storybuilder.event.view.EventDoubleList;
 import storybuilder.item.view.ItemDoubleList;
+import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
 import storybuilder.main.view.MainWindowController;
 import storybuilder.section.model.Get;
 import storybuilder.section.model.Section;
+import storybuilder.story.model.Story;
 
 /**
  *
@@ -41,7 +43,9 @@ public class GetView extends VBox
         });
         getChildren().add(new HBox(10, itemsLabel, newItem));
 
-        itemsField = new ItemDoubleList(get != null ? get.getItemIds() : new ArrayList<>());
+        final Story story = Cache.getInstance().getStory();
+
+        itemsField = new ItemDoubleList(get != null ? story.getItems(get.getItemIds()) : new ArrayList<>());
         getChildren().add(itemsField);
 
         getChildren().add(new Separator());
@@ -53,18 +57,18 @@ public class GetView extends VBox
         });
         getChildren().add(new HBox(10, eventsLabel, newEvent));
 
-        eventsField = new EventDoubleList(get != null ? get.getEventIds() : new ArrayList<>());
+        eventsField = new EventDoubleList(get != null ? story.getEvents(get.getEventIds()) : new ArrayList<>());
         getChildren().add(eventsField);
     }
 
     public List<String> getItemIds()
     {
-        return itemsField.getRightItems();
+        return itemsField.getSelectedElementsIds();
     }
 
     public List<String> getEventsIds()
     {
-        return eventsField.getRightItems();
+        return eventsField.getSelectedElementsIds();
     }
 
     public List<String> getIds()

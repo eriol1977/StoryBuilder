@@ -190,9 +190,9 @@ public class Story
         return new ArrayList<>(commands);
     }
 
-    public List<String> getCommandIds()
+    public List<Command> getCommands(final List<String> ids)
     {
-        return commands.stream().map(c -> c.getName()).collect(Collectors.toList());
+        return ids.stream().map(id -> getCommand(id)).collect(Collectors.toList());
     }
 
     public Command getCommand(final String id)
@@ -242,9 +242,9 @@ public class Story
         return null;
     }
 
-    public List<String> getEventIds()
+    public List<Event> getEvents(final List<String> ids)
     {
-        return events.stream().map(e -> e.getName()).collect(Collectors.toList());
+        return ids.stream().map(id -> getEvent(id)).collect(Collectors.toList());
     }
 
     public void addEvent(final Event event) throws SBException
@@ -493,9 +493,9 @@ public class Story
         return new ArrayList<>(items);
     }
 
-    public List<String> getItemIds()
+    public List<Item> getItems(final List<String> ids)
     {
-        return items.stream().map(i -> i.getName()).collect(Collectors.toList());
+        return ids.stream().map(id -> getItem(id)).collect(Collectors.toList());
     }
 
     public Item getItem(final String id)
