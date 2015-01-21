@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import storybuilder.command.model.Command;
 import storybuilder.event.model.Event;
 import storybuilder.item.model.Item;
 import storybuilder.main.Cache;
@@ -72,30 +73,39 @@ public class Link extends StoryElement
     {
         this.sectionId = linkInfo[0];
         if (linkInfo.length > 1) {
-            commandIds.addAll(Arrays.asList(linkInfo[1].split(",")));
-            if (linkInfo.length > 2) {
-                final String[] stuff = linkInfo[2].split(",");
-                final List<String> items = new ArrayList<>();
-                final List<String> noItems = new ArrayList<>();
-                final List<String> events = new ArrayList<>();
-                final List<String> noEvents = new ArrayList<>();
-                for (final String id : stuff) {
-                    if (id.startsWith("no_" + Item.PREFIX)) {
-                        noItems.add(id.substring(3, id.length()));
-                    } else if (id.startsWith("no_" + Event.PREFIX)) {
-                        noEvents.add(id.substring(3, id.length()));
-                    } else if (id.startsWith(Item.PREFIX)) {
-                        items.add(id);
-                    } else if (id.startsWith(Event.PREFIX)) {
-                        events.add(id);
-                    }
+            if (linkInfo[1].startsWith(Command.PREFIX)) {
+                commandIds.addAll(Arrays.asList(linkInfo[1].split(",")));
+                if (linkInfo.length > 2) {
+                    buildLinkItemEventInfo(linkInfo[2]);
                 }
-                this.itemIds.put(YES, items);
-                this.itemIds.put(NO, noItems);
-                this.eventIds.put(YES, events);
-                this.eventIds.put(NO, noEvents);
+            } else {
+                buildLinkItemEventInfo(linkInfo[1]);
             }
         }
+    }
+
+    private void buildLinkItemEventInfo(final String info)
+    {
+        final String[] stuff = info.split(",");
+        final List<String> items = new ArrayList<>();
+        final List<String> noItems = new ArrayList<>();
+        final List<String> events = new ArrayList<>();
+        final List<String> noEvents = new ArrayList<>();
+        for (final String id : stuff) {
+            if (id.startsWith("no_" + Item.PREFIX)) {
+                noItems.add(id.substring(3, id.length()));
+            } else if (id.startsWith("no_" + Event.PREFIX)) {
+                noEvents.add(id.substring(3, id.length()));
+            } else if (id.startsWith(Item.PREFIX)) {
+                items.add(id);
+            } else if (id.startsWith(Event.PREFIX)) {
+                events.add(id);
+            }
+        }
+        this.itemIds.put(YES, items);
+        this.itemIds.put(NO, noItems);
+        this.eventIds.put(YES, events);
+        this.eventIds.put(NO, noEvents);
     }
 
     public Link(final Link another)
@@ -120,34 +130,34 @@ public class Link extends StoryElement
             sb.append(":");
             getCommandIds().stream().forEach(id -> sb.append(id).append(","));
             sb.delete(sb.length() - 1, sb.length()); // deletes last ','
-
-            // items, no_items, events and no_events
-            if (!getItemIds().isEmpty() || !getNoItemIds().isEmpty() || !getEventIds().isEmpty() || !getNoEventIds().isEmpty()) {
-                sb.append(":");
-            }
-            if (!getItemIds().isEmpty()) {
-                getItemIds().stream().forEach(id -> sb.append(id).append(","));
-                if (getNoItemIds().isEmpty() && getAllEventIds().isEmpty()) {
-                    sb.delete(sb.length() - 1, sb.length()); // deletes last ','
-                }
-            }
-            if (!getNoItemIds().isEmpty()) {
-                getNoItemIds().stream().forEach(id -> sb.append("no_").append(id).append(","));
-                if (getAllEventIds().isEmpty()) {
-                    sb.delete(sb.length() - 1, sb.length()); // deletes last ','
-                }
-            }
-            if (!getEventIds().isEmpty()) {
-                getEventIds().stream().forEach(id -> sb.append(id).append(","));
-                if (getNoEventIds().isEmpty()) {
-                    sb.delete(sb.length() - 1, sb.length()); // deletes last ','
-                }
-            }
-            if (!getNoEventIds().isEmpty()) {
-                getNoEventIds().stream().forEach(id -> sb.append("no_").append(id).append(","));
+        }
+        // items, no_items, events and no_events
+        if (!getItemIds().isEmpty() || !getNoItemIds().isEmpty() || !getEventIds().isEmpty() || !getNoEventIds().isEmpty()) {
+            sb.append(":");
+        }
+        if (!getItemIds().isEmpty()) {
+            getItemIds().stream().forEach(id -> sb.append(id).append(","));
+            if (getNoItemIds().isEmpty() && getAllEventIds().isEmpty()) {
                 sb.delete(sb.length() - 1, sb.length()); // deletes last ','
             }
         }
+        if (!getNoItemIds().isEmpty()) {
+            getNoItemIds().stream().forEach(id -> sb.append("no_").append(id).append(","));
+            if (getAllEventIds().isEmpty()) {
+                sb.delete(sb.length() - 1, sb.length()); // deletes last ','
+            }
+        }
+        if (!getEventIds().isEmpty()) {
+            getEventIds().stream().forEach(id -> sb.append(id).append(","));
+            if (getNoEventIds().isEmpty()) {
+                sb.delete(sb.length() - 1, sb.length()); // deletes last ','
+            }
+        }
+        if (!getNoEventIds().isEmpty()) {
+            getNoEventIds().stream().forEach(id -> sb.append("no_").append(id).append(","));
+            sb.delete(sb.length() - 1, sb.length()); // deletes last ','
+        }
+
         return sb.toString();
     }
 
@@ -162,32 +172,31 @@ public class Link extends StoryElement
             getCommandIds().stream().forEach(id -> sb.append(story.getCommand(id).getDescription()).append(", "));
             sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
             sb.append("] ");
-
-            // items, no_items, events and no_events
-            if (!getItemIds().isEmpty()) {
-                sb.append("[Items: ");
-                getItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
-                sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-                sb.append("] ");
-            }
-            if (!getNoItemIds().isEmpty()) {
-                sb.append("[No-Items: ");
-                getNoItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
-                sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-                sb.append("] ");
-            }
-            if (!getEventIds().isEmpty()) {
-                sb.append("[Events: ");
-                getEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
-                sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-                sb.append("] ");
-            }
-            if (!getNoEventIds().isEmpty()) {
-                sb.append("[No-Events: ");
-                getNoEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
-                sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-                sb.append("] ");
-            }
+        }
+        // items, no_items, events and no_events
+        if (!getItemIds().isEmpty()) {
+            sb.append("[Items: ");
+            getItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
+            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+            sb.append("] ");
+        }
+        if (!getNoItemIds().isEmpty()) {
+            sb.append("[No-Items: ");
+            getNoItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
+            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+            sb.append("] ");
+        }
+        if (!getEventIds().isEmpty()) {
+            sb.append("[Events: ");
+            getEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
+            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+            sb.append("] ");
+        }
+        if (!getNoEventIds().isEmpty()) {
+            sb.append("[No-Events: ");
+            getNoEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
+            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+            sb.append("] ");
         }
         return sb.toString();
     }

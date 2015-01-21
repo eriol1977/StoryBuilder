@@ -1,8 +1,4 @@
--- creazione diretta nuovi oggetti nella dialog di creazione LinkSwitch
-
 -- fix: nelle DoubleList compaiono sempre i prefissi c_, i_, ecc... eliminarli!
-
--- bugfix: eliminare oggetto con sezione annessa
 
 -- profiling e migliorie di performance
 

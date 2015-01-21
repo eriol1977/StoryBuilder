@@ -525,14 +525,14 @@ public class Story
 
     public void removeItem(final Item item) throws SBException
     {
+        removeStoryElement(item);
+        items.remove(item);
         if (!item.getSectionId().isEmpty()) {
             final Section section = getSection(item.getSectionId());
             if (section != null) {
                 deleteSection(section);
             }
         }
-        removeStoryElement(item);
-        items.remove(item);
     }
 
     public void updateItem(final Item item) throws SBException
@@ -580,14 +580,14 @@ public class Story
 
     public void removeJoin(final Join join) throws SBException
     {
+        removeStoryElement(join);
+        joins.remove(join);
         if (!join.getSectionId().isEmpty()) {
             final Section section = getSection(join.getSectionId());
             if (section != null) {
                 deleteSection(section);
             }
         }
-        removeStoryElement(join);
-        joins.remove(join);
     }
 
     public void updateJoin(final Join join) throws SBException
