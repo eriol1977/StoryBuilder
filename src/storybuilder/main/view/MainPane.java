@@ -1,9 +1,9 @@
 package storybuilder.main.view;
 
-import storybuilder.main.view.EmptyView;
-import storybuilder.main.view.AbstractView;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import storybuilder.validation.ErrorManager;
 
 /**
  *
@@ -16,6 +16,8 @@ public class MainPane extends BorderPane
 
     private final StatusBar statusBar;
 
+    private final Map<String, AbstractView> cachedViews = new HashMap<>();
+
     public MainPane()
     {
         menuBar = new SBMenuBar(this);
@@ -27,11 +29,30 @@ public class MainPane extends BorderPane
         setCenter(new EmptyView());
     }
 
+    AbstractView getView(final String clazz)
+    {
+        AbstractView view = cachedViews.get(clazz);
+        if (view == null) {
+            try {
+                view = (AbstractView) Class.forName(clazz).newInstance();
+                cachedViews.put(clazz, view);
+            } catch (ClassNotFoundException | SecurityException | InstantiationException | IllegalAccessException ex) {
+                ErrorManager.showErrorMessage("Error while loading view");
+            }
+        }
+        return view;
+    }
+
     void setContent(final AbstractView view)
     {
         setCenter(view);
     }
 
+    void setContent(final String clazz)
+    {
+        setCenter(getView(clazz));
+    }
+    
     SBMenuBar getMenuBar()
     {
         return menuBar;

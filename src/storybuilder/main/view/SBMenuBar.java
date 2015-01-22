@@ -1,7 +1,5 @@
 package storybuilder.main.view;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.control.Label;
@@ -68,11 +66,7 @@ public class SBMenuBar extends MenuBar
         menu.setAccelerator(new KeyCodeCombination(accelerator, KeyCombination.CONTROL_DOWN));
         final Label menuLabel = new Label(label); // to make menu header clickable
         menuLabel.setOnMouseClicked((Event t) -> {
-            try {
-                mainPane.setContent((AbstractView) Class.forName(clazz).newInstance());
-            } catch (ClassNotFoundException | SecurityException | InstantiationException | IllegalAccessException ex) {
-                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            mainPane.setContent(clazz);
         });
         menu.setGraphic(menuLabel);
         return menu;
@@ -83,11 +77,7 @@ public class SBMenuBar extends MenuBar
         final MenuItem menuItem = new MenuItem(label);
         menuItem.setAccelerator(new KeyCodeCombination(accelerator, KeyCombination.CONTROL_DOWN));
         menuItem.setOnAction((ActionEvent t) -> {
-            try {
-                mainPane.setContent((AbstractView) Class.forName(clazz).newInstance());
-            } catch (ClassNotFoundException | SecurityException | InstantiationException | IllegalAccessException ex) {
-                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            mainPane.setContent(clazz);
         });
         return menuItem;
     }
