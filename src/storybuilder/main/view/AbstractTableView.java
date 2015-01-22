@@ -44,8 +44,8 @@ public abstract class AbstractTableView extends AbstractView
         layout = new HBox(10);
 
         table = new TableView();
-        table.setMinWidth(142);
-        table.setMaxWidth(142);
+        table.setMinWidth(202);
+        table.setMaxWidth(202);
         table.setMinHeight(mwc.getScreenHeight() - 150);
         table.setMaxHeight(mwc.getScreenHeight() - 150);
         table.setFixedCellSize(ROW_HEIGHT);
@@ -144,17 +144,6 @@ public abstract class AbstractTableView extends AbstractView
         layout.getChildren().add(new EmptyDetailView());
     }
 
-    private boolean validateStoryElement(final IStoryElement element)
-    {
-        try {
-            element.validate();
-            return true;
-        } catch (ValidationFailed ex) {
-            mwc.updateStatusBarMessage(ex.getFailCause());
-        }
-        return false;
-    }
-
     public void addElement(final IStoryElement element)
     {
         try {
@@ -162,6 +151,7 @@ public abstract class AbstractTableView extends AbstractView
             addElementToStory(element);
             data.add(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" added");
+            refresh();
             showEmptyView();
         } catch (ValidationFailed ex) {
             ErrorManager.showErrorMessage(ex.getFailCause());
@@ -178,6 +168,7 @@ public abstract class AbstractTableView extends AbstractView
             element.validate();
             updateElementInStory(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" updated");
+            refresh();
             showEmptyView();
         } catch (ValidationFailed ex) {
             ErrorManager.showErrorMessage(ex.getFailCause());
@@ -200,6 +191,7 @@ public abstract class AbstractTableView extends AbstractView
             deleteElementFromStory(element);
             data.remove(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" deleted");
+            refresh();
             showEmptyView();
         } catch (SBException ex) {
             ErrorManager.showErrorMessage(ex.getFailCause());
@@ -236,6 +228,12 @@ public abstract class AbstractTableView extends AbstractView
         }
     }
 
+    private void refresh()
+    {
+        data.clear();
+        loadData();
+    }
+    
     public static <T> void refreshTable(final TableView<T> table, final ObservableList<T> data)
     {
         table.setItems(null);

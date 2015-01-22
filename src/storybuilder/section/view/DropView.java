@@ -25,8 +25,6 @@ public class DropView extends VBox
         setSpacing(10);
         setPadding(new Insets(10));
 
-        getChildren().add(new Label("Items to drop"));
-
         final Story story = Cache.getInstance().getStory();
         itemsField = new ItemDoubleList(drop != null ? story.getItems(drop.getItemIds()) : new ArrayList<>());
         getChildren().add(itemsField);

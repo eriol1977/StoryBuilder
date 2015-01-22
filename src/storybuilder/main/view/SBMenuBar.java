@@ -40,13 +40,13 @@ public class SBMenuBar extends MenuBar
     {
         this.mainPane = mainPane;
         menuStory = buildMenuStory();
+        menuSections = buildMenuButton("Sections", KeyCode.S, "storybuilder.section.view.SectionsView");
         menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView");
         menuEvents = buildMenuButton("Events", KeyCode.E, "storybuilder.event.view.EventsView");
         menuItems = buildMenuButton("Items", KeyCode.I, "storybuilder.item.view.ItemsView");
         menuJoins = buildMenuButton("Joins", KeyCode.J, "storybuilder.join.view.JoinsView");
         menuMinigames = buildMenuButton("Minigames", KeyCode.M, "storybuilder.minigame.view.MinigamesView");
-        menuSections = buildMenuButton("Sections", KeyCode.S, "storybuilder.section.view.SectionsView");
-        getMenus().addAll(menuStory, menuCommands, menuEvents, menuItems, menuJoins, menuMinigames, menuSections);
+        getMenus().addAll(menuStory, menuSections, menuCommands, menuEvents, menuItems, menuJoins, menuMinigames);
         enableMenus(false);
     }
 

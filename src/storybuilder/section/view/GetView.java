@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import storybuilder.event.view.EventDoubleList;
 import storybuilder.item.view.ItemDoubleList;
 import storybuilder.main.Cache;
@@ -22,7 +22,7 @@ import storybuilder.story.model.Story;
  *
  * @author Francesco Bertolino
  */
-public class GetView extends VBox
+public class GetView extends HBox
 {
 
     private final DoubleList itemsField;
@@ -36,7 +36,7 @@ public class GetView extends VBox
         setSpacing(10);
         setPadding(new Insets(10));
 
-        final Label itemsLabel = new Label("Items to get");
+        final Label itemsLabel = new Label("Items:");
         final Button newItem = new Button("New");
         newItem.setOnAction((ActionEvent event) -> {
             MainWindowController.getInstance().switchToNewItem(section.getNameWithoutPrefix(), SectionDetailView.EXPAND_GETS);
@@ -48,9 +48,11 @@ public class GetView extends VBox
         itemsField = new ItemDoubleList(get != null ? story.getItems(get.getItemIds()) : new ArrayList<>());
         getChildren().add(itemsField);
 
-        getChildren().add(new Separator());
+        final Separator separator = new Separator(Orientation.VERTICAL);
+        separator.setPadding(new Insets(0, 30, 0, 30));
+        getChildren().add(separator);
 
-        final Label eventsLabel = new Label("Events to add");
+        final Label eventsLabel = new Label("Events:");
         final Button newEvent = new Button("New");
         newEvent.setOnAction((ActionEvent event) -> {
             MainWindowController.getInstance().switchToNewEvent(section.getNameWithoutPrefix(), SectionDetailView.EXPAND_GETS);

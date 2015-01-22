@@ -43,7 +43,7 @@ public class EventsView extends AbstractTableView
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Code", "nameWithoutPrefix", 100));
+        columns.add(getColumn("Desc.", "description", 160));
         return columns;
     }
 

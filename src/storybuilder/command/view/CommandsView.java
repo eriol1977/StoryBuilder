@@ -1,9 +1,11 @@
 package storybuilder.command.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.scene.control.TableColumn;
 import storybuilder.command.model.Command;
+import storybuilder.command.model.CommandComparatorByDescription;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
@@ -24,7 +26,9 @@ public class CommandsView extends AbstractTableView
     @Override
     protected void loadData()
     {
-        data.addAll(cache.getStory().getCommands());
+        final List<Command> commands = cache.getStory().getCommands();
+        Collections.sort(commands, new CommandComparatorByDescription());
+        data.addAll(commands);
     }
 
     @Override
@@ -49,7 +53,7 @@ public class CommandsView extends AbstractTableView
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Code", "nameWithoutPrefix", 100));
+        columns.add(getColumn("Desc.", "description", 160));
         return columns;
     }
 

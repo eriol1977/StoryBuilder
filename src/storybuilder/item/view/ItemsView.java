@@ -43,7 +43,7 @@ public class ItemsView extends AbstractTableView
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Code", "nameWithoutPrefix", 100));
+        columns.add(getColumn("Name", "itemName", 160));
         return columns;
     }
 

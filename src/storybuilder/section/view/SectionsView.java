@@ -39,6 +39,9 @@ public class SectionsView extends AbstractTableView
     {
         addTitle("Sections");
 
+        table.setMinWidth(102);
+        table.setMaxWidth(102);
+        
         table.setRowFactory(new Callback<TableView<Section>, TableRow<Section>>()
         {
             @Override
@@ -111,7 +114,7 @@ public class SectionsView extends AbstractTableView
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Code", "nameWithoutPrefix", 100));
+        columns.add(getColumn("Code", "nameWithoutPrefix", 60));
         return columns;
     }
 

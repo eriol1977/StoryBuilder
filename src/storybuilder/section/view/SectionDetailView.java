@@ -86,6 +86,9 @@ public class SectionDetailView extends AbstractDetailView
         add(endingField);
 
         final Accordion accordion = new Accordion();
+        accordion.setMinWidth(mwc.getScreenWidth() - 200);
+        accordion.setMaxWidth(mwc.getScreenWidth() - 200);
+        
         // remembers which pane was open in the previously viewed section detail
         accordion.expandedPaneProperty().addListener((ObservableValue<? extends TitledPane> ov, TitledPane old_val, TitledPane new_val) -> {
             if (new_val != null) {
