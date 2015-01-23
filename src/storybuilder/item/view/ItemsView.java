@@ -1,9 +1,11 @@
 package storybuilder.item.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.scene.control.TableColumn;
 import storybuilder.item.model.Item;
+import storybuilder.item.model.ItemComparatorByItemName;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
@@ -68,7 +70,9 @@ public class ItemsView extends AbstractTableView
     @Override
     protected void loadData()
     {
-        data.addAll(cache.getStory().getItems());
+        final List<Item> items = cache.getStory().getItems();
+        Collections.sort(items, new ItemComparatorByItemName());
+        data.addAll(items);
     }
 
 }

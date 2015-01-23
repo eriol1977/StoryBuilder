@@ -1,9 +1,11 @@
 package storybuilder.event.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.scene.control.TableColumn;
 import storybuilder.event.model.Event;
+import storybuilder.event.model.EventComparatorByDescription;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
@@ -68,7 +70,9 @@ public class EventsView extends AbstractTableView
     @Override
     protected void loadData()
     {
-        data.addAll(cache.getStory().getEvents());
+        final List<Event> events = cache.getStory().getEvents();
+        Collections.sort(events, new EventComparatorByDescription());
+        data.addAll(events);
     }
 
 }

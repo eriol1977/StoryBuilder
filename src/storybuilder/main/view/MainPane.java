@@ -26,7 +26,7 @@ public class MainPane extends BorderPane
         statusBar = new StatusBar();
         setBottom(statusBar);
 
-        setCenter(new EmptyView());
+        setContent(new EmptyView());
     }
 
     AbstractView getView(final String clazz)
@@ -46,8 +46,13 @@ public class MainPane extends BorderPane
     AbstractView setContent(final String clazz)
     {
         final AbstractView view = getView(clazz);
-        setCenter(view);
+        setContent(view);
         return view;
+    }
+
+    void setContent(final AbstractView view)
+    {
+        setCenter(view);
     }
 
     SBMenuBar getMenuBar()

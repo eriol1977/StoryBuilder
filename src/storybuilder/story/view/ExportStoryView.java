@@ -15,6 +15,7 @@ import storybuilder.main.FileManager;
 import storybuilder.main.model.StoryElement;
 import storybuilder.main.view.AbstractView;
 import storybuilder.section.model.Section;
+import storybuilder.story.model.NullStory;
 import storybuilder.story.model.Story;
 import storybuilder.validation.ErrorManager;
 import storybuilder.validation.SBException;
@@ -30,6 +31,11 @@ public class ExportStoryView extends AbstractView
     {
         try {
             final Story story = cache.getStory();
+            if(story instanceof NullStory)
+            {
+                ErrorManager.showErrorMessage("A story must be opened to be exported");
+                return;
+            }
 
             final Document originalDoc = story.getXmlDoc();
             final String sections = FileManager.findElementNamed("sections", originalDoc).getTextContent();
@@ -89,7 +95,7 @@ public class ExportStoryView extends AbstractView
         } catch (SBException ex) {
             ErrorManager.showErrorMessage(ex.getFailCause());
         } catch (ParserConfigurationException ex) {
-            ErrorManager.showErrorMessage(new SBException("Error while exporting story").getFailCause());
+            ErrorManager.showErrorMessage("Error while exporting story");
         }
     }
 

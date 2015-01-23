@@ -10,6 +10,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import storybuilder.validation.ErrorManager;
 
 /**
  *
@@ -38,12 +39,12 @@ public class SBMenuBar extends MenuBar
     {
         this.mainPane = mainPane;
         menuStory = buildMenuStory();
-        menuSections = buildMenuButton("Sections", KeyCode.S, "storybuilder.section.view.SectionsView");
-        menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView");
-        menuEvents = buildMenuButton("Events", KeyCode.E, "storybuilder.event.view.EventsView");
-        menuItems = buildMenuButton("Items", KeyCode.I, "storybuilder.item.view.ItemsView");
-        menuJoins = buildMenuButton("Joins", KeyCode.J, "storybuilder.join.view.JoinsView");
-        menuMinigames = buildMenuButton("Minigames", KeyCode.M, "storybuilder.minigame.view.MinigamesView");
+        menuSections = buildMenuButton("Sections", KeyCode.S, "storybuilder.section.view.SectionsView", false);
+        menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView", false);
+        menuEvents = buildMenuButton("Events", KeyCode.E, "storybuilder.event.view.EventsView", false);
+        menuItems = buildMenuButton("Items", KeyCode.I, "storybuilder.item.view.ItemsView", false);
+        menuJoins = buildMenuButton("Joins", KeyCode.J, "storybuilder.join.view.JoinsView", false);
+        menuMinigames = buildMenuButton("Minigames", KeyCode.M, "storybuilder.minigame.view.MinigamesView", false);
         getMenus().addAll(menuStory, menuSections, menuCommands, menuEvents, menuItems, menuJoins, menuMinigames);
         enableMenus(false);
     }
@@ -51,35 +52,48 @@ public class SBMenuBar extends MenuBar
     private Menu buildMenuStory()
     {
         final Menu menu = new Menu("Story");
-        final MenuItem newStory = buildMenuItem("New", KeyCode.N, "storybuilder.story.view.NewStoryView");
-        final MenuItem open = buildMenuItem("Open", KeyCode.O, "storybuilder.story.view.OpenStoryView");
-        final MenuItem delete = buildMenuItem("Delete", KeyCode.D, "storybuilder.story.view.DeleteStoryView");
-        final MenuItem export = buildMenuItem("Export", KeyCode.E, "storybuilder.story.view.ExportStoryView");
-        final MenuItem prefs = buildMenuItem("Preferences", KeyCode.P, "storybuilder.preferences.view.PreferencesView");
+        final MenuItem newStory = buildMenuItem("New", KeyCode.N, "storybuilder.story.view.NewStoryView", true);
+        final MenuItem open = buildMenuItem("Open", KeyCode.O, "storybuilder.story.view.OpenStoryView", true);
+        final MenuItem delete = buildMenuItem("Delete", KeyCode.D, "storybuilder.story.view.DeleteStoryView", true);
+        final MenuItem export = buildMenuItem("Export", KeyCode.E, "storybuilder.story.view.ExportStoryView", true);
+        final MenuItem prefs = buildMenuItem("Preferences", KeyCode.P, "storybuilder.preferences.view.PreferencesView", true);
         menu.getItems().addAll(newStory, open, delete, new SeparatorMenuItem(), export, new SeparatorMenuItem(), prefs);
         return menu;
     }
 
-    private Menu buildMenuButton(final String label, final KeyCode accelerator, final String clazz)
+    private Menu buildMenuButton(final String label, final KeyCode accelerator, final String clazz, final boolean createNewView)
     {
         final Menu menu = new Menu();
         menu.setAccelerator(new KeyCodeCombination(accelerator, KeyCombination.CONTROL_DOWN));
         final Label menuLabel = new Label(label); // to make menu header clickable
         menuLabel.setOnMouseClicked((Event t) -> {
-            mainPane.setContent(clazz);
+            getMenuButtonAction(createNewView, clazz);
         });
         menu.setGraphic(menuLabel);
         return menu;
     }
 
-    private MenuItem buildMenuItem(final String label, final KeyCode accelerator, final String clazz)
+    private MenuItem buildMenuItem(final String label, final KeyCode accelerator, final String clazz, final boolean createNewView)
     {
         final MenuItem menuItem = new MenuItem(label);
         menuItem.setAccelerator(new KeyCodeCombination(accelerator, KeyCombination.CONTROL_DOWN));
         menuItem.setOnAction((ActionEvent t) -> {
-            mainPane.setContent(clazz);
+            getMenuButtonAction(createNewView, clazz);
         });
         return menuItem;
+    }
+
+    private void getMenuButtonAction(final boolean createNewView, final String clazz)
+    {
+        if (createNewView) {
+            try {
+                mainPane.setContent((AbstractView) Class.forName(clazz).newInstance());
+            } catch (ClassNotFoundException | SecurityException | InstantiationException | IllegalAccessException ex) {
+                ErrorManager.showErrorMessage("Error while loading view");
+            }
+        } else {
+            mainPane.setContent(clazz);
+        }
     }
 
     final void enableMenus(boolean enable)

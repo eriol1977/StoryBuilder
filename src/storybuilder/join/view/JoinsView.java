@@ -1,9 +1,11 @@
 package storybuilder.join.view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.scene.control.TableColumn;
 import storybuilder.join.model.Join;
+import storybuilder.join.model.JoinComparatorByDescription;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
@@ -68,7 +70,9 @@ public class JoinsView extends AbstractTableView
     @Override
     protected void loadData()
     {
-        data.addAll(cache.getStory().getJoins());
+        final List<Join> joins = cache.getStory().getJoins();
+        Collections.sort(joins, new JoinComparatorByDescription());
+        data.addAll(joins);
     }
 
 }
