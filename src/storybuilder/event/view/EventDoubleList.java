@@ -23,4 +23,10 @@ public class EventDoubleList extends DoubleList
         return Cache.getInstance().getStory().getEvents();
     }
 
+    @Override
+    protected void createNewElement()
+    {
+        new NewEventDialog(getRightItems()).show();
+    }
+
 }

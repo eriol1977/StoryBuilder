@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import storybuilder.main.view.AbstractView;
 import javafx.scene.control.TextField;
-import storybuilder.main.view.EmptyView;
 import storybuilder.story.model.Story;
 import storybuilder.validation.ErrorManager;
 import storybuilder.validation.SBException;
@@ -32,7 +31,7 @@ public class NewStoryView extends AbstractView
                 cache.setStory(story);
                 mwc.updateTitle();
                 mwc.updateStatusBarMessage("Story \"" + title + "\" created");
-                mwc.switchView(new EmptyView());
+                mwc.switchToEmptyView();
                 mwc.enableMenus(true);
             } catch (ValidationFailed ex) {
                 ErrorManager.showErrorMessage(ex.getFailCause());

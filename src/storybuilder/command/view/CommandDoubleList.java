@@ -23,4 +23,10 @@ public class CommandDoubleList extends DoubleList
         return Cache.getInstance().getStory().getCommands();
     }
 
+    @Override
+    protected void createNewElement()
+    {
+        new NewCommandDialog(getRightItems()).show();
+    }
+
 }

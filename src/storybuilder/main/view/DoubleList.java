@@ -39,14 +39,21 @@ public abstract class DoubleList extends HBox
         addButton.setDisable(true);
         removeButton.setDisable(true);
         buttonBox.getChildren().add(addButton);
-
         buttonBox.getChildren().add(removeButton);
+
         final Button refreshButton = new Button("RF");
         refreshButton.setPrefWidth(50);
         refreshButton.setOnAction((ActionEvent event) -> {
             refresh();
         });
         buttonBox.getChildren().add(refreshButton);
+
+        final Button newrefreshButton = new Button("New");
+        newrefreshButton.setPrefWidth(50);
+        newrefreshButton.setOnAction((ActionEvent event) -> {
+            createNewElement();
+        });
+        buttonBox.getChildren().add(newrefreshButton);
 
         leftListModel = FXCollections.observableArrayList();
         leftListModel.addAll(loadLeftItems());
@@ -129,4 +136,6 @@ public abstract class DoubleList extends HBox
         leftListModel.addAll(loadLeftItems());
         leftListModel.removeAll(rightListModel);
     }
+
+    protected abstract void createNewElement();
 }

@@ -83,19 +83,6 @@ public abstract class AbstractTableView extends AbstractView
 
     protected abstract AbstractDetailView showDetailView(boolean isNewElement, final IStoryElement element);
 
-    public void showNewElementView(final String callingSectionId, final int callingAccordionSection) throws SBException
-    {
-        detailView = showDetailView(true, getNewElement());
-        final Button saveButton = detailView.getSaveButton();
-        detailView.remove(saveButton);
-        final Button backToSection = new Button("Save");
-        backToSection.setOnAction((ActionEvent event) -> {
-            saveButton.fire();
-            mwc.switchToSection(callingSectionId, callingAccordionSection);
-        });
-        detailView.add(backToSection);
-    }
-
     protected abstract List<TableColumn> getColumns();
 
     protected TableColumn getColumn(final String label, final String fieldName, final double width)
@@ -233,7 +220,7 @@ public abstract class AbstractTableView extends AbstractView
         data.clear();
         loadData();
     }
-    
+
     public static <T> void refreshTable(final TableView<T> table, final ObservableList<T> data)
     {
         table.setItems(null);

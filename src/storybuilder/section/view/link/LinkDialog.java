@@ -14,11 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import storybuilder.command.view.CommandDoubleList;
-import storybuilder.command.view.NewCommandDialog;
 import storybuilder.event.view.EventDoubleList;
-import storybuilder.event.view.NewEventDialog;
 import storybuilder.item.view.ItemDoubleList;
-import storybuilder.item.view.NewItemDialog;
 import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
 import storybuilder.main.view.SBDialog;
@@ -77,43 +74,23 @@ public abstract class LinkDialog extends SBDialog
         final Accordion accordion = new Accordion();
 
         commands = new CommandDoubleList(new ArrayList<>());
-        final Button newCommand = new Button("New");
-        newCommand.setOnAction((ActionEvent event) -> {
-            new NewCommandDialog(commands.getRightItems()).show();
-        });
-        final TitledPane commandsPane = new TitledPane("Commands", new HBox(10, commands, newCommand));
+        final TitledPane commandsPane = new TitledPane("Commands", commands);
         accordion.getPanes().add(commandsPane);
 
         items = new ItemDoubleList(new ArrayList<>());
-        final Button newItem = new Button("New");
-        newItem.setOnAction((ActionEvent event) -> {
-            new NewItemDialog(items.getRightItems()).show();
-        });
-        final TitledPane itemsPane = new TitledPane("Items", new HBox(10, items, newItem));
+        final TitledPane itemsPane = new TitledPane("Items", items);
         accordion.getPanes().add(itemsPane);
 
         noItems = new ItemDoubleList(new ArrayList<>());
-        final Button newNoItem = new Button("New");
-        newNoItem.setOnAction((ActionEvent event) -> {
-            new NewItemDialog(noItems.getRightItems()).show();
-        });
-        final TitledPane noItemsPane = new TitledPane("No-Items", new HBox(10, noItems, newNoItem));
+        final TitledPane noItemsPane = new TitledPane("No-Items", noItems);
         accordion.getPanes().add(noItemsPane);
 
         events = new EventDoubleList(new ArrayList<>());
-        final Button newEvent = new Button("New");
-        newEvent.setOnAction((ActionEvent event) -> {
-            new NewEventDialog(events.getRightItems()).show();
-        });
-        final TitledPane eventsPane = new TitledPane("Events", new HBox(10, events, newEvent));
+        final TitledPane eventsPane = new TitledPane("Events", events);
         accordion.getPanes().add(eventsPane);
 
         noEvents = new EventDoubleList(new ArrayList<>());
-        final Button newNoEvent = new Button("New");
-        newNoEvent.setOnAction((ActionEvent event) -> {
-            new NewEventDialog(noEvents.getRightItems()).show();
-        });
-        final TitledPane noEventsPane = new TitledPane("No-Events", new HBox(10, noEvents, newNoEvent));
+        final TitledPane noEventsPane = new TitledPane("No-Events", noEvents);
         accordion.getPanes().add(noEventsPane);
         accordion.setExpandedPane(commandsPane);
 

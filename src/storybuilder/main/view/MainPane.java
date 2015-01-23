@@ -43,16 +43,13 @@ public class MainPane extends BorderPane
         return view;
     }
 
-    void setContent(final AbstractView view)
+    AbstractView setContent(final String clazz)
     {
+        final AbstractView view = getView(clazz);
         setCenter(view);
+        return view;
     }
 
-    void setContent(final String clazz)
-    {
-        setCenter(getView(clazz));
-    }
-    
     SBMenuBar getMenuBar()
     {
         return menuBar;

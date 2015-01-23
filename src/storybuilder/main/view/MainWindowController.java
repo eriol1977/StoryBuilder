@@ -3,13 +3,9 @@ package storybuilder.main.view;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import storybuilder.event.view.EventsView;
-import storybuilder.item.view.ItemsView;
 import storybuilder.main.Cache;
 import storybuilder.section.model.Section;
 import storybuilder.section.view.SectionsView;
-import storybuilder.validation.ErrorManager;
-import storybuilder.validation.SBException;
 
 /**
  *
@@ -51,9 +47,9 @@ public class MainWindowController
         mainWindow.getMainPane().getStatusBar().setMessage(message);
     }
 
-    public void switchView(final AbstractView view)
+    public void switchToEmptyView()
     {
-        mainWindow.getMainPane().setContent(view);
+        mainWindow.getMainPane().setContent("storybuilder.main.view.EmptyView");
     }
 
     public void enableMenus(final boolean enable)
@@ -84,32 +80,10 @@ public class MainWindowController
     {
         final Section section = Cache.getInstance().getStory().getSection(sectionId);
         if (section != null) {
-            final SectionsView sectionsView = new SectionsView();
-            mainWindow.getMainPane().setContent(sectionsView);
+            final SectionsView sectionsView
+                    = (SectionsView) mainWindow.getMainPane().setContent("storybuilder.section.view.SectionsView");
             sectionsView.setExpandedPane(expandedPane);
             sectionsView.selectElement(section);
-        }
-    }
-
-    public void switchToNewItem(final String callingSectionId, final int callingAccordionSection)
-    {
-        final ItemsView itemsView = new ItemsView();
-        mainWindow.getMainPane().setContent(itemsView);
-        try {
-            itemsView.showNewElementView(callingSectionId, callingAccordionSection);
-        } catch (SBException ex) {
-            ErrorManager.showErrorMessage(ex.getFailCause());
-        }
-    }
-
-    public void switchToNewEvent(final String callingSectionId, final int callingAccordionSection)
-    {
-        final EventsView eventsView = new EventsView();
-        mainWindow.getMainPane().setContent(eventsView);
-        try {
-            eventsView.showNewElementView(callingSectionId, callingAccordionSection);
-        } catch (SBException ex) {
-            ErrorManager.showErrorMessage(ex.getFailCause());
         }
     }
 }

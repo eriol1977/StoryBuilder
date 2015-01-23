@@ -23,4 +23,10 @@ public class ItemDoubleList extends DoubleList
         return Cache.getInstance().getStory().getItems();
     }
 
+    @Override
+    protected void createNewElement()
+    {
+        new NewItemDialog(getRightItems()).show();
+    }
+
 }
