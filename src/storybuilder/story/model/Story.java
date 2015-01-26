@@ -327,6 +327,11 @@ public class Story
         return list;
     }
 
+    public List<Section> getSectionsLinkedBy(final Section section)
+    {
+        return section.getLinks().stream().map(l -> getSection(l.getSectionId())).collect(Collectors.toList());
+    }
+
     private void loadSections() throws SBException
     {
         sections.addAll(Section.loadDefault());

@@ -47,6 +47,11 @@ public class MainWindowController
         mainWindow.getMainPane().getStatusBar().setMessage(message);
     }
 
+    public void switchToView(final String clazz)
+    {
+        mainWindow.getMainPane().setContent(clazz);
+    }
+
     public void switchToEmptyView()
     {
         mainWindow.getMainPane().setContent("storybuilder.main.view.EmptyView");

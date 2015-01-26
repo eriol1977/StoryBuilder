@@ -1,2 +1,4 @@
+-- implementazione grafo: continuare, considerare LinkSwitches
 
-
+-- esportatore: aggiungere '\' davanti agli apostrofi
+                gestione accenti??

@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -21,6 +22,7 @@ import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Section;
+import storybuilder.validation.ErrorManager;
 import storybuilder.validation.SBException;
 
 /**

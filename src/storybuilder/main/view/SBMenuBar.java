@@ -34,18 +34,21 @@ public class SBMenuBar extends MenuBar
     private final Menu menuMinigames;
 
     private final Menu menuSections;
+    
+    private final Menu menuSectionsGraph;
 
     SBMenuBar(final MainPane mainPane)
     {
         this.mainPane = mainPane;
         menuStory = buildMenuStory();
         menuSections = buildMenuButton("Sections", KeyCode.S, "storybuilder.section.view.SectionsView", false);
+        menuSectionsGraph = buildMenuButton("Graph", KeyCode.G, "storybuilder.section.graph.view.SectionsGraph", true);
         menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView", false);
         menuEvents = buildMenuButton("Events", KeyCode.E, "storybuilder.event.view.EventsView", false);
         menuItems = buildMenuButton("Items", KeyCode.I, "storybuilder.item.view.ItemsView", false);
         menuJoins = buildMenuButton("Joins", KeyCode.J, "storybuilder.join.view.JoinsView", false);
         menuMinigames = buildMenuButton("Minigames", KeyCode.M, "storybuilder.minigame.view.MinigamesView", false);
-        getMenus().addAll(menuStory, menuSections, menuCommands, menuEvents, menuItems, menuJoins, menuMinigames);
+        getMenus().addAll(menuStory, menuSections,menuSectionsGraph, menuCommands, menuEvents, menuItems, menuJoins, menuMinigames);
         enableMenus(false);
     }
 
@@ -104,6 +107,7 @@ public class SBMenuBar extends MenuBar
         menuJoins.setDisable(!enable);
         menuMinigames.setDisable(!enable);
         menuSections.setDisable(!enable);
+        menuSectionsGraph.setDisable(!enable);
     }
 
 }
