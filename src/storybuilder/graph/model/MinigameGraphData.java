@@ -6,10 +6,11 @@ import storybuilder.section.model.MinigameInstance;
  *
  * @author Francesco Bertolino
  */
-public class MinigameGraphData {
+public class MinigameGraphData
+{
 
     private final MinigameInstance game;
-    
+
     private final boolean winning;
 
     public MinigameGraphData(MinigameInstance game, boolean winning)
@@ -27,5 +28,9 @@ public class MinigameGraphData {
     {
         return winning;
     }
-    
+
+    public String getText()
+    {
+        return game.getKind().toString() + (winning ? " - Game won" : " - Game lost");
+    }
 }

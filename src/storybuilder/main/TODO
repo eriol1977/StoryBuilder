@@ -1,6 +1,6 @@
 
--- rifare la costruzione del grafo... i NodeLink devono essere basati direttamente su un Link o LinkSwitch,
-per mostrare il testo corretto
+-- grafo: rifare la costruzione dello stesso, TDD style
+-- personalizzare lo stile delle Connection
 
 
 -- esportatore: aggiungere '\' davanti agli apostrofi

@@ -7,12 +7,13 @@ import storybuilder.section.model.Section;
  *
  * @author Francesco Bertolino
  */
-public class LinkSwitchGraphData {
+public class LinkSwitchGraphData
+{
 
     private final Section activatingSection;
-    
+
     private final Link link;
-    
+
     public LinkSwitchGraphData(final Section activatingSection, final Link link)
     {
         this.activatingSection = activatingSection;
@@ -28,5 +29,11 @@ public class LinkSwitchGraphData {
     {
         return link;
     }
-    
+
+    public String getText()
+    {
+        return link.getReadableContent()
+                + " [switch activated by section " + activatingSection.getNameWithoutPrefix() + "]";
+    }
+
 }

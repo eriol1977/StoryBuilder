@@ -1,4 +1,4 @@
-package storybuilder.section.graph.view;
+package storybuilder.graph.view;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Cursor;
@@ -21,12 +21,10 @@ import storybuilder.section.view.SectionDetailView;
  *
  * @author Francesco Bertolino
  */
-public class SectionNode extends StackPane
+public class Node extends StackPane
 {
 
     final static double RADIUS = 30;
-
-    private final SectionsGraph graph;
 
     private final Section section;
 
@@ -34,9 +32,8 @@ public class SectionNode extends StackPane
 
     private final double y;
 
-    SectionNode(final SectionsGraph graph, final Section section, final double x, final double y)
+    Node(final Graph graph, final Section section, final double x, final double y)
     {
-        this.graph = graph;
         this.section = section;
         this.x = x;
         this.y = y;

@@ -1,4 +1,4 @@
-package storybuilder.section.graph.view;
+package storybuilder.graph.view;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import storybuilder.story.model.Story;
  *
  * @author Francesco Bertolino
  */
-public class SectionsGraph extends AbstractView
+public class Graph extends AbstractView
 {
 
     private final static double WIDTH = MainWindowController.getInstance().getScreenWidth() - 100;
@@ -31,15 +31,15 @@ public class SectionsGraph extends AbstractView
 
     private final Story story;
 
-    private final Map<SectionNode, List<SectionNode>> linksByOrigin = new HashMap<>();
+    private final Map<Node, List<Node>> linksByOrigin = new HashMap<>();
 
-    private final Map<SectionNode, List<SectionNode>> linkSwitchesByOrigin = new HashMap<>();
+    private final Map<Node, List<Node>> linkSwitchesByOrigin = new HashMap<>();
 
-    private final Map<SectionNode, List<SectionNode>> linksByDestination = new HashMap<>();
+    private final Map<Node, List<Node>> linksByDestination = new HashMap<>();
 
-    private final Map<SectionNode, List<SectionNode>> linkSwitchesByDestination = new HashMap<>();
+    private final Map<Node, List<Node>> linkSwitchesByDestination = new HashMap<>();
 
-    public SectionsGraph()
+    public Graph()
     {
         addTitle("Graph");
 
@@ -105,11 +105,11 @@ public class SectionsGraph extends AbstractView
         return xs;
     }
 
-    private SectionNode buildOriginNode(final SectionNode destination, final Section section, final double x, final double y)
+    private Node buildOriginNode(final Node destination, final Section section, final double x, final double y)
     {
-        final SectionNode node = new SectionNode(this, section, x, y);
+        final Node node = new Node(this, section, x, y);
         if (destination != null) {
-            List<SectionNode> nodes = this.linksByDestination.get(destination);
+            List<Node> nodes = this.linksByDestination.get(destination);
             if (nodes == null) {
                 nodes = new ArrayList<>();
                 linksByDestination.put(destination, nodes);
@@ -119,9 +119,9 @@ public class SectionsGraph extends AbstractView
         return node;
     }
 
-    private SectionNode buildDestinationNode(final SectionNode origin, final Section section, final int kind, final double x, final double y)
+    private Node buildDestinationNode(final Node origin, final Section section, final int kind, final double x, final double y)
     {
-        final SectionNode node = new SectionNode(this, section, x, y);
+        final Node node = new Node(this, section, x, y);
 //        if (origin != null) {
 //            if (kind == GraphDirectLink.LINK) {
 //                List<SectionNode> nodes = this.linksByOrigin.get(origin);
