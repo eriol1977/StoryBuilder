@@ -11,7 +11,6 @@ import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;
 import storybuilder.section.model.MinigameInstance;
 import storybuilder.section.model.Section;
-import storybuilder.story.model.Story;
 
 /**
  *
@@ -20,12 +19,11 @@ import storybuilder.story.model.Story;
 public class GraphDatasource
 {
 
-    public Map<Section, List<Link>> getSectionsLinkedTo(final Section target)
+    public Map<Section, List<Link>> getLinkConnectionsTo(final Section target)
     {
         final Map<Section, List<Link>> result = new HashMap<>();
 
-        final Story story = Cache.getInstance().getStory();
-        final List<Section> sections = story.getSections();
+        final List<Section> sections = getStorySections();
 
         List<Link> links;
         List<Link> chosenLinks;
@@ -45,12 +43,31 @@ public class GraphDatasource
         return result;
     }
 
-    public Map<Section, List<LinkSwitchGraphData>> getSectionsLinkedBySwitchTo(final Section target)
+    public Map<Section, List<Link>> getLinkConnectionsFrom(final Section origin)
+    {
+        final Map<Section, List<Link>> result = new HashMap<>();
+
+        Section target;
+        List<Link> linksToTarget;
+        final List<Link> links = origin.getLinks();
+        for (final Link link : links) {
+            target = getSection(link.getSectionId());
+            linksToTarget = result.get(target);
+            if (linksToTarget == null) {
+                linksToTarget = new ArrayList<>();
+                result.put(target, linksToTarget);
+            }
+            linksToTarget.add(link);
+        }
+
+        return result;
+    }
+
+    public Map<Section, List<LinkSwitchGraphData>> getSwitchConnectionsTo(final Section target)
     {
         final Map<Section, List<LinkSwitchGraphData>> result = new HashMap<>();
 
-        final Story story = Cache.getInstance().getStory();
-        final List<Section> sections = story.getSections();
+        final List<Section> sections = getStorySections();
 
         List<LinkSwitch> linkSwitches;
         List<LinkSwitch> chosenSwitches;
@@ -74,7 +91,7 @@ public class GraphDatasource
             // una volta attivato lo switch
             if (!chosenSwitches.isEmpty()) {
                 for (final LinkSwitch linkSwitch : chosenSwitches) {
-                    s = story.getSection(linkSwitch.getSectionNumber());
+                    s = getSection(linkSwitch.getSectionNumber());
                     data = result.get(s);
                     if (data == null) {
                         data = new ArrayList<>();
@@ -88,12 +105,53 @@ public class GraphDatasource
         return result;
     }
 
-    public Map<Section, MinigameGraphData> getSectionsLinkedByMinigameTo(final Section target)
+    public Map<Section, List<LinkSwitchGraphData>> getSwitchConnectionsFrom(final Section origin)
+    {
+        final Map<Section, List<LinkSwitchGraphData>> result = new HashMap<>();
+
+        final List<Section> sections = getStorySections();
+
+        List<LinkSwitch> linkSwitches;
+        List<LinkSwitch> chosenSwitches;
+        List<LinkSwitchGraphData> data;
+        Section s;
+        // per ogni sezione della storia...
+        for (final Section section : sections) {
+            linkSwitches = section.getLinkSwitches();
+            chosenSwitches = new ArrayList<>();
+
+            // ...seleziona gli switch che hanno origine dalla sezione origin...
+            for (final LinkSwitch linkSwitch : linkSwitches) {
+                if (linkSwitch.getLink() != null
+                        && linkSwitch.getSectionNumber().equals(origin.getNameWithoutPrefix())) {
+                    chosenSwitches.add(linkSwitch);
+                }
+            }
+
+            // ...e inserisce i dati (sezione attivatrice dello switch + link)
+            // nel risultato, usando come chiave la sezione alla quale punta
+            // il link
+            if (!chosenSwitches.isEmpty()) {
+                for (final LinkSwitch linkSwitch : chosenSwitches) {
+                    s = getSection(linkSwitch.getLink().getSectionId());
+                    data = result.get(s);
+                    if (data == null) {
+                        data = new ArrayList<>();
+                        result.put(s, data);
+                    }
+                    data.add(new LinkSwitchGraphData(section, linkSwitch.getLink()));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public Map<Section, MinigameGraphData> getMinigameConnectionsTo(final Section target)
     {
         final Map<Section, MinigameGraphData> result = new HashMap<>();
 
-        final Story story = Cache.getInstance().getStory();
-        final List<Section> sections = story.getSections();
+        final List<Section> sections = getStorySections();
 
         MinigameInstance game;
         for (final Section section : sections) {
@@ -108,6 +166,27 @@ public class GraphDatasource
         }
 
         return result;
+    }
+
+    public Map<Section, MinigameGraphData> getMinigameConnectionsFrom(final Section origin)
+    {
+        final Map<Section, MinigameGraphData> result = new HashMap<>();
+
+        final MinigameInstance game = origin.getMinigame();
+        result.put(getSection(game.getWinningSectionNumber()), new MinigameGraphData(game, true));
+        result.put(getSection(game.getLosingSectionNumber()), new MinigameGraphData(game, false));
+
+        return result;
+    }
+
+    protected List<Section> getStorySections()
+    {
+        return Cache.getInstance().getStory().getSections();
+    }
+
+    protected Section getSection(final String sectionId)
+    {
+        return Cache.getInstance().getStory().getSection(sectionId);
     }
 
 }

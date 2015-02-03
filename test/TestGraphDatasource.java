@@ -6,6 +6,7 @@
 
 import storybuilder.graph.controller.GraphDatasource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +18,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import storybuilder.graph.model.LinkSwitchGraphData;
 import storybuilder.graph.model.MinigameGraphData;
-import storybuilder.main.Cache;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;
 import storybuilder.section.model.MinigameInstance;
 import storybuilder.section.model.Section;
-import storybuilder.story.model.Story;
 import storybuilder.validation.SBException;
 
 /**
@@ -31,6 +30,8 @@ import storybuilder.validation.SBException;
  */
 public class TestGraphDatasource
 {
+
+    private GraphDatasource dataSource;
 
     private Section section1;
     private Section section2;
@@ -61,23 +62,35 @@ public class TestGraphDatasource
         section4 = new Section(Section.PREFIX + 4, false);
         section5 = new Section(Section.PREFIX + 5, false);
 
-        final Story story = new Story("Test", "")
+        dataSource = new GraphDatasource()
         {
 
             @Override
-            public void incrementLastSectionId() throws SBException
+            protected List<Section> getStorySections()
             {
-                // do nothing
+                return Arrays.asList(section1, section2, section3, section4, section5);
+            }
+
+            @Override
+            protected Section getSection(String sectionId)
+            {
+                switch (sectionId) {
+                    case "1":
+                        return section1;
+                    case "2":
+                        return section2;
+                    case "3":
+                        return section3;
+                    case "4":
+                        return section4;
+                    case "5":
+                        return section5;
+                    default:
+                        return null;
+                }
             }
 
         };
-        story.addSection(section1);
-        story.addSection(section2);
-        story.addSection(section3);
-        story.addSection(section4);
-        story.addSection(section5);
-
-        Cache.getInstance().setStory(story);
     }
 
     @After
@@ -85,16 +98,21 @@ public class TestGraphDatasource
     {
     }
 
+    /**
+     * Testa {@link GraphDatasource#getLinkConnectionsTo(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
     @Test
-    public void testGetSectionsLinkedToSection() throws SBException
+    public void testGetLinkConnectionsTo() throws SBException
     {
         final Link link1 = buildEmptyLink(section1, 1, section5);
         final Link link2 = buildEmptyLink(section2, 1, section5);
         buildEmptyLink(section3, 1, section3);
         final Link link4 = buildEmptyLink(section4, 1, section5);
 
-        final GraphDatasource ds = new GraphDatasource();
-        final Map<Section, List<Link>> sectionsLinkedTo = ds.getSectionsLinkedTo(section5);
+        final Map<Section, List<Link>> sectionsLinkedTo = dataSource.getLinkConnectionsTo(section5);
 
         Assert.assertNotNull(sectionsLinkedTo);
         Assert.assertEquals(3, sectionsLinkedTo.size());
@@ -121,8 +139,58 @@ public class TestGraphDatasource
         Assert.assertEquals(link4, links.get(0));
     }
 
+    /**
+     * Testa {@link GraphDatasource#getLinkConnectionsFrom(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
     @Test
-    public void testGetSectionsLinkedBySwitchToSection() throws SBException
+    public void testGetLinkConnectionsFrom() throws SBException
+    {
+        final Link link1 = buildEmptyLink(section1, 1, section2);
+        final Link link2 = buildEmptyLink(section1, 2, section3);
+        final Link link3 = buildEmptyLink(section1, 3, section5);
+        final Link link4 = buildEmptyLink(section1, 4, section5);
+        buildEmptyLink(section2, 1, section3);
+        buildEmptyLink(section4, 1, section5);
+
+        final Map<Section, List<Link>> sectionsLinkedBy = dataSource.getLinkConnectionsFrom(section1);
+
+        Assert.assertNotNull(sectionsLinkedBy);
+        Assert.assertEquals(3, sectionsLinkedBy.size());
+
+        final List<Section> orderedTargets = new ArrayList<>(sectionsLinkedBy.keySet());
+        Collections.sort(orderedTargets);
+
+        Assert.assertEquals(section2, orderedTargets.get(0));
+        List<Link> links = sectionsLinkedBy.get(orderedTargets.get(0));
+        Assert.assertNotNull(links);
+        Assert.assertEquals(1, links.size());
+        Assert.assertEquals(link1, links.get(0));
+
+        Assert.assertEquals(section3, orderedTargets.get(1));
+        links = sectionsLinkedBy.get(orderedTargets.get(1));
+        Assert.assertNotNull(links);
+        Assert.assertEquals(1, links.size());
+        Assert.assertEquals(link2, links.get(0));
+
+        Assert.assertEquals(section5, orderedTargets.get(2));
+        links = sectionsLinkedBy.get(orderedTargets.get(2));
+        Assert.assertNotNull(links);
+        Assert.assertEquals(2, links.size());
+        Assert.assertEquals(link3, links.get(0));
+        Assert.assertEquals(link4, links.get(1));
+    }
+
+    /**
+     * Testa {@link GraphDatasource#getSwitchConnectionsTo(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetSwitchConnectionsTo() throws SBException
     {
         final Link link1 = buildEmptyLink("link1", section5);
         final Link link2 = buildEmptyLink("link2", section5);
@@ -133,9 +201,8 @@ public class TestGraphDatasource
         buildLinkSwitch(section1, 2, section3, "2", link2);
         buildLinkSwitch(section2, 1, section4, "1", link3);
 
-        final GraphDatasource ds = new GraphDatasource();
         final Map<Section, List<LinkSwitchGraphData>> sectionsLinkedBySwitchTo
-                = ds.getSectionsLinkedBySwitchTo(section5);
+                = dataSource.getSwitchConnectionsTo(section5);
 
         Assert.assertNotNull(sectionsLinkedBySwitchTo);
         Assert.assertEquals(2, sectionsLinkedBySwitchTo.size());
@@ -160,8 +227,60 @@ public class TestGraphDatasource
         Assert.assertEquals(link3, structs.get(0).getLink());
     }
 
+    /**
+     * Testa {@link GraphDatasource#getSwitchConnectionsFrom(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
     @Test
-    public void testGetSectionsLinkedByMinigameToSection() throws SBException
+    public void testGetSwitchConnectionsFrom() throws SBException
+    {
+        final Link link1 = buildEmptyLink("link1", section3);
+        final Link link2 = buildEmptyLink("link2", section4);
+        final Link link3 = buildEmptyLink("link3", section4);
+        final Link link4 = buildEmptyLink("link4", section5);
+
+        // la sezione 1 possiede uno switch che aggiunge un link (che punta alla sezione 3) alla sezione 2
+        buildLinkSwitch(section1, 1, section2, "1", link1);
+        buildLinkSwitch(section1, 2, section2, "2", link2);
+        buildLinkSwitch(section3, 2, section2, "3", link3);
+        buildLinkSwitch(section2, 1, section3, "1", link4);
+
+        final Map<Section, List<LinkSwitchGraphData>> sectionsLinkedBySwitchBy
+                = dataSource.getSwitchConnectionsFrom(section2);
+
+        Assert.assertNotNull(sectionsLinkedBySwitchBy);
+        Assert.assertEquals(2, sectionsLinkedBySwitchBy.size());
+
+        final List<Section> orderedTargets = new ArrayList<>(sectionsLinkedBySwitchBy.keySet());
+        Collections.sort(orderedTargets);
+
+        Assert.assertEquals(section3, orderedTargets.get(0));
+        List<LinkSwitchGraphData> structs = sectionsLinkedBySwitchBy.get(orderedTargets.get(0));
+        Assert.assertNotNull(structs);
+        Assert.assertEquals(1, structs.size());
+        Assert.assertEquals(section1, structs.get(0).getActivatingSection());
+        Assert.assertEquals(link1, structs.get(0).getLink());
+
+        Assert.assertEquals(section4, orderedTargets.get(1));
+        structs = sectionsLinkedBySwitchBy.get(orderedTargets.get(1));
+        Assert.assertNotNull(structs);
+        Assert.assertEquals(2, structs.size());
+        Assert.assertEquals(section1, structs.get(0).getActivatingSection());
+        Assert.assertEquals(link2, structs.get(0).getLink());
+        Assert.assertEquals(section3, structs.get(1).getActivatingSection());
+        Assert.assertEquals(link3, structs.get(1).getLink());
+    }
+
+    /**
+     * Testa {@link GraphDatasource#getMinigameConnectionsTo(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetMinigameConnectionsTo() throws SBException
     {
         final MinigameInstance game1 = new MinigameInstance(getMinigameId(section1),
                 null, "2", "3", new ArrayList<>(), false);
@@ -173,9 +292,8 @@ public class TestGraphDatasource
                 null, "1", "5", new ArrayList<>(), false);
         section4.setMinigame(game3);
 
-        final GraphDatasource ds = new GraphDatasource();
         final Map<Section, MinigameGraphData> sectionsLinkedByMinigameTo
-                = ds.getSectionsLinkedByMinigameTo(section3);
+                = dataSource.getMinigameConnectionsTo(section3);
 
         Assert.assertNotNull(sectionsLinkedByMinigameTo);
         Assert.assertEquals(2, sectionsLinkedByMinigameTo.size());
@@ -194,6 +312,44 @@ public class TestGraphDatasource
         Assert.assertNotNull(gameData);
         Assert.assertEquals(game2, gameData.getGame());
         Assert.assertTrue(gameData.isWinning());
+    }
+
+    /**
+     * Testa {@link GraphDatasource#getMinigameConnectionsFrom(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetMinigameConnectionsFrom() throws SBException
+    {
+        final MinigameInstance game1 = new MinigameInstance(getMinigameId(section1),
+                null, "2", "3", new ArrayList<>(), false);
+        section1.setMinigame(game1);
+        final MinigameInstance game2 = new MinigameInstance(getMinigameId(section2),
+                null, "3", "4", new ArrayList<>(), false);
+        section2.setMinigame(game2);
+
+        final Map<Section, MinigameGraphData> sectionsLinkedByMinigameBy
+                = dataSource.getMinigameConnectionsFrom(section1);
+
+        Assert.assertNotNull(sectionsLinkedByMinigameBy);
+        Assert.assertEquals(2, sectionsLinkedByMinigameBy.size());
+
+        final List<Section> orderedTargets = new ArrayList<>(sectionsLinkedByMinigameBy.keySet());
+        Collections.sort(orderedTargets);
+
+        Assert.assertEquals(section2, orderedTargets.get(0));
+        MinigameGraphData gameData = sectionsLinkedByMinigameBy.get(orderedTargets.get(0));
+        Assert.assertNotNull(gameData);
+        Assert.assertEquals(game1, gameData.getGame());
+        Assert.assertTrue(gameData.isWinning());
+
+        Assert.assertEquals(section3, orderedTargets.get(1));
+        gameData = sectionsLinkedByMinigameBy.get(orderedTargets.get(1));
+        Assert.assertNotNull(gameData);
+        Assert.assertEquals(game1, gameData.getGame());
+        Assert.assertFalse(gameData.isWinning());
     }
 
     private LinkSwitch buildLinkSwitch(final Section origin, final int number,
