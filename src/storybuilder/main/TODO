@@ -1,4 +1,7 @@
--- implementazione grafo: continuare, considerare LinkSwitches
+
+-- rifare la costruzione del grafo... i NodeLink devono essere basati direttamente su un Link o LinkSwitch,
+per mostrare il testo corretto
+
 
 -- esportatore: aggiungere '\' davanti agli apostrofi
                 gestione accenti??

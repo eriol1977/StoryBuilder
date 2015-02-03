@@ -3,8 +3,10 @@ package storybuilder.story.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
@@ -330,6 +332,22 @@ public class Story
     public List<Section> getSectionsLinkedBy(final Section section)
     {
         return section.getLinks().stream().map(l -> getSection(l.getSectionId())).collect(Collectors.toList());
+    }
+
+    public Map<Section, LinkSwitch> getSectionsLinkSwitchedBy(final Section section)
+    {
+        final Map<Section, LinkSwitch> ss = new HashMap<>();
+        List<LinkSwitch> linkSwitches;
+        for (final Section s : sections) {
+            linkSwitches = s.getLinkSwitches();
+            for (LinkSwitch linkSwitch : linkSwitches) {
+                if (linkSwitch.getSectionNumber().equals(section.getNameWithoutPrefix())
+                        && linkSwitch.getLink() != null) {
+                    ss.put(getSection(linkSwitch.getLink().getSectionId()), linkSwitch);
+                }
+            }
+        }
+        return ss;
     }
 
     private void loadSections() throws SBException

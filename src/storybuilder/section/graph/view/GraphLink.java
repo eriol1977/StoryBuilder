@@ -1,22 +1,24 @@
 package storybuilder.section.graph.view;
 
-import java.util.List;
+import javafx.scene.Cursor;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
-import storybuilder.section.model.Link;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  *
  * @author Francesco Bertolino
  */
-public class NodeLink extends Line
+public abstract class GraphLink extends Line
 {
 
     private final SectionNode origin;
 
     private final SectionNode destination;
 
-    public NodeLink(SectionNode origin, SectionNode destination)
+    public GraphLink(final SectionNode origin, final SectionNode destination)
     {
         this.origin = origin;
         this.destination = destination;
@@ -29,17 +31,16 @@ public class NodeLink extends Line
 
         setStrokeWidth(2);
 
-        final List<Link> links = origin.getSection().getLinks();
-        String text = "";
-        for (final Link link : links) {
-            if (link.getSectionId().equals(destination.getSection().getNameWithoutPrefix())) {
-                text = link.getReadableContent();
-                break;
-            }
-        }
-        Tooltip t = new Tooltip(text);
+        Tooltip t = new Tooltip(getText());
+        t.setFont(Font.font("Verdana", FontWeight.NORMAL, 20));
         Tooltip.install(this, t);
+
+        setOnMouseEntered((MouseEvent event) -> {
+            setCursor(Cursor.CROSSHAIR);
+        });
     }
+
+    protected abstract String getText();
 
     public SectionNode getOrigin()
     {
