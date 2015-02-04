@@ -1,4 +1,7 @@
-package storybuilder.graph.model;
+package storybuilder.graph.model.connection;
+
+import storybuilder.graph.model.struct.MinigameGraphData;
+import storybuilder.graph.model.Node;
 
 /**
  *
@@ -11,7 +14,7 @@ public class MinigameConnection extends Connection
 
     public MinigameConnection(final Node origin, final Node destination, final MinigameGraphData data)
     {
-        super(origin, destination);
+        super(ConnectionKind.MINIGAME, origin, destination);
         this.data = data;
     }
 
@@ -25,5 +28,5 @@ public class MinigameConnection extends Connection
     {
         return data;
     }
-    
+
 }

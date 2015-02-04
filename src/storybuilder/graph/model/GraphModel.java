@@ -1,10 +1,15 @@
 package storybuilder.graph.model;
 
+import storybuilder.graph.model.struct.MinigameGraphData;
+import storybuilder.graph.model.struct.LinkSwitchGraphData;
+import storybuilder.graph.model.connection.Connection;
+import storybuilder.graph.model.connection.MinigameConnection;
+import storybuilder.graph.model.connection.SwitchConnection;
+import storybuilder.graph.model.connection.LinkConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import storybuilder.graph.controller.GraphDatasource;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.Section;
 

@@ -13,15 +13,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import storybuilder.graph.controller.GraphDatasource;
-import storybuilder.graph.model.Connection;
+import storybuilder.graph.model.GraphDatasource;
+import storybuilder.graph.model.connection.Connection;
 import storybuilder.graph.model.GraphModel;
-import storybuilder.graph.model.LinkConnection;
-import storybuilder.graph.model.LinkSwitchGraphData;
-import storybuilder.graph.model.MinigameConnection;
-import storybuilder.graph.model.MinigameGraphData;
+import storybuilder.graph.model.connection.LinkConnection;
+import storybuilder.graph.model.struct.LinkSwitchGraphData;
+import storybuilder.graph.model.connection.MinigameConnection;
+import storybuilder.graph.model.struct.MinigameGraphData;
 import storybuilder.graph.model.Node;
-import storybuilder.graph.model.SwitchConnection;
+import storybuilder.graph.model.connection.SwitchConnection;
 import storybuilder.minigame.model.MinigameKind;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;
@@ -33,10 +33,10 @@ import storybuilder.section.model.Section;
  *
  * @author Francesco
  */
-public class TestGraphModel
+public class GraphModelTest
 {
 
-    public TestGraphModel()
+    public GraphModelTest()
     {
     }
 

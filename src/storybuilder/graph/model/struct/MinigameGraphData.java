@@ -1,4 +1,4 @@
-package storybuilder.graph.model;
+package storybuilder.graph.model.struct;
 
 import storybuilder.section.model.MinigameInstance;
 

@@ -1,11 +1,11 @@
-package storybuilder.graph.controller;
+package storybuilder.graph.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import storybuilder.graph.model.LinkSwitchGraphData;
-import storybuilder.graph.model.MinigameGraphData;
+import storybuilder.graph.model.struct.LinkSwitchGraphData;
+import storybuilder.graph.model.struct.MinigameGraphData;
 import storybuilder.main.Cache;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;

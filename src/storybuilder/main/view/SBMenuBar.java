@@ -42,7 +42,7 @@ public class SBMenuBar extends MenuBar
         this.mainPane = mainPane;
         menuStory = buildMenuStory();
         menuSections = buildMenuButton("Sections", KeyCode.S, "storybuilder.section.view.SectionsView", false);
-        menuSectionsGraph = buildMenuButton("Graph", KeyCode.G, "storybuilder.graph.view.Graph", true);
+        menuSectionsGraph = buildMenuButton("Graph", KeyCode.G, "storybuilder.graph.view.GraphView", false);
         menuCommands = buildMenuButton("Commands", KeyCode.O, "storybuilder.command.view.CommandsView", false);
         menuEvents = buildMenuButton("Events", KeyCode.E, "storybuilder.event.view.EventsView", false);
         menuItems = buildMenuButton("Items", KeyCode.I, "storybuilder.item.view.ItemsView", false);

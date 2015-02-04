@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-import storybuilder.graph.controller.GraphDatasource;
+import storybuilder.graph.model.GraphDatasource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,8 +13,8 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import storybuilder.graph.model.LinkSwitchGraphData;
-import storybuilder.graph.model.MinigameGraphData;
+import storybuilder.graph.model.struct.LinkSwitchGraphData;
+import storybuilder.graph.model.struct.MinigameGraphData;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;
 import storybuilder.section.model.MinigameInstance;
@@ -25,7 +25,7 @@ import storybuilder.validation.SBException;
  *
  * @author Francesco
  */
-public class TestGraphDatasource
+public class GraphDatasourceTest
 {
 
     private GraphDatasource dataSource;

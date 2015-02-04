@@ -1,5 +1,6 @@
-package storybuilder.graph.model;
+package storybuilder.graph.model.connection;
 
+import storybuilder.graph.model.Node;
 import storybuilder.section.model.Link;
 
 /**
@@ -13,7 +14,7 @@ public class LinkConnection extends Connection
 
     public LinkConnection(final Node origin, final Node destination, final Link link)
     {
-        super(origin, destination);
+        super(ConnectionKind.LINK, origin, destination);
         this.link = link;
     }
 
