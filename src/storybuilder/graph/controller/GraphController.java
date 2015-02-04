@@ -37,11 +37,13 @@ public class GraphController
 
     private final static double CENTER_X = WIDTH / 2;
 
-    private final static double TOP = 50;
+    private final static double VERTICAL_STEP = 250;
+    
+    private final static double TOP = 0;
 
-    private final static double MIDDLE = 300;
+    private final static double MIDDLE = TOP + VERTICAL_STEP;
 
-    private final static double BOTTOM = 550;
+    private final static double BOTTOM = MIDDLE + VERTICAL_STEP;
 
     private final Graph graph;
 
@@ -138,12 +140,12 @@ public class GraphController
 
     public void showContextMenuForNode(final NodeView nodeView, final double x, final double y)
     {
-        final MenuItem addMenuItem = new MenuItem("Go to table entry");
-        addMenuItem.setOnAction((ActionEvent ev) -> {
+        final MenuItem jumpMenuItem = new MenuItem("Jump to table");
+        jumpMenuItem.setOnAction((ActionEvent ev) -> {
             switchToTableForSection(nodeView.getNode().getSection());
         });
         final ContextMenu contextMenu = new ContextMenu();
-        contextMenu.getItems().add(addMenuItem);
+        contextMenu.getItems().add(jumpMenuItem);
         contextMenu.show(nodeView, x, y);
     }
 

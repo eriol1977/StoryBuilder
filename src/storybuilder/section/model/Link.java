@@ -165,37 +165,35 @@ public class Link extends StoryElement
     {
         final Story story = Cache.getInstance().getStory();
         final StringBuilder sb = new StringBuilder();
-        sb.append("[Next section: ").append(getSectionId()).append("] ");
-        // commands
-        if (!getCommandIds().isEmpty()) {
-            sb.append("[Commands: ");
-            getCommandIds().stream().forEach(id -> sb.append(story.getCommand(id).getDescription()).append(", "));
-            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-            sb.append("] ");
-        }
-        // items, no_items, events and no_events
-        if (!getItemIds().isEmpty()) {
-            sb.append("[Items: ");
-            getItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
-            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-            sb.append("] ");
-        }
-        if (!getNoItemIds().isEmpty()) {
-            sb.append("[No-Items: ");
-            getNoItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemName()).append(", "));
-            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-            sb.append("] ");
-        }
-        if (!getEventIds().isEmpty()) {
-            sb.append("[Events: ");
-            getEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
-            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
-            sb.append("] ");
-        }
-        if (!getNoEventIds().isEmpty()) {
-            sb.append("[No-Events: ");
-            getNoEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
-            sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+        sb.append("Go to ").append(getSectionId());
+        if (!isDirectLink()) {
+            sb.append(" [");
+            // commands
+            if (!getCommandIds().isEmpty()) {
+                getCommandIds().stream().forEach(id -> sb.append(story.getCommand(id).getDescription()).append(", "));
+                sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+                sb.append(" ");
+            }
+            // items, no_items, events and no_events
+            if (!getItemIds().isEmpty()) {
+                sb.append(" (with) ");
+                getItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemFullName()).append(", "));
+            }
+            if (!getNoItemIds().isEmpty()) {
+                sb.append(" without ");
+                getNoItemIds().stream().forEach(id -> sb.append(story.getItem(id).getItemFullName()).append(", "));
+            }
+            if (!getEventIds().isEmpty()) {
+                sb.append(" when these events have happened ");
+                getEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
+            }
+            if (!getNoEventIds().isEmpty()) {
+                sb.append(" when these events haven't happened ");
+                getNoEventIds().stream().forEach(id -> sb.append(story.getEvent(id).getDescription()).append(", "));
+            }
+            if (sb.toString().endsWith(", ")) {
+                sb.delete(sb.length() - 2, sb.length()); // deletes last ', '
+            }
             sb.append("] ");
         }
         return sb.toString();

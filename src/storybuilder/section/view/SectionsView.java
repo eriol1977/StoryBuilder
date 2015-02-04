@@ -2,16 +2,9 @@ package storybuilder.section.view;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -20,9 +13,7 @@ import javafx.util.Callback;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
-import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Section;
-import storybuilder.validation.ErrorManager;
 import storybuilder.validation.SBException;
 
 /**
@@ -43,7 +34,7 @@ public class SectionsView extends AbstractTableView
 
         table.setMinWidth(102);
         table.setMaxWidth(102);
-        
+
         table.setRowFactory(new Callback<TableView<Section>, TableRow<Section>>()
         {
             @Override
@@ -62,32 +53,12 @@ public class SectionsView extends AbstractTableView
 
             private ContextMenu buildContextMenu(final TableRow<Section> row)
             {
-                final MenuItem linksMenuItem = new MenuItem("Linked by");
-                linksMenuItem.setOnAction((ActionEvent event) -> {
-                    final List<Section> sections = cache.getStory().getSectionsPointingTo(row.getItem());
-                    final SBDialog dialog = new SBDialog();
-                    dialog.setWidth(200);
-                    if (sections.isEmpty()) {
-                        dialog.add(new Label("None"));
-                    } else {
-                        final int ROW_HEIGHT = 24;
-                        ObservableList<String> model
-                                = FXCollections.observableArrayList(sections.stream().map(s -> s.getNameWithoutPrefix()).collect(Collectors.toList()));
-                        final ListView<String> list = new ListView<>(model);
-                        final int h = model.size() * ROW_HEIGHT + 2;
-                        list.setPrefHeight(h);
-                        dialog.setHeight(h > 120 ? h : 120);
-                        list.getSelectionModel().selectedItemProperty().
-                                addListener((ObservableValue<? extends String> ov, String old_val, String new_val) -> {
-                                    mwc.switchToSection(new_val, SectionDetailView.EXPAND_PARAGRAPHS);
-                                    dialog.close();
-                                });
-                        dialog.add(list);
-                    }
-                    dialog.show();
+                final MenuItem jumpMenuItem = new MenuItem("Jump to graph");
+                jumpMenuItem.setOnAction((ActionEvent event) -> {
+                    mwc.jumpToGraphSection(row.getItem());
                 });
                 final ContextMenu contextMenu = new ContextMenu();
-                contextMenu.getItems().add(linksMenuItem);
+                contextMenu.getItems().add(jumpMenuItem);
                 return contextMenu;
             }
         });

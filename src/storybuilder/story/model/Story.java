@@ -3,11 +3,7 @@ package storybuilder.story.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,7 +21,6 @@ import storybuilder.main.model.IStoryElement;
 import storybuilder.minigame.model.MinigameKind;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;
-import storybuilder.section.model.MinigameInstance;
 import storybuilder.section.model.Paragraph;
 import storybuilder.section.model.ParagraphSwitch;
 import storybuilder.section.model.Section;
@@ -290,64 +285,6 @@ public class Story
             }
         }
         return null;
-    }
-
-    public List<Section> getSectionsPointingTo(final Section section)
-    {
-        final Set<Section> result = new HashSet<>();
-        final String sectionNumber = section.getNameWithoutPrefix();
-        List<Link> links;
-        MinigameInstance minigame;
-        List<LinkSwitch> switches;
-        final List<Section> ss = getSections();
-        for (final Section s : ss) {
-            links = s.getLinks();
-            minigame = s.getMinigame();
-            switches = s.getLinkSwitches();
-            if (minigame != null) {
-                if (minigame.getWinningSectionNumber().equals(sectionNumber)
-                        || minigame.getLosingSectionNumber().equals(sectionNumber)) {
-                    result.add(s);
-                    continue;
-                }
-            }
-            for (final Link link : links) {
-                if (link.getSectionId().equals(sectionNumber)) {
-                    result.add(s);
-                    break;
-                }
-            }
-
-            for (final LinkSwitch linkSwitch : switches) {
-                if (linkSwitch.getLink() != null && linkSwitch.getLink().getSectionId().equals(sectionNumber)) {
-                    result.add(getSection(linkSwitch.getSectionNumber()));
-                }
-            }
-        }
-        final List<Section> list = new ArrayList<>(result);
-        Collections.sort(list);
-        return list;
-    }
-
-    public List<Section> getSectionsLinkedBy(final Section section)
-    {
-        return section.getLinks().stream().map(l -> getSection(l.getSectionId())).collect(Collectors.toList());
-    }
-
-    public Map<Section, LinkSwitch> getSectionsLinkSwitchedBy(final Section section)
-    {
-        final Map<Section, LinkSwitch> ss = new HashMap<>();
-        List<LinkSwitch> linkSwitches;
-        for (final Section s : sections) {
-            linkSwitches = s.getLinkSwitches();
-            for (LinkSwitch linkSwitch : linkSwitches) {
-                if (linkSwitch.getSectionNumber().equals(section.getNameWithoutPrefix())
-                        && linkSwitch.getLink() != null) {
-                    ss.put(getSection(linkSwitch.getLink().getSectionId()), linkSwitch);
-                }
-            }
-        }
-        return ss;
     }
 
     private void loadSections() throws SBException

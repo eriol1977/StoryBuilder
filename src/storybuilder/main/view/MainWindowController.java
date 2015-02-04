@@ -3,6 +3,7 @@ package storybuilder.main.view;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import storybuilder.graph.view.GraphView;
 import storybuilder.main.Cache;
 import storybuilder.section.model.Section;
 import storybuilder.section.view.SectionsView;
@@ -89,6 +90,15 @@ public class MainWindowController
                     = (SectionsView) mainWindow.getMainPane().setContent("storybuilder.section.view.SectionsView");
             sectionsView.setExpandedPane(expandedPane);
             sectionsView.selectElement(section);
+        }
+    }
+
+    public void jumpToGraphSection(final Section section)
+    {
+        if (section != null) {
+            final GraphView graphView
+                    = (GraphView) mainWindow.getMainPane().setContent("storybuilder.graph.view.GraphView");
+            graphView.jumpToSection(section);
         }
     }
 }

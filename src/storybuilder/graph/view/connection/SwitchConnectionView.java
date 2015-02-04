@@ -1,5 +1,6 @@
 package storybuilder.graph.view.connection;
 
+import javafx.scene.paint.Color;
 import storybuilder.graph.model.connection.SwitchConnection;
 
 /**
@@ -18,8 +19,15 @@ public class SwitchConnectionView extends ConnectionView
     @Override
     protected void setStroke()
     {
+        if (isDirectLink()) {
+            setStroke(Color.GREEN);
+        }
         setStrokeWidth(2);
         getStrokeDashArray().addAll(25d, 10d);
     }
 
+    private boolean isDirectLink()
+    {
+        return ((SwitchConnection) getConnection()).getData().getLink().isDirectLink();
+    }
 }

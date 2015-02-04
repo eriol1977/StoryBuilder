@@ -1,7 +1,2 @@
-
--- grafo: rifare la costruzione dello stesso, TDD style
--- personalizzare lo stile delle Connection
-
-
 -- esportatore: aggiungere '\' davanti agli apostrofi
                 gestione accenti??
