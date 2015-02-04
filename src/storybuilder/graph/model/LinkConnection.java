@@ -1,4 +1,4 @@
-package storybuilder.graph.view;
+package storybuilder.graph.model;
 
 import storybuilder.section.model.Link;
 
@@ -18,15 +18,13 @@ public class LinkConnection extends Connection
     }
 
     @Override
-    protected String getText()
+    public String getDescription()
     {
         return link.getReadableContent();
     }
 
-    @Override
-    protected void setStroke()
+    public Link getLink()
     {
-        setStrokeWidth(2);
+        return link;
     }
-
 }

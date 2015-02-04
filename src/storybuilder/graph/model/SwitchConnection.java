@@ -1,7 +1,4 @@
-package storybuilder.graph.view;
-
-import storybuilder.graph.model.LinkSwitchGraphData;
-import storybuilder.section.model.Link;
+package storybuilder.graph.model;
 
 /**
  *
@@ -19,16 +16,14 @@ public class SwitchConnection extends Connection
     }
 
     @Override
-    protected String getText()
+    public String getDescription()
     {
         return data.getText();
     }
 
-    @Override
-    protected void setStroke()
+    public LinkSwitchGraphData getData()
     {
-        setStrokeWidth(2);
-        // TODO
+        return data;
     }
-
+    
 }

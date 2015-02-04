@@ -1,6 +1,4 @@
-package storybuilder.graph.view;
-
-import storybuilder.graph.model.MinigameGraphData;
+package storybuilder.graph.model;
 
 /**
  *
@@ -18,16 +16,14 @@ public class MinigameConnection extends Connection
     }
 
     @Override
-    protected String getText()
+    public String getDescription()
     {
         return data.getText();
     }
 
-    @Override
-    protected void setStroke()
+    public MinigameGraphData getData()
     {
-        setStrokeWidth(2);
-        // TODO
+        return data;
     }
-
+    
 }

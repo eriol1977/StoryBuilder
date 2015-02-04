@@ -1,6 +1,5 @@
 package storybuilder.graph.view;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +30,13 @@ public class Graph extends AbstractView
 
     private final Story story;
 
-    private final Map<Node, List<Node>> linksByOrigin = new HashMap<>();
+    private final Map<NodeView, List<NodeView>> linksByOrigin = new HashMap<>();
 
-    private final Map<Node, List<Node>> linkSwitchesByOrigin = new HashMap<>();
+    private final Map<NodeView, List<NodeView>> linkSwitchesByOrigin = new HashMap<>();
 
-    private final Map<Node, List<Node>> linksByDestination = new HashMap<>();
+    private final Map<NodeView, List<NodeView>> linksByDestination = new HashMap<>();
 
-    private final Map<Node, List<Node>> linkSwitchesByDestination = new HashMap<>();
+    private final Map<NodeView, List<NodeView>> linkSwitchesByDestination = new HashMap<>();
 
     public Graph()
     {
@@ -105,42 +104,42 @@ public class Graph extends AbstractView
         return xs;
     }
 
-    private Node buildOriginNode(final Node destination, final Section section, final double x, final double y)
-    {
-        final Node node = new Node(this, section, x, y);
-        if (destination != null) {
-            List<Node> nodes = this.linksByDestination.get(destination);
-            if (nodes == null) {
-                nodes = new ArrayList<>();
-                linksByDestination.put(destination, nodes);
-            }
-            nodes.add(node);
-        }
-        return node;
-    }
-
-    private Node buildDestinationNode(final Node origin, final Section section, final int kind, final double x, final double y)
-    {
-        final Node node = new Node(this, section, x, y);
-//        if (origin != null) {
-//            if (kind == GraphDirectLink.LINK) {
-//                List<SectionNode> nodes = this.linksByOrigin.get(origin);
-//                if (nodes == null) {
-//                    nodes = new ArrayList<>();
-//                    linksByOrigin.put(origin, nodes);
-//                }
-//                nodes.add(node);
-//            } else {
-//                List<SectionNode> nodes = this.linkSwitchesByOrigin.get(origin);
-//                if (nodes == null) {
-//                    nodes = new ArrayList<>();
-//                    linkSwitchesByOrigin.put(origin, nodes);
-//                }
-//                nodes.add(node);
+//    private NodeView buildOriginNode(final NodeView destination, final Section section, final double x, final double y)
+//    {
+//        final NodeView node = new NodeView(this, section, x, y);
+//        if (destination != null) {
+//            List<NodeView> nodes = this.linksByDestination.get(destination);
+//            if (nodes == null) {
+//                nodes = new ArrayList<>();
+//                linksByDestination.put(destination, nodes);
 //            }
+//            nodes.add(node);
 //        }
-        return node;
-    }
+//        return node;
+//    }
+//
+//    private NodeView buildDestinationNode(final NodeView origin, final Section section, final int kind, final double x, final double y)
+//    {
+//        final NodeView node = new NodeView(this, section, x, y);
+////        if (origin != null) {
+////            if (kind == GraphDirectLink.LINK) {
+////                List<SectionNode> nodes = this.linksByOrigin.get(origin);
+////                if (nodes == null) {
+////                    nodes = new ArrayList<>();
+////                    linksByOrigin.put(origin, nodes);
+////                }
+////                nodes.add(node);
+////            } else {
+////                List<SectionNode> nodes = this.linkSwitchesByOrigin.get(origin);
+////                if (nodes == null) {
+////                    nodes = new ArrayList<>();
+////                    linkSwitchesByOrigin.put(origin, nodes);
+////                }
+////                nodes.add(node);
+////            }
+////        }
+//        return node;
+//    }
 
     private void drawLinks(final Pane canvas)
     {
@@ -161,4 +160,6 @@ public class Graph extends AbstractView
 //                    new GraphDirectLink(origin, n, GraphDirectLink.LINK_SWITCH)));
 //        }
     }
+
+    
 }

@@ -173,8 +173,10 @@ public class GraphDatasource
         final Map<Section, MinigameGraphData> result = new HashMap<>();
 
         final MinigameInstance game = origin.getMinigame();
-        result.put(getSection(game.getWinningSectionNumber()), new MinigameGraphData(game, true));
-        result.put(getSection(game.getLosingSectionNumber()), new MinigameGraphData(game, false));
+        if (game != null) {
+            result.put(getSection(game.getWinningSectionNumber()), new MinigameGraphData(game, true));
+            result.put(getSection(game.getLosingSectionNumber()), new MinigameGraphData(game, false));
+        }
 
         return result;
     }

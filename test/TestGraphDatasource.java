@@ -10,11 +10,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import storybuilder.graph.model.LinkSwitchGraphData;
 import storybuilder.graph.model.MinigameGraphData;
@@ -38,20 +35,6 @@ public class TestGraphDatasource
     private Section section3;
     private Section section4;
     private Section section5;
-
-    public TestGraphDatasource()
-    {
-    }
-
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
-
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
 
     @Before
     public void setUp() throws SBException
@@ -93,11 +76,6 @@ public class TestGraphDatasource
         };
     }
 
-    @After
-    public void tearDown()
-    {
-    }
-
     /**
      * Testa {@link GraphDatasource#getLinkConnectionsTo(storybuilder.section.model.Section)
      * }
@@ -107,10 +85,10 @@ public class TestGraphDatasource
     @Test
     public void testGetLinkConnectionsTo() throws SBException
     {
-        final Link link1 = buildEmptyLink(section1, 1, section5);
-        final Link link2 = buildEmptyLink(section2, 1, section5);
-        buildEmptyLink(section3, 1, section3);
-        final Link link4 = buildEmptyLink(section4, 1, section5);
+        final Link link1 = buildLink("link1", section1, section5);
+        final Link link2 = buildLink("link2", section2, section5);
+        buildLink("link3", section3, section3);
+        final Link link4 = buildLink("link4", section4, section5);
 
         final Map<Section, List<Link>> sectionsLinkedTo = dataSource.getLinkConnectionsTo(section5);
 
@@ -140,6 +118,20 @@ public class TestGraphDatasource
     }
 
     /**
+     * Testa {@link GraphDatasource#getLinkConnectionsTo(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetLinkConnectionsTo_SectionWithoutLinks() throws SBException
+    {
+        final Map<Section, List<Link>> sectionsLinkedTo = dataSource.getLinkConnectionsTo(section5);
+        Assert.assertNotNull(sectionsLinkedTo);
+        Assert.assertTrue(sectionsLinkedTo.isEmpty());
+    }
+    
+    /**
      * Testa {@link GraphDatasource#getLinkConnectionsFrom(storybuilder.section.model.Section)
      * }
      *
@@ -148,12 +140,12 @@ public class TestGraphDatasource
     @Test
     public void testGetLinkConnectionsFrom() throws SBException
     {
-        final Link link1 = buildEmptyLink(section1, 1, section2);
-        final Link link2 = buildEmptyLink(section1, 2, section3);
-        final Link link3 = buildEmptyLink(section1, 3, section5);
-        final Link link4 = buildEmptyLink(section1, 4, section5);
-        buildEmptyLink(section2, 1, section3);
-        buildEmptyLink(section4, 1, section5);
+        final Link link1 = buildLink("link1", section1, section2);
+        final Link link2 = buildLink("link2", section1, section3);
+        final Link link3 = buildLink("link3", section1, section5);
+        final Link link4 = buildLink("link4", section1, section5);
+        buildLink("link5", section2, section3);
+        buildLink("link6", section4, section5);
 
         final Map<Section, List<Link>> sectionsLinkedBy = dataSource.getLinkConnectionsFrom(section1);
 
@@ -184,6 +176,20 @@ public class TestGraphDatasource
     }
 
     /**
+     * Testa {@link GraphDatasource#getLinkConnectionsFrom(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetLinkConnectionsFrom_SectionWithoutLinks() throws SBException
+    {
+        final Map<Section, List<Link>> sectionsLinkedFrom = dataSource.getLinkConnectionsFrom(section5);
+        Assert.assertNotNull(sectionsLinkedFrom);
+        Assert.assertTrue(sectionsLinkedFrom.isEmpty());
+    }
+    
+    /**
      * Testa {@link GraphDatasource#getSwitchConnectionsTo(storybuilder.section.model.Section)
      * }
      *
@@ -192,14 +198,14 @@ public class TestGraphDatasource
     @Test
     public void testGetSwitchConnectionsTo() throws SBException
     {
-        final Link link1 = buildEmptyLink("link1", section5);
-        final Link link2 = buildEmptyLink("link2", section5);
-        final Link link3 = buildEmptyLink("link3", section5);
+        final Link link1 = buildLink("link1", section5);
+        final Link link2 = buildLink("link2", section5);
+        final Link link3 = buildLink("link3", section5);
 
         // la sezione 1 possiede uno switch che aggiunge un link (che punta alla sezione 5) alla sezione 3
-        buildLinkSwitch(section1, 1, section3, "1", link1);
-        buildLinkSwitch(section1, 2, section3, "2", link2);
-        buildLinkSwitch(section2, 1, section4, "1", link3);
+        buildLinkSwitch("switch1", section1, section3, "1", link1);
+        buildLinkSwitch("switch2", section1, section3, "2", link2);
+        buildLinkSwitch("switch3", section2, section4, "1", link3);
 
         final Map<Section, List<LinkSwitchGraphData>> sectionsLinkedBySwitchTo
                 = dataSource.getSwitchConnectionsTo(section5);
@@ -228,6 +234,21 @@ public class TestGraphDatasource
     }
 
     /**
+     * Testa {@link GraphDatasource#getSwitchConnectionsTo(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetSwitchConnectionsTo_SectionWithoutSwitches() throws SBException
+    {
+        final Map<Section, List<LinkSwitchGraphData>> sectionsLinkedBySwitchTo
+                = dataSource.getSwitchConnectionsTo(section5);
+        Assert.assertNotNull(sectionsLinkedBySwitchTo);
+        Assert.assertTrue(sectionsLinkedBySwitchTo.isEmpty());
+    }
+    
+    /**
      * Testa {@link GraphDatasource#getSwitchConnectionsFrom(storybuilder.section.model.Section)
      * }
      *
@@ -236,16 +257,16 @@ public class TestGraphDatasource
     @Test
     public void testGetSwitchConnectionsFrom() throws SBException
     {
-        final Link link1 = buildEmptyLink("link1", section3);
-        final Link link2 = buildEmptyLink("link2", section4);
-        final Link link3 = buildEmptyLink("link3", section4);
-        final Link link4 = buildEmptyLink("link4", section5);
+        final Link link1 = buildLink("link1", section3);
+        final Link link2 = buildLink("link2", section4);
+        final Link link3 = buildLink("link3", section4);
+        final Link link4 = buildLink("link4", section5);
 
         // la sezione 1 possiede uno switch che aggiunge un link (che punta alla sezione 3) alla sezione 2
-        buildLinkSwitch(section1, 1, section2, "1", link1);
-        buildLinkSwitch(section1, 2, section2, "2", link2);
-        buildLinkSwitch(section3, 2, section2, "3", link3);
-        buildLinkSwitch(section2, 1, section3, "1", link4);
+        buildLinkSwitch("switch1", section1, section2, "1", link1);
+        buildLinkSwitch("switch2", section1, section2, "2", link2);
+        buildLinkSwitch("switch3", section3, section2, "3", link3);
+        buildLinkSwitch("switch4", section2, section3, "1", link4);
 
         final Map<Section, List<LinkSwitchGraphData>> sectionsLinkedBySwitchBy
                 = dataSource.getSwitchConnectionsFrom(section2);
@@ -274,6 +295,21 @@ public class TestGraphDatasource
     }
 
     /**
+     * Testa {@link GraphDatasource#getSwitchConnectionsFrom(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetSwitchConnectionsFrom_SectionWithoutSwitches() throws SBException
+    {
+        final Map<Section, List<LinkSwitchGraphData>> sectionsLinkedBySwitchFrom
+                = dataSource.getSwitchConnectionsFrom(section5);
+        Assert.assertNotNull(sectionsLinkedBySwitchFrom);
+        Assert.assertTrue(sectionsLinkedBySwitchFrom.isEmpty());
+    }
+    
+    /**
      * Testa {@link GraphDatasource#getMinigameConnectionsTo(storybuilder.section.model.Section)
      * }
      *
@@ -282,13 +318,13 @@ public class TestGraphDatasource
     @Test
     public void testGetMinigameConnectionsTo() throws SBException
     {
-        final MinigameInstance game1 = new MinigameInstance(getMinigameId(section1),
+        final MinigameInstance game1 = new MinigameInstance("game1",
                 null, "2", "3", new ArrayList<>(), false);
         section1.setMinigame(game1);
-        final MinigameInstance game2 = new MinigameInstance(getMinigameId(section2),
+        final MinigameInstance game2 = new MinigameInstance("game2",
                 null, "3", "4", new ArrayList<>(), false);
         section2.setMinigame(game2);
-        final MinigameInstance game3 = new MinigameInstance(getMinigameId(section4),
+        final MinigameInstance game3 = new MinigameInstance("game3",
                 null, "1", "5", new ArrayList<>(), false);
         section4.setMinigame(game3);
 
@@ -315,6 +351,21 @@ public class TestGraphDatasource
     }
 
     /**
+     * Testa {@link GraphDatasource#getMinigameConnectionsTo(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetMinigameConnectionsTo_SectionWithoutGame() throws SBException
+    {
+        final Map<Section, MinigameGraphData> sectionsLinkedByMinigameTo
+                = dataSource.getMinigameConnectionsTo(section1);
+        Assert.assertNotNull(sectionsLinkedByMinigameTo);
+        Assert.assertTrue(sectionsLinkedByMinigameTo.isEmpty());
+    }
+
+    /**
      * Testa {@link GraphDatasource#getMinigameConnectionsFrom(storybuilder.section.model.Section)
      * }
      *
@@ -323,10 +374,10 @@ public class TestGraphDatasource
     @Test
     public void testGetMinigameConnectionsFrom() throws SBException
     {
-        final MinigameInstance game1 = new MinigameInstance(getMinigameId(section1),
+        final MinigameInstance game1 = new MinigameInstance("game1",
                 null, "2", "3", new ArrayList<>(), false);
         section1.setMinigame(game1);
-        final MinigameInstance game2 = new MinigameInstance(getMinigameId(section2),
+        final MinigameInstance game2 = new MinigameInstance("game1",
                 null, "3", "4", new ArrayList<>(), false);
         section2.setMinigame(game2);
 
@@ -352,43 +403,44 @@ public class TestGraphDatasource
         Assert.assertFalse(gameData.isWinning());
     }
 
-    private LinkSwitch buildLinkSwitch(final Section origin, final int number,
+    /**
+     * Testa {@link GraphDatasource#getMinigameConnectionsFrom(storybuilder.section.model.Section)
+     * }
+     *
+     * @throws SBException
+     */
+    @Test
+    public void testGetMinigameConnectionsFrom_SectionWithoutGame() throws SBException
+    {
+        final Map<Section, MinigameGraphData> sectionsLinkedByMinigameBy
+                = dataSource.getMinigameConnectionsFrom(section1);
+        Assert.assertNotNull(sectionsLinkedByMinigameBy);
+        Assert.assertTrue(sectionsLinkedByMinigameBy.isEmpty());
+    }
+
+    private LinkSwitch buildLinkSwitch(final String id, final Section origin,
             final Section target, final String newLinkNumber, final Link newLink)
     {
-        final LinkSwitch linkSwitch = new LinkSwitch(getLinkSwitchId(origin, number), target.getNameWithoutPrefix(),
+        final LinkSwitch linkSwitch = new LinkSwitch(id, target.getNameWithoutPrefix(),
                 newLinkNumber, newLink, false);
         final List<LinkSwitch> linkSwitches = origin.getLinkSwitches();
         linkSwitches.add(linkSwitch);
         return linkSwitch;
     }
 
-    private Link buildEmptyLink(final Section origin, final int number, final Section target)
+    private Link buildLink(final String linkId, final Section origin, final Section target)
     {
-        final Link link = new Link(getLinkId(origin, number), target.getNameWithoutPrefix(),
+        final Link link = new Link(linkId, target.getNameWithoutPrefix(),
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), false);
         final List<Link> links = origin.getLinks();
         links.add(link);
         return link;
     }
 
-    private Link buildEmptyLink(final String linkId, final Section target)
+    private Link buildLink(final String linkId, final Section target)
     {
         return new Link(linkId, target.getNameWithoutPrefix(),
                 new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), false);
     }
 
-    private String getLinkId(final Section section, final int number)
-    {
-        return section.getName() + "_link_" + number;
-    }
-
-    private String getLinkSwitchId(final Section section, final int number)
-    {
-        return section.getName() + "_switch_" + number;
-    }
-
-    private String getMinigameId(final Section section)
-    {
-        return section.getName() + "_minigame";
-    }
 }
