@@ -215,7 +215,7 @@ public abstract class AbstractTableView extends AbstractView
         }
     }
 
-    private void refresh()
+    public void refresh()
     {
         data.clear();
         loadData();

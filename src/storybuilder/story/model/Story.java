@@ -18,6 +18,7 @@ import storybuilder.join.model.Join;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.main.view.MainWindowController;
 import storybuilder.minigame.model.MinigameKind;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.LinkSwitch;
@@ -207,6 +208,7 @@ public class Story
     {
         saveStoryElement(command);
         commands.add(command);
+        MainWindowController.getInstance().refreshCommandsView();
     }
 
     public void removeCommand(final Command command) throws SBException
@@ -250,6 +252,7 @@ public class Story
     {
         saveStoryElement(event);
         events.add(event);
+        MainWindowController.getInstance().refreshEventsView();
     }
 
     public void removeEvent(final Event event) throws SBException
@@ -392,7 +395,7 @@ public class Story
     {
         return lastSectionId;
     }
-    
+
     public int getNewSectionId() throws SBException
     {
         this.lastSectionId++;
@@ -495,6 +498,7 @@ public class Story
         }
         saveStoryElement(item);
         items.add(item);
+        MainWindowController.getInstance().refreshItemsView();
     }
 
     public void removeItem(final Item item) throws SBException
