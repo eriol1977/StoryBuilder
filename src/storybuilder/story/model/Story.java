@@ -52,6 +52,8 @@ public class Story
 
     private final List<Section> sections = new ArrayList<>();
 
+    private int lastSectionId;
+
     public Story(String title, String fileName)
     {
         this.title = title;
@@ -289,6 +291,7 @@ public class Story
 
     private void loadSections() throws SBException
     {
+        initLastSectionId();
         sections.addAll(Section.loadDefault());
         sections.addAll(Section.load(this));
     }
@@ -300,7 +303,7 @@ public class Story
         }
         saveSectionElements(section);
         sections.add(section);
-        incrementLastSectionId();
+        saveLastSectionId();
     }
 
     public Section addNewEmptySection(final String idNumber, final String cause) throws SBException
@@ -378,19 +381,30 @@ public class Story
         saveXmlDoc(doc);
     }
 
-    public int getLastSectionId() throws SBException
+    private void initLastSectionId() throws SBException
     {
         final Document doc = getXmlDoc();
         final Node sectionsElement = FileManager.findElementNamed("sections", doc);
-        return Integer.valueOf(sectionsElement.getTextContent());
+        this.lastSectionId = Integer.valueOf(sectionsElement.getTextContent());
     }
 
-    public void incrementLastSectionId() throws SBException
+    public int getLastSectionId()
+    {
+        return lastSectionId;
+    }
+    
+    public int getNewSectionId() throws SBException
+    {
+        this.lastSectionId++;
+        saveLastSectionId();
+        return this.lastSectionId;
+    }
+
+    private void saveLastSectionId() throws SBException
     {
         final Document doc = getXmlDoc();
         final Node sectionsElement = FileManager.findElementNamed("sections", doc);
-        int lastSectionId = Integer.valueOf(sectionsElement.getTextContent());
-        sectionsElement.setTextContent(String.valueOf(++lastSectionId));
+        sectionsElement.setTextContent(String.valueOf(lastSectionId));
         saveXmlDoc(doc);
     }
 
@@ -471,7 +485,7 @@ public class Story
     {
         final String description = item.getTemporarySectionText();
         if (!description.isEmpty()) {
-            final int newSectionId = getLastSectionId() + 1;
+            final int newSectionId = getNewSectionId();
             final Section section = new Section(Section.PREFIX + newSectionId, false);
             final List<Paragraph> paragraphs = new ArrayList<>(1);
             paragraphs.add(new Paragraph(section.getName() + "_1", description, false));
@@ -526,7 +540,7 @@ public class Story
     public void addJoin(final Join join) throws SBException
     {
         final String description = join.getTemporarySectionText();
-        final int newSectionId = getLastSectionId() + 1;
+        final int newSectionId = getNewSectionId();
         final Section section = new Section(Section.PREFIX + newSectionId, false);
         final List<Paragraph> paragraphs = new ArrayList<>(1);
         paragraphs.add(new Paragraph(section.getName() + "_1", description, false));

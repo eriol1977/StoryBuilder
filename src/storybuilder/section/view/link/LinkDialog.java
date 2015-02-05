@@ -109,7 +109,7 @@ public abstract class LinkDialog extends SBDialog
     {
         if (newSectionCheckBox.isSelected()) {
             final Story story = Cache.getInstance().getStory();
-            final Section section = story.addNewEmptySection(linksTable.getNewLinkSectionId(), "link in section " + linksTable.getSection().getNameWithoutPrefix());
+            final Section section = story.addNewEmptySection(String.valueOf(story.getNewSectionId()), "link in section " + linksTable.getSection().getNameWithoutPrefix());
             return section.getNameWithoutPrefix();
         } else {
             final String sectionNumber = (String) newSectionCombo.getSelectionModel().getSelectedItem();

@@ -67,7 +67,7 @@ public class SectionsView extends AbstractTableView
     @Override
     protected IStoryElement getNewElement() throws SBException
     {
-        final int newSectionId = cache.getStory().getLastSectionId() + 1;
+        final int newSectionId = cache.getStory().getNewSectionId();
         return new Section(Section.PREFIX + newSectionId, false);
     }
 

@@ -17,14 +17,12 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
-import storybuilder.main.Cache;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.main.view.MainWindowController;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.Link;
 import storybuilder.section.model.Section;
 import storybuilder.section.view.SectionDetailView;
-import storybuilder.validation.SBException;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -142,7 +140,7 @@ public class LinksTable extends TableView<Link>
         column.setCellValueFactory(new PropertyValueFactory<>("readableContent"));
         column.setCellFactory(TextFieldTableCell.forTableColumn());
         getColumns().add(column);
-        
+
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
@@ -195,23 +193,6 @@ public class LinksTable extends TableView<Link>
     {
         int id = linksData.size() + 1;
         return section.getName() + "_link_" + id;
-    }
-
-    /**
-     * Quando si crea un link a una nuova sezione, bisogna considerare il caso
-     * in cui stiamo creando anche la sezione che contiene il link: in questo caso 
-     * dobbiamo sempre incrementare l'id di uno per evitare sovrapposizione
-     * 
-     * @return Id della nuova sezione associata al nuovo link
-     * @throws SBException 
-     */
-    String getNewLinkSectionId() throws SBException
-    {
-        int number = Cache.getInstance().getStory().getLastSectionId() + 1;
-        if (sectionDetailView.isNewSection()) {
-            number++;
-        }
-        return String.valueOf(number);
     }
 
     private void renameLinks()

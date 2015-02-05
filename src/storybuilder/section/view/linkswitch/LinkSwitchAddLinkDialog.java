@@ -89,7 +89,7 @@ public class LinkSwitchAddLinkDialog extends SBDialog
             if (newSectionCheckBox.isSelected()) {
                 try {
                     final Story story = Cache.getInstance().getStory();
-                    sectionNumber = String.valueOf(story.getLastSectionId() + 1);
+                    sectionNumber = String.valueOf(story.getNewSectionId());
                     view.setNewSectionNumber(sectionNumber);
                 } catch (SBException ex) {
                     view.setResult(ex.getFailCause());
