@@ -5,6 +5,7 @@ import java.util.List;
 import storybuilder.main.model.StoryElement;
 import javafx.beans.property.SimpleStringProperty;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
@@ -56,9 +57,21 @@ public class Command extends StoryElement
         final Document doc = FileManager.openDocument(fileName);
         final List<Node> elements = FileManager.findElementsStartingWith(PREFIX, doc);
         elements.stream().forEach((element) -> {
-            commands.add(new Command(element, defaultElements));
+            if (!defaultElements || filterDefaultElements(element)) {
+                commands.add(new Command(element, defaultElements));
+            }
         });
         return commands;
+    }
+
+    private static boolean filterDefaultElements(final Node element)
+    {
+        return ((Element)element).getAttribute("name").equals("c_yes") ||
+                ((Element)element).getAttribute("name").equals("c_no") ||
+                ((Element)element).getAttribute("name").equals("c_get") ||
+                ((Element)element).getAttribute("name").equals("c_use") ||
+                ((Element)element).getAttribute("name").equals("c_go_back") ||
+                ((Element)element).getAttribute("name").equals("c_observe");
     }
 
     @Override
