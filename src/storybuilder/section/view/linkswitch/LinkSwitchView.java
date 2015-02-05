@@ -23,6 +23,7 @@ import storybuilder.main.view.MainWindowController;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.LinkSwitch;
 import storybuilder.section.model.Section;
+import storybuilder.section.view.SectionDetailView;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -32,12 +33,16 @@ import storybuilder.validation.ValidationFailed;
 public class LinkSwitchView extends TableView<LinkSwitch>
 {
 
+    private final SectionDetailView view;
+
     private final Section section;
 
     private ObservableList<LinkSwitch> switchesData;
 
-    public LinkSwitchView(final Section section)
+    public LinkSwitchView(final SectionDetailView view, final Section section)
     {
+        this.view = view;
+
         this.section = section;
         switchesData = FXCollections.observableArrayList();
         switchesData.addAll(section.getLinkSwitches());
@@ -104,7 +109,7 @@ public class LinkSwitchView extends TableView<LinkSwitch>
         buttonYes.setOnAction((ActionEvent event) -> {
             switchesData.remove(linkSwitch);
             renameSwitches(linkSwitch.getNumber(section.getName()));
-            resizeTableHeight();
+            view.save();
             dialog.close();
         });
         buttonBox.getChildren().add(buttonYes);
@@ -122,7 +127,7 @@ public class LinkSwitchView extends TableView<LinkSwitch>
         try {
             linkSwitch.validate();
             switchesData.add(linkSwitch);
-            resizeTableHeight();
+            view.save();
         } catch (final ValidationFailed ex) {
             MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
         }

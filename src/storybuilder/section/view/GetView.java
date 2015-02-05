@@ -11,6 +11,7 @@ import storybuilder.event.view.EventDoubleList;
 import storybuilder.item.view.ItemDoubleList;
 import storybuilder.main.Cache;
 import storybuilder.main.view.DoubleList;
+import storybuilder.main.view.Observer;
 import storybuilder.section.model.Get;
 import storybuilder.section.model.Section;
 import storybuilder.story.model.Story;
@@ -19,15 +20,17 @@ import storybuilder.story.model.Story;
  *
  * @author Francesco Bertolino
  */
-public class GetView extends HBox
+public class GetView extends HBox implements Observer
 {
-
+    private final SectionDetailView view;
+    
     private final DoubleList itemsField;
 
     private final DoubleList eventsField;
 
-    public GetView(final Section section)
+    public GetView(final SectionDetailView view, final Section section)
     {
+        this.view = view;
         final Get get = section.getGet();
 
         setSpacing(10);
@@ -38,6 +41,7 @@ public class GetView extends HBox
         final Story story = Cache.getInstance().getStory();
 
         itemsField = new ItemDoubleList(get != null ? story.getItems(get.getItemIds()) : new ArrayList<>());
+        itemsField.setObserver(this);
         getChildren().add(itemsField);
 
         final Separator separator = new Separator(Orientation.VERTICAL);
@@ -47,6 +51,7 @@ public class GetView extends HBox
         getChildren().add(new Label("Events:"));
 
         eventsField = new EventDoubleList(get != null ? story.getEvents(get.getEventIds()) : new ArrayList<>());
+        eventsField.setObserver(this);
         getChildren().add(eventsField);
     }
 
@@ -70,5 +75,11 @@ public class GetView extends HBox
     public String[] getIdsArray()
     {
         return getIds().toArray(new String[0]);
+    }
+
+    @Override
+    public void somethingHappened()
+    {
+        view.save();
     }
 }

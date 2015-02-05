@@ -32,7 +32,7 @@ import storybuilder.validation.ValidationFailed;
 public class LinksTable extends TableView<Link>
 {
 
-    private final SectionDetailView sectionDetailView;
+    private final SectionDetailView view;
 
     private final Section section;
 
@@ -40,7 +40,7 @@ public class LinksTable extends TableView<Link>
 
     public LinksTable(final SectionDetailView sectionDetailView, final Section section)
     {
-        this.sectionDetailView = sectionDetailView;
+        this.view = sectionDetailView;
         this.section = section;
         linksData = FXCollections.observableArrayList();
         linksData.addAll(section.getLinks());
@@ -113,7 +113,7 @@ public class LinksTable extends TableView<Link>
                     linksData.set(index - 1, link);
                     linksData.set(index, temp);
                     renameLinks();
-                    AbstractTableView.refreshTable(LinksTable.this, linksData);
+                    view.save();
                 }
             }
 
@@ -125,7 +125,7 @@ public class LinksTable extends TableView<Link>
                     linksData.set(index + 1, link);
                     linksData.set(index, temp);
                     renameLinks();
-                    AbstractTableView.refreshTable(LinksTable.this, linksData);
+                    view.save();
                 }
             }
         });
@@ -155,7 +155,7 @@ public class LinksTable extends TableView<Link>
         buttonYes.setOnAction((ActionEvent event) -> {
             linksData.remove(link);
             renameLinks();
-            resizeTableHeight();
+            view.save();
             dialog.close();
         });
         buttonBox.getChildren().add(buttonYes);
@@ -173,7 +173,7 @@ public class LinksTable extends TableView<Link>
         try {
             link.validate();
             linksData.add(link);
-            resizeTableHeight();
+            view.save();
         } catch (final ValidationFailed ex) {
             MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
         }
@@ -183,7 +183,7 @@ public class LinksTable extends TableView<Link>
     {
         try {
             link.validate();
-            AbstractTableView.refreshTable(this, linksData);
+            view.save();
         } catch (final ValidationFailed ex) {
             MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
         }
@@ -220,7 +220,7 @@ public class LinksTable extends TableView<Link>
 
     public SectionDetailView getSectionDetailView()
     {
-        return sectionDetailView;
+        return view;
     }
 
     Section getSection()

@@ -31,13 +31,15 @@ import storybuilder.validation.ValidationFailed;
  */
 public class ParagraphsTable extends TableView<Paragraph>
 {
-
+    private final SectionDetailView view;
+    
     private final Section section;
 
     private ObservableList<Paragraph> paragraphsData;
 
-    public ParagraphsTable(final Section section)
+    public ParagraphsTable(final SectionDetailView view, final Section section)
     {
+        this.view = view;
         this.section = section;
         paragraphsData = FXCollections.observableArrayList();
         paragraphsData.addAll(section.getParagraphs());
@@ -110,7 +112,7 @@ public class ParagraphsTable extends TableView<Paragraph>
                     paragraphsData.set(index - 1, paragraph);
                     paragraphsData.set(index, temp);
                     renameParagraphs();
-                    AbstractTableView.refreshTable(ParagraphsTable.this, paragraphsData);
+                    view.save();
                 }
             }
 
@@ -122,7 +124,7 @@ public class ParagraphsTable extends TableView<Paragraph>
                     paragraphsData.set(index + 1, paragraph);
                     paragraphsData.set(index, temp);
                     renameParagraphs();
-                    AbstractTableView.refreshTable(ParagraphsTable.this, paragraphsData);
+                    view.save();
                 }
             }
         });
@@ -153,7 +155,7 @@ public class ParagraphsTable extends TableView<Paragraph>
             try {
                 paragraph.validate();
                 paragraphsData.add(paragraph);
-                resizeParagraphsTableHeight();
+                view.save();
             } catch (ValidationFailed ex) {
                 MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
             }
@@ -174,7 +176,7 @@ public class ParagraphsTable extends TableView<Paragraph>
             paragraph.setText(text.getText());
             try {
                 paragraph.validate();
-                AbstractTableView.refreshTable(this, paragraphsData);
+                view.save();
             } catch (ValidationFailed ex) {
                 MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
             }
@@ -195,7 +197,7 @@ public class ParagraphsTable extends TableView<Paragraph>
         buttonYes.setOnAction((ActionEvent event) -> {
             paragraphsData.remove(paragraph);
             renameParagraphs();
-            resizeParagraphsTableHeight();
+            view.save();
             dialog.close();
         });
         buttonBox.getChildren().add(buttonYes);

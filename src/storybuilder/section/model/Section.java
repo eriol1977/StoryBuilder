@@ -232,9 +232,7 @@ public class Section extends StoryElement
             throw new ValidationFailed("A minimum of one paragraph is required.");
         }
 
-        if (!isEnding() && links.isEmpty() && minigame == null) {
-            throw new ValidationFailed("A minimum of one link/minigame is required, if this is not an ending section.");
-        } else if (isEnding() && (!links.isEmpty() || minigame != null)) {
+        if (isEnding() && (!links.isEmpty() || minigame != null)) {
             throw new ValidationFailed("An ending section cannot have links or a minigame.");
         }
 

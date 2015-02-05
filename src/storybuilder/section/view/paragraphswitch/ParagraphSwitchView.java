@@ -23,6 +23,7 @@ import storybuilder.main.view.MainWindowController;
 import storybuilder.main.view.SBDialog;
 import storybuilder.section.model.ParagraphSwitch;
 import storybuilder.section.model.Section;
+import storybuilder.section.view.SectionDetailView;
 import storybuilder.validation.ValidationFailed;
 
 /**
@@ -32,12 +33,15 @@ import storybuilder.validation.ValidationFailed;
 public class ParagraphSwitchView extends TableView<ParagraphSwitch>
 {
 
+    private final SectionDetailView view;
+
     private final Section section;
 
     private ObservableList<ParagraphSwitch> switchesData;
 
-    public ParagraphSwitchView(final Section section)
+    public ParagraphSwitchView(final SectionDetailView view, final Section section)
     {
+        this.view = view;
         this.section = section;
         switchesData = FXCollections.observableArrayList();
         switchesData.addAll(section.getParagraphSwitches());
@@ -104,7 +108,7 @@ public class ParagraphSwitchView extends TableView<ParagraphSwitch>
         buttonYes.setOnAction((ActionEvent event) -> {
             switchesData.remove(parSwitch);
             renameSwitches(parSwitch.getNumber(section.getName()));
-            resizeTableHeight();
+            view.save();
             dialog.close();
         });
         buttonBox.getChildren().add(buttonYes);
@@ -122,7 +126,7 @@ public class ParagraphSwitchView extends TableView<ParagraphSwitch>
         try {
             parSwitch.validate();
             switchesData.add(parSwitch);
-            resizeTableHeight();
+            view.save();
         } catch (final ValidationFailed ex) {
             MainWindowController.getInstance().updateStatusBarMessage(ex.getFailCause());
         }

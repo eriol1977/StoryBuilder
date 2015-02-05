@@ -7,6 +7,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TitledPane;
 import storybuilder.main.model.IStoryElement;
+import storybuilder.main.model.StoryElement;
 import storybuilder.main.view.AbstractDetailView;
 import storybuilder.main.view.AbstractTableView;
 import storybuilder.section.model.Drop;
@@ -73,6 +74,19 @@ public class SectionDetailView extends AbstractDetailView
             nameField.setText(element.getNameWithoutPrefix());
             nameField.setDisable(true);
         }
+        saveButton.setVisible(false);
+    }
+
+    public void save()
+    {
+        setElementValues();
+        if (isNewElement) {
+            ((StoryElement) (element)).setNameWithoutPrefix(nameField.getText());
+            tableView.addElement(element);
+        } else {
+            tableView.updateElement(element);
+        }
+        tableView.selectElement(element);
     }
 
     @Override
@@ -88,7 +102,7 @@ public class SectionDetailView extends AbstractDetailView
         final Accordion accordion = new Accordion();
         accordion.setMinWidth(mwc.getScreenWidth() - 200);
         accordion.setMaxWidth(mwc.getScreenWidth() - 200);
-        
+
         // remembers which pane was open in the previously viewed section detail
         accordion.expandedPaneProperty().addListener((ObservableValue<? extends TitledPane> ov, TitledPane old_val, TitledPane new_val) -> {
             if (new_val != null) {
@@ -120,7 +134,7 @@ public class SectionDetailView extends AbstractDetailView
             }
         });
 
-        paragraphsTable = new ParagraphsTable(section);
+        paragraphsTable = new ParagraphsTable(this, section);
         TitledPane paragraphsPane = new TitledPane(PARAGRAPHS_PANE_TITLE, paragraphsTable);
         accordion.getPanes().add(paragraphsPane);
 
@@ -128,23 +142,23 @@ public class SectionDetailView extends AbstractDetailView
         TitledPane linksPane = new TitledPane(LINKS_PANE_TITLE, linksTable);
         accordion.getPanes().add(linksPane);
 
-        getView = new GetView(section);
+        getView = new GetView(this, section);
         TitledPane getPane = new TitledPane(GETS_PANE_TITLE, getView);
         accordion.getPanes().add(getPane);
 
-        dropView = new DropView(section.getDrop());
+        dropView = new DropView(this, section.getDrop());
         TitledPane dropPane = new TitledPane(DROPS_PANE_TITLE, dropView);
         accordion.getPanes().add(dropPane);
 
-        paragraphSwitchView = new ParagraphSwitchView(section);
+        paragraphSwitchView = new ParagraphSwitchView(this, section);
         TitledPane parSwitchPane = new TitledPane(PAR_SWITCHES_PANE_TITLE, paragraphSwitchView);
         accordion.getPanes().add(parSwitchPane);
 
-        linkSwitchView = new LinkSwitchView(section);
+        linkSwitchView = new LinkSwitchView(this, section);
         TitledPane linkSwitchPane = new TitledPane(LINK_SWITCHES_PANE_TITLE, linkSwitchView);
         accordion.getPanes().add(linkSwitchPane);
 
-        minigameView = new MinigameInstanceView(section);
+        minigameView = new MinigameInstanceView(this, section);
         TitledPane minigamePane = new TitledPane(MINIGAME_PANE_TITLE, minigameView);
         accordion.getPanes().add(minigamePane);
 

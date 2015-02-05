@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -26,6 +27,8 @@ public abstract class DoubleList extends HBox
     private ListView<StoryElement> rightList;
 
     private ObservableList<StoryElement> rightListModel;
+
+    private Observer observer;
 
     public DoubleList(final List<? extends StoryElement> rightItems)
     {
@@ -99,6 +102,12 @@ public abstract class DoubleList extends HBox
             rightList.getSelectionModel().clearSelection();
             removeButton.setDisable(true);
         });
+
+        rightListModel.addListener((ListChangeListener.Change<? extends StoryElement> c) -> {
+            if (observer != null) {
+                observer.somethingHappened();
+            }
+        });
     }
 
     public ObservableList<StoryElement> getLeftItems()
@@ -138,4 +147,10 @@ public abstract class DoubleList extends HBox
     }
 
     protected abstract void createNewElement();
+
+    public void setObserver(Observer observer)
+    {
+        this.observer = observer;
+    }
+    
 }

@@ -1,4 +1,1 @@
--- forse il salvataggio della sezione dovrebbe essere automatico, anche per evitare problemi con vari update successivi,
-che magari ricaricano la sezione stessa
-
 -- quando il comando di un nuovo link è osservo, la sezione target dovrebbe essere quella associata all'oggetto!

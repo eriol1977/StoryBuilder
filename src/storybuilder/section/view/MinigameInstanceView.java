@@ -28,7 +28,8 @@ import storybuilder.validation.ValidationFailed;
  */
 public class MinigameInstanceView extends AbstractView
 {
-
+    private final SectionDetailView view;
+    
     private final Section section;
 
     private final Text resume;
@@ -42,8 +43,9 @@ public class MinigameInstanceView extends AbstractView
     private final Button add;
     private final HBox buttonBox;
 
-    public MinigameInstanceView(final Section section)
+    public MinigameInstanceView(final SectionDetailView view, final Section section)
     {
+        this.view = view;
         this.section = section;
         this.minigame = section.getMinigame();
         this.resume = new Text();
@@ -65,6 +67,7 @@ public class MinigameInstanceView extends AbstractView
         remove = new Button("Remove");
         remove.setOnAction((ActionEvent event) -> {
             minigame = null;
+            view.save();
             updateView();
         });
 
@@ -135,6 +138,7 @@ public class MinigameInstanceView extends AbstractView
             try {
                 newInstance.validate();
                 MinigameInstanceView.this.minigame = newInstance;
+                view.save();
                 dialog.close();
                 updateView();
             } catch (ValidationFailed ex) {
