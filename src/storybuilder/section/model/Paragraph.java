@@ -46,7 +46,7 @@ public class Paragraph extends StoryElement
     @Override
     public String getContent()
     {
-        return text.get();
+        return getText();
     }
 
     @Override
@@ -73,14 +73,15 @@ public class Paragraph extends StoryElement
     public void validate() throws ValidationFailed
     {
         super.validate();
-        if (text == null || text.get().isEmpty()) {
+        if (text == null || getText().isEmpty()) {
             throw new ValidationFailed("Paragraph text must be at least one character long");
         }
     }
 
     public String getText()
     {
-        return text.get();
+        final String textWithBars = text.get();
+        return textWithBars.replaceAll("\\\\", "");
     }
 
     public void setText(String text)
