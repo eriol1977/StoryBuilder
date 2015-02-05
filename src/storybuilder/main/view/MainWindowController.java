@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import storybuilder.command.view.CommandsView;
 import storybuilder.event.view.EventsView;
 import storybuilder.graph.view.GraphView;
+import storybuilder.item.model.Item;
 import storybuilder.item.view.ItemsView;
 import storybuilder.main.Cache;
 import storybuilder.section.model.Section;
@@ -102,6 +103,15 @@ public class MainWindowController
             final GraphView graphView
                     = (GraphView) mainWindow.getMainPane().setContent("storybuilder.graph.view.GraphView");
             graphView.jumpToSection(section);
+        }
+    }
+
+    public void jumpToItem(final Item item)
+    {
+        if (item != null) {
+            final ItemsView itemsView
+                    = (ItemsView) mainWindow.getMainPane().setContent("storybuilder.item.view.ItemsView");
+            itemsView.selectElement(item);
         }
     }
 

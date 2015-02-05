@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import storybuilder.item.model.Item;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
 import storybuilder.main.model.IStoryElement;
@@ -374,4 +375,10 @@ public class Section extends StoryElement
         this.minigame = minigame;
     }
 
+    public Item getItem()
+    {
+        final List<Item> items = Cache.getInstance().getStory().getItems();
+        return items.stream().filter(i -> i.getSectionId().equals(this.getNameWithoutPrefix()))
+                .findFirst().orElse(null);
+    }
 }

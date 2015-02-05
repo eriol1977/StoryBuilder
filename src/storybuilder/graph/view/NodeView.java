@@ -44,8 +44,10 @@ public class NodeView extends StackPane
     private void initShape()
     {
         final Circle circle = new Circle(RADIUS);
-        if (node.isStarting() || node.isEnding()) {
-            circle.setFill(Color.LIGHTGRAY);
+        if (node.isEnding()) {
+            circle.setFill(Color.LIGHTSALMON);
+        } else if (node.getItem() != null) {
+            circle.setFill(Color.LIGHTBLUE);
         } else {
             circle.setFill(Color.WHITE);
         }

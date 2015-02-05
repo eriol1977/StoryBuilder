@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
@@ -41,12 +47,11 @@ public class SectionsView extends AbstractTableView
             public TableRow<Section> call(TableView<Section> tableView)
             {
                 final TableRow<Section> row = new TableRow<>();
-                final ContextMenu contextMenu = buildContextMenu(row);
                 // Set context menu on row, but use a binding to make it only show for non-empty rows:  
                 row.contextMenuProperty().bind(
                         Bindings.when(row.emptyProperty())
                         .then((ContextMenu) null)
-                        .otherwise(contextMenu)
+                        .otherwise(buildContextMenu(row))
                 );
                 return row;
             }
@@ -87,7 +92,31 @@ public class SectionsView extends AbstractTableView
     protected List<TableColumn> getColumns()
     {
         final List<TableColumn> columns = new ArrayList<>(1);
-        columns.add(getColumn("Code", "nameWithoutPrefix", 60));
+        final TableColumn<Section, String> column = getColumn("Code", "nameWithoutPrefix", 60);
+        column.setCellFactory((TableColumn<Section, String> param) -> {
+            return new TableCell<Section, String>()
+            {
+                @Override
+                protected void updateItem(String item, boolean empty)
+                {
+                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
+                    if (!empty) {
+                        setText(item);
+                        final Section section = (Section) getTableRow().getItem();
+                        if (section != null) {
+                            if (section.isEnding()) {
+                                setBackground(new Background(new BackgroundFill(Color.LIGHTSALMON, CornerRadii.EMPTY, new Insets(2))));
+                            } else if (section.getItem() != null) {
+                                setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, new Insets(2))));
+                            } else {
+                                setBackground(Background.EMPTY);
+                            }
+                        }
+                    }
+                }
+            };
+        });
+        columns.add(column);
         return columns;
     }
 

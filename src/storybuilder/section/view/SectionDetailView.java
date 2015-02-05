@@ -3,9 +3,17 @@ package storybuilder.section.view;
 import storybuilder.section.view.paragraphswitch.ParagraphSwitchView;
 import storybuilder.section.view.link.LinksTable;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import storybuilder.item.model.Item;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.model.StoryElement;
 import storybuilder.main.view.AbstractDetailView;
@@ -181,6 +189,15 @@ public class SectionDetailView extends AbstractDetailView
         }
 
         add(accordion);
+
+        final Item item = section.getItem();
+        if (item != null) {
+            final Button jumpButton = addButton("Jump to '" + section.getItem().getItemName() + "'");
+            jumpButton.setOnAction((ActionEvent event) -> {
+                mwc.jumpToItem(item);
+            });
+            jumpButton.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, new Insets(2))));
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package storybuilder.graph.model;
 
+import storybuilder.item.model.Item;
 import storybuilder.section.model.Section;
 
 /**
@@ -30,7 +31,14 @@ public class Node implements Comparable<Node>
     {
         final StringBuilder sb = new StringBuilder();
         section.getParagraphs().stream().forEach(p -> sb.append(p.getText()).append("\n"));
-        sb.delete(sb.length() - 1, sb.length()); // removes last \n
+        final Item item = getItem();
+        if (item == null) {
+            sb.delete(sb.length() - 1, sb.length()); // removes last \n
+        } else {
+            sb.append("[This section describes item '")
+                    .append(item.getItemName())
+                    .append("' for examination]");
+        }
         return sb.toString();
     }
 
@@ -42,6 +50,11 @@ public class Node implements Comparable<Node>
     public boolean isEnding()
     {
         return section.isEnding();
+    }
+
+    public Item getItem()
+    {
+        return section.getItem();
     }
 
     @Override

@@ -1,8 +1,13 @@
 package storybuilder.item.view;
 
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import storybuilder.item.model.Item;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
@@ -39,10 +44,11 @@ public class ItemDetailView extends AbstractDetailView
         textField = addLabeledTextInput("Section text", 600);
         textField.setText(item.getSectionText());
         if (!isNewElement && !item.getSectionId().isEmpty()) {
-            final Button button = addButton("Go to description section (" + item.getSectionId() + ")");
+            final Button button = addButton("Jump to section " + item.getSectionId());
             button.setOnAction((ActionEvent event) -> {
                 mwc.switchToSection(item.getSectionId(), SectionDetailView.EXPAND_PARAGRAPHS);
             });
+            button.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, new Insets(2))));
         }
     }
 
