@@ -1,6 +1,5 @@
--- il salvataggio di un oggetto con descrizione ha creato la sezione, ma non ha salvato il testo
-
--- la manipolazione di linkswitch incasina tutto il sistema, malgrado il file venga aggiornato correttamente 
+-- la manipolazione degli switch fa comparire una voce indesiderata nella tabella delle sezioni,
+ malgrado il file venga aggiornato correttamente 
 
 -- i comandi con oggetti lasciano sempre una virgola in fondo
 

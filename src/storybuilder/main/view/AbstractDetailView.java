@@ -89,4 +89,10 @@ public abstract class AbstractDetailView extends AbstractView
         }
         return el;
     }
+
+    public AbstractTableView getTableView()
+    {
+        return tableView;
+    }
+    
 }

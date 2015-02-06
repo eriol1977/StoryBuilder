@@ -21,6 +21,7 @@ public class DeleteStoryView extends AbstractView
         final File file = fileChooser.showOpenDialog(mwc.getStage());
         if (file != null) {
             Story.delete(file);
+            mwc.clearViewsCache();
             mwc.updateTitle();
             mwc.updateStatusBarMessage("Story deleted");
             mwc.enableMenus(false);

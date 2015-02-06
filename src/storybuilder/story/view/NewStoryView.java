@@ -29,6 +29,7 @@ public class NewStoryView extends AbstractView
             try {
                 story.create();
                 cache.setStory(story);
+                mwc.clearViewsCache();
                 mwc.updateTitle();
                 mwc.updateStatusBarMessage("Story \"" + title + "\" created");
                 mwc.switchToEmptyView();

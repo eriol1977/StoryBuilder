@@ -121,27 +121,9 @@ public class SectionsView extends AbstractTableView
     }
 
     @Override
-    public void addElement(IStoryElement element)
-    {
-        super.addElement(element);
-        // new sections can appear because of new links
-        data.clear();
-        loadData();
-    }
-
-    @Override
     protected void addElementToStory(final IStoryElement element) throws SBException
     {
         cache.getStory().addSection((Section) element);
-    }
-
-    @Override
-    public void updateElement(IStoryElement element)
-    {
-        super.updateElement(element);
-        // new sections can appear because of new links
-        data.clear();
-        loadData();
     }
 
     @Override

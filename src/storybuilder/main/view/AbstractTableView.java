@@ -139,7 +139,7 @@ public abstract class AbstractTableView extends AbstractView
             data.add(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" added");
             refresh();
-            showEmptyView();
+            selectElement(element);
         } catch (ValidationFailed ex) {
             ErrorManager.showErrorMessage(ex.getFailCause());
         } catch (SBException ex) {

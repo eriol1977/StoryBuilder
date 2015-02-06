@@ -133,6 +133,7 @@ public class AddLinkSwitchDialog extends SBDialog
             if (newSectionNumber != null) {
                 try {
                     Cache.getInstance().getStory().addNewEmptySection(newSectionNumber, "link switch in section " + view.getSection().getNameWithoutPrefix());
+                    view.getView().getTableView().refresh();
                 } catch (SBException ex) {
                     // ignore: the section can be created manually afterwards
                 }
