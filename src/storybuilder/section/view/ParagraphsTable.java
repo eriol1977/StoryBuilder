@@ -146,6 +146,7 @@ public class ParagraphsTable extends TableView<Paragraph>
     private void showAddParagraphDialog()
     {
         final SBDialog dialog = new SBDialog();
+        dialog.setTitle("New paragraph");
         dialog.add(new Label("Paragraph text:"));
         TextField text = new TextField();
         dialog.add(text);
@@ -168,6 +169,7 @@ public class ParagraphsTable extends TableView<Paragraph>
     private void showUpdateParagraphDialog(final Paragraph paragraph)
     {
         final SBDialog dialog = new SBDialog();
+        dialog.setTitle("Update paragraph");
         dialog.add(new Label("Paragraph text:"));
         TextField text = new TextField(paragraph.getText());
         dialog.add(text);
@@ -189,6 +191,7 @@ public class ParagraphsTable extends TableView<Paragraph>
     private void showRemoveParagraphDialog(final Paragraph paragraph)
     {
         final SBDialog dialog = new SBDialog();
+        dialog.setTitle("Delete paragraph");
         String parText = paragraph.getText().length() > 120 ? paragraph.getText().substring(0, 120) + "..." : paragraph.getText();
         dialog.add(new Text("\"" + parText + "\""));
         dialog.add(new Label("Do you really want to delete this paragraph?"));

@@ -158,9 +158,18 @@ public class Link extends StoryElement
             sb.delete(sb.length() - 1, sb.length()); // deletes last ','
         }
 
-        return sb.toString();
+        return deleteLastComma(sb.toString());
     }
 
+    private String deleteLastComma(final String s)
+    {
+        if (s.endsWith(",")) {
+            final String newS = s.substring(0, s.length() - 1);
+            return deleteLastComma(newS);
+        }
+        return s;
+    }
+    
     public String getReadableContent()
     {
         final Story story = Cache.getInstance().getStory();

@@ -19,6 +19,7 @@ public class NewItemDialog extends NewElementDialog
         super(itemList, new ItemDetailView(true, new Item("", "", "", "", false), null));
         setMinWidth(800);
         setMinHeight(300);
+        setTitle("New item");
     }
 
     @Override

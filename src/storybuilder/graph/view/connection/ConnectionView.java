@@ -1,6 +1,9 @@
 package storybuilder.graph.view.connection;
 
+import javafx.event.ActionEvent;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
@@ -8,6 +11,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import storybuilder.graph.model.connection.Connection;
 import storybuilder.graph.view.NodeView;
+import storybuilder.main.view.SBDialog;
 
 /**
  *
@@ -50,6 +54,22 @@ public abstract class ConnectionView extends Line
     {
         setOnMouseEntered((MouseEvent event) -> {
             setCursor(Cursor.CROSSHAIR);
+        });
+        setOnMouseClicked((MouseEvent event) -> {
+            if (event.isControlDown()) {
+                final SBDialog dialog = new SBDialog();
+                dialog.setTitle("Connection");
+                dialog.setWidth(400);
+                dialog.setHeight(110);
+                dialog.add(new Label(getConnection().getDescription()));
+                final Button closeButton = new Button("Close");
+                closeButton.setOnAction((ActionEvent event1) -> {
+                    dialog.close();
+                });
+                closeButton.setMinWidth(370);
+                dialog.add(closeButton);
+                dialog.show();
+            }
         });
     }
 

@@ -18,6 +18,7 @@ public class NewCommandDialog extends NewElementDialog
     {
         super(itemList, new CommandDetailView(true, new Command("", "", "", false), null));
         setMinHeight(270);
+        setTitle("New command");
     }
 
     @Override

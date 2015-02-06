@@ -101,6 +101,7 @@ public class ParagraphSwitchView extends TableView<ParagraphSwitch>
     private void showRemoveSwitchDialog(final ParagraphSwitch parSwitch)
     {
         final SBDialog dialog = new SBDialog();
+        dialog.setTitle("Delete switch");
         dialog.add(new Text("\"" + parSwitch.getReadableContent() + "\""));
         dialog.add(new Label("Do you really want to delete this switch?"));
         final HBox buttonBox = new HBox(10);

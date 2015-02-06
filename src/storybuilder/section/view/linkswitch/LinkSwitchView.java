@@ -102,6 +102,7 @@ public class LinkSwitchView extends TableView<LinkSwitch>
     private void showRemoveSwitchDialog(final LinkSwitch linkSwitch)
     {
         final SBDialog dialog = new SBDialog();
+        dialog.setTitle("Delete switch");
         dialog.add(new Text("\"" + linkSwitch.getReadableContent() + "\""));
         dialog.add(new Label("Do you really want to delete this switch?"));
         final HBox buttonBox = new HBox(10);

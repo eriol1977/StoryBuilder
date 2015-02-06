@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -20,6 +21,7 @@ public class SBDialog extends Stage
     {
         initModality(Modality.APPLICATION_MODAL);
         initOwner(MainWindowController.getInstance().getStage());
+        initStyle(StageStyle.UTILITY);
         dialogVbox = new VBox(20);
         dialogVbox.setSpacing(10);
         dialogVbox.setPadding(new Insets(10, 10, 10, 10));

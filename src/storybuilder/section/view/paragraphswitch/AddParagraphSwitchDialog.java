@@ -50,7 +50,7 @@ public class AddParagraphSwitchDialog extends SBDialog
         this.view = view;
 
         setMinHeight(500);
-        add(new Label("Add new paragraph switch"));
+        setTitle("New paragraph switch");
 
         paragraphs = FXCollections.observableArrayList();
         paragraphsTable = new TableView(paragraphs);
@@ -107,6 +107,7 @@ public class AddParagraphSwitchDialog extends SBDialog
             private void showChangeParagraphDialog(final Paragraph paragraph)
             {
                 final SBDialog dialog = new SBDialog();
+                dialog.setTitle("Update paragraph");
                 dialog.setMinHeight(200);
                 dialog.add(new Label("Original text for this paragraph:"));
                 dialog.add(new Text(paragraph.getText()));
@@ -130,6 +131,7 @@ public class AddParagraphSwitchDialog extends SBDialog
             private void showCreateParagraphDialog()
             {
                 final SBDialog dialog = new SBDialog();
+                dialog.setTitle("New paragraph");
                 dialog.add(new Label("Text for the new paragraph:"));
                 final TextField newTextField = new TextField();
                 newTextField.setMinWidth(680);

@@ -91,6 +91,8 @@ public class MinigameInstanceView extends AbstractView
     {
         final SBDialog dialog = new SBDialog();
         dialog.setMinHeight(600);
+        dialog.setTitle("Minigame");
+        
         final Label message = new Label("Configure the minigame");
         dialog.add(message);
 

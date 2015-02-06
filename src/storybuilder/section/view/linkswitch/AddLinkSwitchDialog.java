@@ -52,7 +52,7 @@ public class AddLinkSwitchDialog extends SBDialog
         this.view = view;
 
         setMinHeight(500);
-        add(new Label("Add new link switch"));
+        setTitle("New link switch");
 
         links = FXCollections.observableArrayList();
         linksTable = new TableView(links);

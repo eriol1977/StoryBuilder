@@ -18,6 +18,7 @@ public class NewEventDialog extends NewElementDialog
     {
         super(itemList, new EventDetailView(true, new Event("", "", false), null));
         setMinHeight(270);
+        setTitle("New event");
     }
 
     @Override

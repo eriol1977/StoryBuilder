@@ -33,7 +33,7 @@ public class LinkSwitchAddLinkDialog extends SBDialog
     public LinkSwitchAddLinkDialog(final AddLinkSwitchDialog view)
     {
         setMinHeight(500);
-        add(new Label("Create a new link"));
+        setTitle("New link");
 
         final ObservableList<String> options
                 = FXCollections.observableArrayList(

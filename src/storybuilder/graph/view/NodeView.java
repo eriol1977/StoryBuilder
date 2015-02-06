@@ -1,6 +1,9 @@
 package storybuilder.graph.view;
 
+import javafx.event.ActionEvent;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -12,6 +15,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import storybuilder.graph.controller.GraphController;
 import storybuilder.graph.model.Node;
+import storybuilder.main.view.SBDialog;
 
 /**
  *
@@ -72,10 +76,24 @@ public class NodeView extends StackPane
             setCursor(Cursor.HAND);
         });
         setOnMouseClicked((MouseEvent event) -> {
-            if (event.getButton().equals(MouseButton.PRIMARY)) {
-                controller.drawGraphForSection(node.getSection());
+            if (event.isControlDown()) {
+                final SBDialog dialog = new SBDialog();
+                dialog.setTitle("Section");
+                dialog.setHeight(300);
+                dialog.add(new Label(getNode().getDescription()));
+                final Button closeButton = new Button("Close");
+                closeButton.setOnAction((ActionEvent event1) -> {
+                    dialog.close();
+                });
+                closeButton.setMinWidth(670);
+                dialog.add(closeButton);
+                dialog.show();
             } else {
-                controller.showContextMenuForNode(this, event.getScreenX(), event.getScreenY());
+                if (event.getButton().equals(MouseButton.PRIMARY)) {
+                    controller.drawGraphForSection(node.getSection());
+                } else {
+                    controller.showContextMenuForNode(this, event.getScreenX(), event.getScreenY());
+                }
             }
         });
     }

@@ -45,7 +45,7 @@ public abstract class LinkDialog extends SBDialog
         this.linksTable = linksTable;
 
         setMinHeight(500);
-        add(new Label(title));
+        setTitle(title);
 
         final ObservableList<String> options
                 = FXCollections.observableArrayList(

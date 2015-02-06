@@ -147,7 +147,7 @@ public class LinksTable extends TableView<Link>
     private void showRemoveLinkDialog(final Link link)
     {
         final SBDialog dialog = new SBDialog();
-
+        dialog.setTitle("Delete link");
         dialog.add(new Text("\"" + link.getReadableContent() + "\""));
         dialog.add(new Label("Do you really want to delete this link?"));
         final HBox buttonBox = new HBox(10);
