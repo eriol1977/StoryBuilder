@@ -21,6 +21,7 @@ import storybuilder.main.view.AbstractTableView;
 import storybuilder.section.model.Drop;
 import storybuilder.section.model.Get;
 import storybuilder.section.model.Section;
+import storybuilder.section.view.link.LinksActivatedBySwitchesTable;
 import storybuilder.section.view.linkswitch.LinkSwitchView;
 import storybuilder.validation.SBException;
 
@@ -45,6 +46,8 @@ public class SectionDetailView extends AbstractDetailView
 
     public final static int EXPAND_MINIGAME = 7;
 
+    public final static int EXPAND_LINKS_ACTIVATED = 8;
+
     private final static String PARAGRAPHS_PANE_TITLE = "Paragraphs";
 
     private final static String LINKS_PANE_TITLE = "Links";
@@ -59,11 +62,15 @@ public class SectionDetailView extends AbstractDetailView
 
     private final static String MINIGAME_PANE_TITLE = "Minigame";
 
+    private final static String LINKS_ACTIVATED_PANE_TITLE = "Links activated by switches";
+
     private CheckBox endingField;
 
     private ParagraphsTable paragraphsTable;
 
     private LinksTable linksTable;
+
+    private LinksActivatedBySwitchesTable linksActivatedBySwitchesTable;
 
     private ParagraphSwitchView paragraphSwitchView;
 
@@ -140,6 +147,9 @@ public class SectionDetailView extends AbstractDetailView
                     case MINIGAME_PANE_TITLE:
                         sectionsView.setExpandedPane(EXPAND_MINIGAME);
                         break;
+                    case LINKS_ACTIVATED_PANE_TITLE:
+                        sectionsView.setExpandedPane(EXPAND_LINKS_ACTIVATED);
+                        break;
                 }
             }
         });
@@ -151,6 +161,10 @@ public class SectionDetailView extends AbstractDetailView
         linksTable = new LinksTable(this, section);
         TitledPane linksPane = new TitledPane(LINKS_PANE_TITLE, linksTable);
         accordion.getPanes().add(linksPane);
+
+        linksActivatedBySwitchesTable = new LinksActivatedBySwitchesTable(section);
+        TitledPane linksActivatedPane = new TitledPane(LINKS_ACTIVATED_PANE_TITLE, linksActivatedBySwitchesTable);
+        accordion.getPanes().add(linksActivatedPane);
 
         getView = new GetView(this, section);
         TitledPane getPane = new TitledPane(GETS_PANE_TITLE, getView);
@@ -186,6 +200,8 @@ public class SectionDetailView extends AbstractDetailView
             accordion.setExpandedPane(linkSwitchPane);
         } else if (expandedPane == EXPAND_MINIGAME) {
             accordion.setExpandedPane(minigamePane);
+        } else if (expandedPane == EXPAND_LINKS_ACTIVATED) {
+            accordion.setExpandedPane(linksActivatedPane);
         } else {
             accordion.setExpandedPane(paragraphsPane);
         }

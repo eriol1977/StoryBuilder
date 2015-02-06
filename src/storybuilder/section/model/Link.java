@@ -169,7 +169,7 @@ public class Link extends StoryElement
         }
         return s;
     }
-    
+
     public String getReadableContent()
     {
         final Story story = Cache.getInstance().getStory();
@@ -347,5 +347,4 @@ public class Link extends StoryElement
     {
         this.eventIds.put(NO, noEventIds);
     }
-
 }

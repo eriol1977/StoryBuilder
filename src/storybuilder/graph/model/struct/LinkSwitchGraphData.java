@@ -7,7 +7,7 @@ import storybuilder.section.model.Section;
  *
  * @author Francesco Bertolino
  */
-public class LinkSwitchGraphData
+public class LinkSwitchGraphData implements Comparable<LinkSwitchGraphData>
 {
 
     private final Section activatingSection;
@@ -34,6 +34,12 @@ public class LinkSwitchGraphData
     {
         return link.getReadableContent()
                 + " [switch activated by section " + activatingSection.getNameWithoutPrefix() + "]";
+    }
+
+    @Override
+    public int compareTo(final LinkSwitchGraphData another)
+    {
+        return activatingSection.compareTo(another.getActivatingSection());
     }
 
 }

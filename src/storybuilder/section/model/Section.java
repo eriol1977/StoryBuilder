@@ -1,9 +1,13 @@
 package storybuilder.section.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import storybuilder.graph.model.GraphDatasource;
+import storybuilder.graph.model.struct.LinkSwitchGraphData;
 import storybuilder.item.model.Item;
 import storybuilder.main.Cache;
 import storybuilder.main.FileManager;
@@ -331,6 +335,20 @@ public class Section extends StoryElement
         return linkSwitches;
     }
 
+    public List<LinkSwitchGraphData> getLinksActivatedBySwitches()
+    {
+        final List<LinkSwitchGraphData> result = new ArrayList<>();
+        final Map<Section, List<LinkSwitchGraphData>> switchConnectionsFrom
+                = new GraphDatasource().getSwitchConnectionsFrom(this);
+        for (List<LinkSwitchGraphData> dataList : switchConnectionsFrom.values()) {
+            for (LinkSwitchGraphData data : dataList) {
+                result.add(data);
+            }
+        }
+        Collections.sort(result);
+        return result;
+    }
+
     public void setLinkSwitches(List<LinkSwitch> linkSwitches)
     {
         this.linkSwitches = linkSwitches;
@@ -385,8 +403,8 @@ public class Section extends StoryElement
 
     /**
      * For SectionsView table
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getHasItem()
     {
@@ -399,7 +417,8 @@ public class Section extends StoryElement
 
     /**
      * For SectionsView table
-     * @return 
+     *
+     * @return
      */
     public String getIsEnding()
     {
