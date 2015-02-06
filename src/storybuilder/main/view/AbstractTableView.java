@@ -156,7 +156,7 @@ public abstract class AbstractTableView extends AbstractView
             updateElementInStory(element);
             mwc.updateStatusBarMessage("Element \"" + element.getNameWithoutPrefix() + "\" updated");
             refresh();
-            showEmptyView();
+            selectElement(element);
         } catch (ValidationFailed ex) {
             ErrorManager.showErrorMessage(ex.getFailCause());
             element.copyData(stashed);

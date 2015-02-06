@@ -379,7 +379,7 @@ public class Story
     private void deleteSectionElements(final Section section) throws SBException
     {
         final Document doc = getXmlDoc();
-        final List<Node> sectionElements = FileManager.findElementsStartingWith(section.getName(), doc);
+        final List<Node> sectionElements = FileManager.findElementsStartingWith(section.getName() + "_", doc);
         sectionElements.stream().forEach(node -> doc.getDocumentElement().removeChild(node));
         saveXmlDoc(doc);
     }

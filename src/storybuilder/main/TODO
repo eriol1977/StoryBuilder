@@ -1,0 +1,7 @@
+-- il salvataggio di un oggetto con descrizione ha creato la sezione, ma non ha salvato il testo
+
+-- la manipolazione di linkswitch incasina tutto il sistema, malgrado il file venga aggiornato correttamente 
+
+-- i comandi con oggetti lasciano sempre una virgola in fondo
+
+-- aggiungere colori alle connessioni del grafo? per esempio, per indicare che bisogna possedere o meno un evento, ecc...

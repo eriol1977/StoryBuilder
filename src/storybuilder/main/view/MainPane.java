@@ -43,6 +43,11 @@ public class MainPane extends BorderPane
         return view;
     }
 
+    void clear()
+    {
+        this.cachedViews.clear();
+    }
+
     AbstractView setContent(final String clazz)
     {
         final AbstractView view = getView(clazz);

@@ -24,6 +24,7 @@ public class OpenStoryView extends AbstractView
         if (file != null) {
             try {
                 final Story story = Story.load(file);
+                mwc.clearViewsCache();
                 mwc.updateTitle();
                 mwc.updateStatusBarMessage("Story \"" + story.getTitle() + "\" loaded");
                 mwc.enableMenus(true);

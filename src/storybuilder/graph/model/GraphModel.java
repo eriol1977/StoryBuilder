@@ -30,21 +30,33 @@ public class GraphModel
 
     public Node buildNode(final Section section)
     {
+        if (section == null) {
+            return null;
+        }
         return new Node(section);
     }
 
     public LinkConnection buildConnection(final Node origin, final Node destination, final Link link)
     {
+        if (origin == null || destination == null || link == null) {
+            return null;
+        }
         return new LinkConnection(origin, destination, link);
     }
 
     public SwitchConnection buildConnection(final Node origin, final Node destination, final LinkSwitchGraphData data)
     {
+        if (origin == null || destination == null || data == null) {
+            return null;
+        }
         return new SwitchConnection(origin, destination, data);
     }
 
     public MinigameConnection buildConnection(final Node origin, final Node destination, final MinigameGraphData data)
     {
+        if (origin == null || destination == null || data == null) {
+            return null;
+        }
         return new MinigameConnection(origin, destination, data);
     }
 

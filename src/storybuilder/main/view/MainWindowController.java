@@ -135,4 +135,9 @@ public class MainWindowController
                 = (EventsView) mainWindow.getMainPane().getView("storybuilder.event.view.EventsView");
         itemsView.refresh();
     }
+    
+    public void clearViewsCache()
+    {
+        mainWindow.getMainPane().clear();
+    }
 }

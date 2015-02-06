@@ -83,6 +83,7 @@ public class Section extends StoryElement
     {
         final Section anotherSection = (Section) another;
         setName(anotherSection.getName());
+        setEnding(anotherSection.isEnding());
         setParagraphs(anotherSection.getParagraphs());
         setLinks(anotherSection.getLinks());
         setParagraphSwitches(anotherSection.getParagraphSwitches());

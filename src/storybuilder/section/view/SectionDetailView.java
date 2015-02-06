@@ -94,7 +94,6 @@ public class SectionDetailView extends AbstractDetailView
         } else {
             tableView.updateElement(element);
         }
-        tableView.selectElement(element);
     }
 
     @Override
@@ -105,6 +104,9 @@ public class SectionDetailView extends AbstractDetailView
 
         endingField = new CheckBox("Ending?");
         endingField.setSelected(section.isEnding());
+        endingField.setOnAction((ActionEvent event) -> {
+            save();
+        });
         add(endingField);
 
         final Accordion accordion = new Accordion();

@@ -1,9 +1,9 @@
 package storybuilder.graph.view;
 
+import javafx.scene.control.Label;
 import storybuilder.graph.view.connection.ConnectionView;
 import javafx.scene.layout.Pane;
 import storybuilder.main.view.AbstractView;
-import storybuilder.section.model.Section;
 
 /**
  *
@@ -35,25 +35,9 @@ public class Graph extends AbstractView
     {
         canvas.getChildren().add(connectionView);
     }
-    
-    private void drawLinks(final Pane canvas)
-    {
-//        List<SectionNode> nodes;
-//        for (SectionNode destination : linksByDestination.keySet()) {
-//            nodes = linksByDestination.get(destination);
-//            nodes.stream().forEach(n -> canvas.getChildren().add(
-//                    new GraphDirectLink(n, destination, GraphDirectLink.LINK)));
-//        }
-//        for (SectionNode origin : linksByOrigin.keySet()) {
-//            nodes = linksByOrigin.get(origin);
-//            nodes.stream().forEach(n -> canvas.getChildren().add(
-//                    new GraphDirectLink(origin, n, GraphDirectLink.LINK)));
-//        }
-//        for (SectionNode origin : linkSwitchesByOrigin.keySet()) {
-//            nodes = linkSwitchesByOrigin.get(origin);
-//            nodes.stream().forEach(n -> canvas.getChildren().add(
-//                    new GraphDirectLink(origin, n, GraphDirectLink.LINK_SWITCH)));
-//        }
-    }
 
+    public void drawEmpty()
+    {
+        canvas.getChildren().add(new Label("No section 1 detected!"));
+    }
 }

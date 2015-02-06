@@ -38,7 +38,7 @@ public class GraphController
     private final static double CENTER_X = WIDTH / 2;
 
     private final static double VERTICAL_STEP = 250;
-    
+
     private final static double TOP = 0;
 
     private final static double MIDDLE = TOP + VERTICAL_STEP;
@@ -60,12 +60,16 @@ public class GraphController
 
     public void drawGraphForSection(final Section section)
     {
-        model.buildForSection(section);
         clear();
-        drawNodes(model.getNodesToTarget(), TOP);
-        drawNode(model.getTargetNode(), MIDDLE);
-        drawNodes(model.getNodesFromTarget(), BOTTOM);
-        drawConnections(model.getConnections());
+        if (section != null) {
+            model.buildForSection(section);
+            drawNodes(model.getNodesToTarget(), TOP);
+            drawNode(model.getTargetNode(), MIDDLE);
+            drawNodes(model.getNodesFromTarget(), BOTTOM);
+            drawConnections(model.getConnections());
+        } else {
+            this.graph.drawEmpty();
+        }
     }
 
     private void clear()

@@ -96,6 +96,18 @@ public class GraphModelTest
     }
 
     /**
+     * Testa {@link GraphModel#buildNode(storybuilder.section.model.Section, double, double)
+     * }
+     */
+    @Test
+    public void testBuildNode_NullSection()
+    {
+        final GraphModel model = new GraphModel();
+        final Node node = model.buildNode(null);
+        Assert.assertNull(node);
+    }
+
+    /**
      * Testa {@link GraphModel#buildConnection(storybuilder.graph.model.Node, storybuilder.graph.model.Node, storybuilder.section.model.Link)
      * }
      */
@@ -121,6 +133,29 @@ public class GraphModelTest
         Assert.assertEquals(link.getReadableContent(), connection.getDescription());
     }
 
+    /**
+     * Testa {@link GraphModel#buildConnection(storybuilder.graph.model.Node, storybuilder.graph.model.Node, storybuilder.section.model.Link)
+     * }
+     */
+    @Test
+    public void testBuildLinkConnection_NullParams()
+    {
+        final GraphModel model = new GraphModel();
+        final Section section1 = new Section(Section.PREFIX + 1, false);
+        final Section section2 = new Section(Section.PREFIX + 2, false);
+        final Link link = new Link("link", "2",
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), false);
+        final Node node1 = model.buildNode(section1);
+        final Node node2 = model.buildNode(section2);
+        LinkConnection connection = model.buildConnection(null, node2, link);
+        Assert.assertNull(connection);
+        connection = model.buildConnection(node1, null, link);
+        Assert.assertNull(connection);
+        connection = model.buildConnection(node1, node2, (Link)null);
+        Assert.assertNull(connection);
+    }
+    
     /**
      * Testa {@link GraphModel#buildConnection(storybuilder.graph.model.Node, storybuilder.graph.model.Node, storybuilder.graph.model.LinkSwitchGraphData)
      * }
@@ -148,6 +183,32 @@ public class GraphModelTest
     }
 
     /**
+     * Testa {@link GraphModel#buildConnection(storybuilder.graph.model.Node, storybuilder.graph.model.Node, storybuilder.graph.model.LinkSwitchGraphData)
+     * }
+     */
+    @Test
+    public void testBuildSwitchConnection_NullParams()
+    {
+        final Section section1 = new Section(Section.PREFIX + 1, false);
+        final Section section2 = new Section(Section.PREFIX + 2, false);
+        final Link link = new Link("link", "3",
+                new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>(), false);
+        final LinkSwitchGraphData data = new LinkSwitchGraphData(section1, link);
+
+        final GraphModel model = new GraphModel();
+        final Node node1 = model.buildNode(section1);
+        final Node node2 = model.buildNode(section2);
+
+        SwitchConnection connection = model.buildConnection(null, node2, data);
+        Assert.assertNull(connection);
+        connection = model.buildConnection(node1, null, data);
+        Assert.assertNull(connection);
+        connection = model.buildConnection(node1, node2, (LinkSwitchGraphData)null);
+        Assert.assertNull(connection);
+    }
+    
+    /**
      * Testa {@link GraphModel#buildConnection(storybuilder.graph.model.Node, storybuilder.graph.model.Node, storybuilder.graph.model.MinigameGraphData)
      * }
      */
@@ -174,6 +235,62 @@ public class GraphModelTest
         Assert.assertEquals(data.getText(), connection.getDescription());
     }
 
+    /**
+     * Testa {@link GraphModel#buildConnection(storybuilder.graph.model.Node, storybuilder.graph.model.Node, storybuilder.graph.model.MinigameGraphData)
+     * }
+     */
+    @Test
+    public void testBuildMinigameConnection_NullParams()
+    {
+        final Section section1 = new Section(Section.PREFIX + 1, false);
+        final Section section2 = new Section(Section.PREFIX + 2, false);
+        final MinigameInstance game = new MinigameInstance("game1",
+                new MinigameKind("code", "title", "clazz", new ArrayList<>()),
+                "2", "3", new ArrayList<>(), false);
+        final MinigameGraphData data = new MinigameGraphData(game, true);
+
+        final GraphModel model = new GraphModel();
+        final Node node1 = model.buildNode(section1);
+        final Node node2 = model.buildNode(section2);
+
+        MinigameConnection connection = model.buildConnection(null, node2, data);
+        Assert.assertNull(connection);
+        connection = model.buildConnection(node1, null, data);
+        Assert.assertNull(connection);
+        connection = model.buildConnection(node1, node2, (MinigameGraphData)null);
+        Assert.assertNull(connection);
+    }
+    
+    /**
+     * Testa {@link GraphModel#buildForSection(storybuilder.section.model.Section)
+     * }
+     */
+    @Test
+    public void testBuildForSection_NullSection()
+    {
+        final Section section1 = new Section(Section.PREFIX + 1, false);
+        final Section section2 = new Section(Section.PREFIX + 2, false);
+        final Section section3 = new Section(Section.PREFIX + 3, false);
+
+        final GraphModel model = new GraphModelForTests(section1, section2, section3);
+        model.buildForSection(null);
+        
+        final Node targetNode = model.getTargetNode();
+        Assert.assertNull(targetNode);
+        
+        final List<Node> nodesToTarget = model.getNodesToTarget();
+        Assert.assertNotNull(nodesToTarget);
+        Assert.assertTrue(nodesToTarget.isEmpty());
+        
+        final List<Node> nodesFromTarget = model.getNodesFromTarget();
+        Assert.assertNotNull(nodesFromTarget);
+        Assert.assertTrue(nodesFromTarget.isEmpty());
+        
+        final List<Connection> connections = model.getConnections();
+        Assert.assertNotNull(connections);
+        Assert.assertTrue(connections.isEmpty());
+    }
+    
     /**
      * Testa {@link GraphModel#buildForSection(storybuilder.section.model.Section)
      * }
@@ -443,60 +560,60 @@ public class GraphModelTest
         List<Node> nodesToTarget = model.getNodesToTarget();
         List<Node> nodesFromTarget = model.getNodesFromTarget();
         List<Connection> connections = model.getConnections();
-        
+
         Assert.assertNotNull(targetNode);
         Assert.assertEquals(section3, targetNode.getSection());
-        
+
         Assert.assertNotNull(nodesToTarget);
         Assert.assertEquals(3, nodesToTarget.size());
         Assert.assertEquals(section1, nodesToTarget.get(0).getSection());
         Assert.assertEquals(section2, nodesToTarget.get(1).getSection());
         Assert.assertEquals(section8, nodesToTarget.get(2).getSection());
-        
+
         Assert.assertNotNull(nodesFromTarget);
         Assert.assertEquals(4, nodesFromTarget.size());
         Assert.assertEquals(section4, nodesFromTarget.get(0).getSection());
         Assert.assertEquals(section5, nodesFromTarget.get(1).getSection());
         Assert.assertEquals(section6, nodesFromTarget.get(2).getSection());
         Assert.assertEquals(section7, nodesFromTarget.get(3).getSection());
-        
+
         Assert.assertNotNull(connections);
         Assert.assertEquals(7, connections.size());
-        
+
         // link da 1 a 3
         Assert.assertEquals(nodesToTarget.get(0), connections.get(0).getOrigin());
         Assert.assertEquals(targetNode, connections.get(0).getDestination());
         Assert.assertTrue(connections.get(0) instanceof LinkConnection);
-        
+
         // switch da 2 a 3 (attivato da 1)
         Assert.assertEquals(nodesToTarget.get(1), connections.get(1).getOrigin());
         Assert.assertEquals(targetNode, connections.get(1).getDestination());
         Assert.assertTrue(connections.get(1) instanceof SwitchConnection);
         Assert.assertEquals(section1, ((SwitchConnection) connections.get(1)).getData().getActivatingSection());
-        
+
         // switch da 3 a 4 (attivato da 5)
         Assert.assertEquals(targetNode, connections.get(2).getOrigin());
         Assert.assertEquals(nodesFromTarget.get(0), connections.get(2).getDestination());
         Assert.assertTrue(connections.get(2) instanceof SwitchConnection);
         Assert.assertEquals(section5, ((SwitchConnection) connections.get(2)).getData().getActivatingSection());
-        
+
         // link da 3 a 5
         Assert.assertEquals(targetNode, connections.get(3).getOrigin());
         Assert.assertEquals(nodesFromTarget.get(1), connections.get(3).getDestination());
         Assert.assertTrue(connections.get(3) instanceof LinkConnection);
-        
+
         // minigame da 3 a 6 (vittoria)
         Assert.assertEquals(targetNode, connections.get(4).getOrigin());
         Assert.assertEquals(nodesFromTarget.get(2), connections.get(4).getDestination());
         Assert.assertTrue(connections.get(4) instanceof MinigameConnection);
         Assert.assertTrue(((MinigameConnection) connections.get(4)).getData().isWinning());
-        
+
         // minigame da 3 a 7 (sconfitta)
         Assert.assertEquals(targetNode, connections.get(5).getOrigin());
         Assert.assertEquals(nodesFromTarget.get(3), connections.get(5).getDestination());
         Assert.assertTrue(connections.get(5) instanceof MinigameConnection);
         Assert.assertFalse(((MinigameConnection) connections.get(5)).getData().isWinning());
-        
+
         // minigame da 8 a 3 (vittoria)
         Assert.assertEquals(nodesToTarget.get(2), connections.get(6).getOrigin());
         Assert.assertEquals(targetNode, connections.get(6).getDestination());
