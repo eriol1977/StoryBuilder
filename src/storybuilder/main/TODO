@@ -1,6 +1,3 @@
--- la manipolazione degli switch fa comparire una voce indesiderata nella tabella delle sezioni,
- malgrado il file venga aggiornato correttamente 
-
 -- i comandi con oggetti lasciano sempre una virgola in fondo
 
 -- aggiungere colori alle connessioni del grafo? per esempio, per indicare che bisogna possedere o meno un evento, ecc...

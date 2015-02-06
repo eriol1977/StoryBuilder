@@ -382,4 +382,30 @@ public class Section extends StoryElement
         return items.stream().filter(i -> i.getSectionId().equals(this.getNameWithoutPrefix()))
                 .findFirst().orElse(null);
     }
+
+    /**
+     * For SectionsView table
+     * 
+     * @return 
+     */
+    public String getHasItem()
+    {
+        Item item = getItem();
+        if (item != null) {
+            return "I";
+        }
+        return "";
+    }
+
+    /**
+     * For SectionsView table
+     * @return 
+     */
+    public String getIsEnding()
+    {
+        if (isEnding()) {
+            return "E";
+        }
+        return "";
+    }
 }

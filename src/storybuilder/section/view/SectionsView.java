@@ -4,17 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import storybuilder.main.model.IStoryElement;
 import storybuilder.main.view.AbstractDetailView;
@@ -38,8 +32,8 @@ public class SectionsView extends AbstractTableView
     {
         addTitle("Sections");
 
-        table.setMinWidth(102);
-        table.setMaxWidth(102);
+        table.setMinWidth(132);
+        table.setMaxWidth(132);
 
         table.setRowFactory(new Callback<TableView<Section>, TableRow<Section>>()
         {
@@ -93,30 +87,11 @@ public class SectionsView extends AbstractTableView
     {
         final List<TableColumn> columns = new ArrayList<>(1);
         final TableColumn<Section, String> column = getColumn("Code", "nameWithoutPrefix", 60);
-        column.setCellFactory((TableColumn<Section, String> param) -> {
-            return new TableCell<Section, String>()
-            {
-                @Override
-                protected void updateItem(String item, boolean empty)
-                {
-                    super.updateItem(item, empty); //To change body of generated methods, choose Tools | Templates.
-                    if (!empty) {
-                        setText(item);
-                        final Section section = (Section) getTableRow().getItem();
-                        if (section != null) {
-                            if (section.isEnding()) {
-                                setBackground(new Background(new BackgroundFill(Color.LIGHTSALMON, CornerRadii.EMPTY, new Insets(2))));
-                            } else if (section.getItem() != null) {
-                                setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, new Insets(2))));
-                            } else {
-                                setBackground(Background.EMPTY);
-                            }
-                        }
-                    }
-                }
-            };
-        });
+        final TableColumn<Section, String> columnItem = getColumn("", "hasItem", 15);
+        final TableColumn<Section, String> columnEnding = getColumn("", "isEnding", 15);
         columns.add(column);
+        columns.add(columnItem);
+        columns.add(columnEnding);
         return columns;
     }
 
